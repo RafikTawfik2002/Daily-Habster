@@ -1,5 +1,6 @@
 import express from 'express';
 import { Habit } from '../models/habit.js'
+import mongodb, { ObjectId } from "mongodb"
 
 const router = express.Router();
 
@@ -18,76 +19,81 @@ router.get('/', async (request, response) => {
 
     }
 })
-// // Get route to get one book from the database
-// router.get('/:id', async (request, response) => {
-//     try{
-//         const { id } = request.params;
-//         const book = await Book.findById(id);
-//         return response.status(200).json(book);
-//     } catch (error){
-//         console.log(error.message);
-//         response.status(500).send({ message: error.message });
+// Get route to get one book from the database
+router.get('/:id', async (request, response) => {
+    try{
+        const { id } = request.params;
+        const habit = await Habit.findById(id);
+        return response.status(200).json(habit);
+    } catch (error){
+        console.log(error.message);
+        response.status(500).send({ message: error.message });
 
-//     }
-// })
+    }
+})
 // // Post route -> route for Save a new book
-// router.post('/', async (request, response) => {
-//     try {
-//         //input validation
-//         if (!request.body.title || !request.body.author || !request.body.publishYear){
-//             return response.status(400).send({message: 'Send all required fields: title, author, publishYear'});
-//         }
-//         //initialize a new book
-//         const newBook = {
-//             title: request.body.title,
-//             author: request.body.author,
-//             publishYear: request.body.publishYear,
-//         };
+router.post('/', async (request, response) => {
+    try {
+        //input validation
+        if (!request.body.desc || !request.body.archived || !request.body.discrete || !request.body.userID || !request.body.endDate){
+            return response.status(400).send({message: 'Send all required fields'});
+        }
 
-//         const book = await Book.create(newBook); //using a mongoose.model which has a mongoose Schema
+        //initialize a new book
+        const newhabit = {
+            desc: request.body.desc,
+            archived: request.body.archived,
+            discrete: request.body.discrete,
+            userID: new ObjectId(request.body.userID),
+            endDate: request.body.endDate
+        };
 
-//         return response.status(201).send(book);
-//     } catch (error) {
-//         console.log(error.message);
-//         response.status(500).send({ message: error.message });
-//     }
-// });
+        const habit = await Habit.create(newhabit); //using a mongoose.model which has a mongoose Schema
+
+        return response.status(201).send(habit);
+    } catch (error) {
+        console.log(error.message);
+        response.status(500).send({ message: error.message });
+    }
+});
 
 // // Route for Update a book
-// router.put('/:id', async (request, response) => {
-//     try{
-//         if ( !request.body.title || !request.body.author || !request.body.publishYear ) {
-//             return response.status(400).send({message: 'Send all required fields: title, author, publishYear'});
-//         }
-//         const { id } = request.params;
+router.put('/:id', async (request, response) => {
+    try{
+        if (!request.body.desc || !request.body.archived || !request.body.discrete || !request.body.userID || !request.body.endDate){
+            return response.status(400).send({message: 'Send all required fields'});
+        }
+        const { id } = request.params;
 
-//         const result = await Book.findByIdAndUpdate(id, request.body);
+        request.body.userID = new ObjectId(request.body.userID)
 
-//         if (!result) {
-//             return response.status(404).json({ message: 'Book not ound' });
-//         }
+        const result = await Habit.findByIdAndUpdate(id, request.body);
 
-//         return response.status(200).send({ message: 'Book updated successfully' });
-//     } catch (error) {
-//         console.log(error.message);
-//         response.status(500).send({ message: error.message });
-//     }
-// });
+        if (!result) {
+            return response.status(404).json({ message: 'Book not ound' });
+        }
+
+        return response.status(200).send({ message: 'Book updated successfully' });
+    } catch (error) {
+        console.log(error.message);
+        response.status(500).send({ message: error.message });
+    }
+});
 // // Route for deleting a book
-// router.delete('/:id', async (request, response) => {
-//     try {
-//         const { id } = request.params;
-//         const result = await Book.findByIdAndDelete(id);
-//         if(!result){
-//             return response.status(404).json({ message: 'Book not found '});
-//         }
+router.delete('/:id', async (request, response) => {
+    try {
+        const { id } = request.params;
+        const result = await Habit.findByIdAndDelete(id);
+        if(!result){
+            return response.status(404).json({ message: 'Book not found '});
+        }
 
-//         return response.status(200).send({ message: 'Book deleted successfully' });
+        return response.status(200).send({ message: 'Book deleted successfully' });
         
-//     } catch (error) {
-//         console.log(error.message);
-//         response.status(500).send({ message: error.message });
-//     }
-// })
+    } catch (error) {
+        console.log(error.message);
+        response.status(500).send({ message: error.message });
+    }
+})
 
 export default router;
