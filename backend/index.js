@@ -1,27 +1,24 @@
 import app from "./server.js"
-import mongodb from "mongodb"
 import dotenv from "dotenv"
+import mongoose from "mongoose"
 
+
+const DATABASE = process.env.DATABASE_STRING
 
 dotenv.config()
 
 
+const PORT = process.env.PORT || 8000
+const DATABASE_STRING = process.env.DATABASE_STRING
 
-const MongoClient = mongodb.MongoClient
-
-const port = process.env.PORT || 8000
-
-MongoClient.connect(
-    process.env.DATABASE_STRING,
-    )
-    .catch(err => {
-        console.error(err.stack)
-        process.exit(1)
+mongoose
+    .connect(process.env.DATABASE_STRING)
+    .then(() => {
+        console.log('App connected to database');
+        app.listen(PORT, () => {
+            console.log(`App is listening to port: ${PORT}`);
+        });
     })
-    .then(async client => {
-        //await RestaurantsDAO.injectDB(client) // getting intial refrence to the database's restaurant collection
-        //await ReviewsDAO.injectDB(client) // getting initial refrence to the database's reviews collection
-        app.listen(port, () => {
-            console.log(`listening on port ${port}`)
-        })
-    })
+    .catch((error) => {
+        console.log(error);
+    });
