@@ -19,11 +19,13 @@ router.get('/', async (request, response) => {
 
     }
 })
-// Get route to get one book from the database
-router.get('/:id', async (request, response) => {
+// get habit by id
+router.get('/id/:id', async (request, response) => {
     try{
+
         const { id } = request.params;
         const habit = await Habit.findById(id);
+        
         return response.status(200).json(habit);
     } catch (error){
         console.log(error.message);
@@ -31,7 +33,21 @@ router.get('/:id', async (request, response) => {
 
     }
 })
-// // Post route -> route for Save a new book
+// habits by user
+router.get('/user/:user', async (request, response) => {
+    try{
+        
+        const { user } = request.params;
+        const habit = await Habit.find({userID : user});
+        
+        return response.status(200).json(habit);
+    } catch (error){
+        console.log(error.message);
+        response.status(500).send({ message: error.message });
+
+    }
+})
+// // Post route -> route for Save a new habit
 router.post('/', async (request, response) => {
     try {
         //input validation
@@ -57,23 +73,21 @@ router.post('/', async (request, response) => {
     }
 });
 
-// // Route for Update a book
+// Update a habit
 router.put('/:id', async (request, response) => {
     try{
-        if (!request.body.desc || !request.body.archived || !request.body.discrete || !request.body.userID || !request.body.endDate){
+        if (!request.body.desc || !request.body.archived || !request.body.discrete || !request.body.endDate){
             return response.status(400).send({message: 'Send all required fields'});
         }
         const { id } = request.params;
 
-        request.body.userID = new ObjectId(request.body.userID)
-
-        const result = await Habit.findByIdAndUpdate(id, request.body);
+        const result = await Habit.findByIdAndUpdate(id, request.body,  { new: true, runValidators: true });
 
         if (!result) {
-            return response.status(404).json({ message: 'Book not ound' });
+            return response.status(404).json({ message: 'Habit not found' });
         }
 
-        return response.status(200).send({ message: 'Book updated successfully' });
+        return response.status(200).send({ message: 'Habit updated successfully' });
     } catch (error) {
         console.log(error.message);
         response.status(500).send({ message: error.message });
@@ -85,15 +99,19 @@ router.delete('/:id', async (request, response) => {
         const { id } = request.params;
         const result = await Habit.findByIdAndDelete(id);
         if(!result){
-            return response.status(404).json({ message: 'Book not found '});
+            return response.status(404).json({ message: 'Habit not found '});
         }
 
-        return response.status(200).send({ message: 'Book deleted successfully' });
+        return response.status(200).send({ message: 'Habit deleted successfully' });
         
     } catch (error) {
         console.log(error.message);
         response.status(500).send({ message: error.message });
     }
 })
+
+// routes for user login
+
+
 
 export default router;

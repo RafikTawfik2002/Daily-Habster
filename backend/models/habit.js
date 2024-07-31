@@ -29,4 +29,4 @@ const habitSchema = mongoose.Schema(
     }
 );
 
-export const Habit = mongoose.model('Cat', habitSchema);
+export const Habit = mongoose.model('habit', habitSchema);
