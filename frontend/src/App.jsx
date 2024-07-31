@@ -1,10 +1,14 @@
 import React from 'react'
+import { BrowserRouter } from 'react-router-dom'
+import { Link } from 'react-router-dom'
+import { useState } from 'react'
+import Login from './pages/Login'
 
 const App = () => {
+
+
   return (
-    <h1 className="text-5xl font-bold underline text-slate-400">
-      Hello world!
-    </h1>
+    <Login />
   )
 }
 
