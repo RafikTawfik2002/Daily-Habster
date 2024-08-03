@@ -1,12 +1,11 @@
 import React from 'react'
+import LoginForm from '../components/LoginForm'
 
 const Login = () => {
   return (
-    <div className='mt-40 mb-40 ml-20 mr-20'>
-    <div className='text-4xl text-red-600 text-center'>
-      Simple Habit Tracker
-    </div>
-    </div>
+   <div className='text-white h-[100vh] flex justify-center items-center bg-cover' style={{"backgroundImage" : `url(https://images.pexels.com/photos/417074/pexels-photo-417074.jpeg?cs=srgb&dl=pexels-souvenirpixels-417074.jpg&fm=jpg)`}}>
+    <LoginForm/>
+   </div>
   )
 }
 
