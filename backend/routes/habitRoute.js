@@ -93,7 +93,7 @@ router.put('/:id', async (request, response) => {
         response.status(500).send({ message: error.message });
     }
 });
-// // Route for deleting a book
+// // Route for deleting a habit
 router.delete('/:id', async (request, response) => {
     try {
         const { id } = request.params;
