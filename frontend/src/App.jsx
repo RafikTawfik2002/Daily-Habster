@@ -1,40 +1,42 @@
-import React from 'react'
+import React from "react";
 
-import Login from './pages/Login'
-import { Routes as Switch, Route, Link } from "react-router-dom"; 
-import LoginForm from './components/LoginForm';
+import MainHabits from "./pages/MainHabits";
+import WelcomePage from "./pages/WelcomePage";
+import User from "./pages/User";
+import { Routes as Switch, Route, Link } from "react-router-dom";
+import { useState } from "react";
+
+import Register from "./components/Register";
 
 const App = () => {
-
-
+  const [logged, setLogged] = useState()
+  const [user, setUser] = useState()
   return (
-    <>
-    <Switch>
-            <Route exact path='*' element={<Login/>} />
-            <Route exact path='/' element={<Login/>} />
-            <Route exact path='/login' element={<Login/>} />
-            {/* <Route
-              path="/restaurants/:id/review"
-              render={(props) => (
-                <AddReview {...props} user={user} />  //passing in props to the addreview components
-              )}
-            />
-            <Route
-              path="/restaurants/:id"                 // there is no path for restaurants, only restaurants followed by an id
-              render={(props) => (
-                <Restaurant {...props} user={user} />  //passing in props to the restaurantById components
-              )}
-            />
-            <Route
-              path="/login"
-              render={(props) => (
-                 <Login {...props} login={login}/>
-              )}  
-            /> */}
+
+    <div
+      className="h-[100vh] bg-cover"
+      style={{ 
+        backgroundImage: `url(https://images.pexels.com/photos/417074/pexels-photo-417074.jpeg?cs=srgb&dl=pexels-souvenirpixels-417074.jpg&fm=jpg)`,
+      }}
+    >
+      {/* Navbar */}
+
+      <div>
+      <Link to='/Home'>Home</Link>
+      <Link to='/Login'>Login</Link>
+      
+      </div>
+
+
+      {/* Routing to different pages */}
+      <Switch>
+            {/* <Route exact path='/' element={logged ? <MainHabits user={user} setUser={setUser} setLogged={setLogged}/> : <User setUser={setUser} setLogged={setLogged}/>} /> */}
+            <Route exact path='/' element={<WelcomePage />} />
+            <Route exact path='/Login' element={<User setUser={setUser} setLogged={setLogged}/>} />
+            <Route exact path='/Home' element={<MainHabits user={user} setUser={setUser} setLogged={setLogged}/>} />
       </Switch>
-      </>
+    </div>
+  );
+};
 
-  )
-}
-
-export default App
+export default App;
