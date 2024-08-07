@@ -40,7 +40,7 @@ const Login = (props) => {
       await props.filled(user.username);
     }
     catch(e){
-      setMessage("username may be taken")
+      setMessage("could not connect to server")
       console.log(e)
     }
 

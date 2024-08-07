@@ -21,12 +21,6 @@ const App = () => {
     >
       {/* Navbar */}
 
-      <div>
-      <Link to='/Home'>Home</Link>
-      <Link to='/Login'>Login</Link>
-      
-      </div>
-
 
       {/* Routing to different pages */}
       <Switch>
