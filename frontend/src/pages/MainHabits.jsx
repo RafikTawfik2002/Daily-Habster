@@ -19,7 +19,7 @@ const MainHabits = (props) => {
   return (
     <>
     <HabitPageTitle user={user}/>
-    {/* <HabitsDisplay user={user}/> */}
+    <HabitsDisplay user={user}/>
     </>
   );
 };

@@ -1,27 +1,42 @@
-import React, { useEffect, useState } from 'react'
-import HabitDataServices from "../../services/habits"
+import React, { useEffect, useState } from "react";
+import DisplayHabit from "./DisplayHabit";
+import HabitDataServices from "../../services/habits";
 
 const HabitsDisplay = (props) => {
-    console.log("Habit Diplay Working")
-    const user = props.user
+  console.log("Habit Diplay Working");
+  const user = props.user;
 
-    const [habits, setHabits] = useState([])
+  const [habits, setHabits] = useState([]);
 
-    useEffect(async () => {
-        if(!user){console.log("no user");return}
-        const data = await HabitDataServices.findByUserId(user.userID)
-        console.log(data.data)
-        setHabits(data.data)
-    }, [])
+  //console.log("user is " + user.userID);
 
-  return (
-    <div className='text-white flex justify-center items-center'>
-        <div>
+  const find = (user) => {
+    HabitDataServices.findByUserId(user.userID)
+      .then((response) => {
+        console.log("did work " + response.data);
+        setHabits(response.data);
+      })
+      .catch((e) => {
+        console.log("didn't work " + e);
+      });
+  };
+
+  useEffect(() => {if(user && user.userID){find(user)}}, [])
+
+  return (<>
+      
+     <div className="text-white flex justify-center items-center">
+      <div>
         Trying To Display Something
-      {habits.length > 0 ? (habits.map((item) => <div>{item.desc}</div>)) : (<div>{"No Habits to Display"}</div>)}
-      </div>
+        {habits.length > 0 ? (
+          habits.map((item) => <DisplayHabit habit={item} />)
+        ) : (
+          <div>{"No Habits to Display"}</div>
+        )}
+      </div> 
     </div>
-  )
-}
+    </>
+  );
+};
 
-export default HabitsDisplay
+export default HabitsDisplay;
