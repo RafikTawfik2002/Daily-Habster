@@ -11,6 +11,10 @@ const habitSchema = mongoose.Schema(
             type: Boolean,
             required: true,
         },
+        success: {
+            type: Boolean,
+            required: true,
+        },
         discrete: {
             type: Boolean,
             required: true,
