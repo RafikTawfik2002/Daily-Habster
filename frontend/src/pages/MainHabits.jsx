@@ -1,13 +1,11 @@
-import React from "react";
-import { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
-import HabitDataService from "../../services/habits.js";
-import HabitPageTitle from "../components/HabitPageTitle.jsx";
-import HabitsDisplay from "../components/HabitsDisplay.jsx";
+import React, { useState, useEffect } from "react";
+import HabitPageTitle from "../components/habit/HabitPageTitle.jsx";
+import HabitsDisplay from "../components/habit/HabitsDisplay.jsx";
+import AddHabit from "../components/habit/AddHabit.jsx";
 
 const MainHabits = (props) => {
   const user = props.user;
+  const [addState, setAddState] = useState(false)
 
   useEffect(() => {
     props.setLogged(true);
@@ -18,8 +16,8 @@ const MainHabits = (props) => {
 
   return (
     <>
-    <HabitPageTitle user={user}/>
-    <HabitsDisplay user={user}/>
+    <HabitPageTitle user={user} addState={addState} setAddState={setAddState}/>
+    {(addState) ? (<AddHabit setAddState={setAddState} user={user}/>) : (<HabitsDisplay user={user}/>) }
     </>
   );
 };

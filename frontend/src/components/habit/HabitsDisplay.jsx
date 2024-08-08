@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import DisplayHabit from "./DisplayHabit";
-import HabitDataServices from "../../services/habits";
+import HabitDataServices from "../../../services/habits";
+import SingleHabit from "./SingleHabit";
 
 const HabitsDisplay = (props) => {
   console.log("Habit Diplay Working");
@@ -29,7 +29,7 @@ const HabitsDisplay = (props) => {
       <div>
         Trying To Display Something
         {habits.length > 0 ? (
-          habits.map((item) => <DisplayHabit habit={item} />)
+          habits.map((item) => <SingleHabit habit={item} />)
         ) : (
           <div>{"No Habits to Display"}</div>
         )}

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { BiUser } from "react-icons/bi"
 import {AiOutlineUnlock } from "react-icons/ai"
 import { MdMenuBook } from "react-icons/md";
-import HabitDataService from "../../services/users.js"
+import HabitDataService from "../../../services/users.js"
 import { useState } from "react";
 
 

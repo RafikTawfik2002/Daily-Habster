@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 
 
 
-const DisplayHabit = (props) => {
+const SingleHabit = (props) => {
     const initData = props.habit
     const initHabit = {
         desc: initData.desc,
@@ -28,4 +28,4 @@ const DisplayHabit = (props) => {
   )
 }
 
-export default DisplayHabit
+export default SingleHabit

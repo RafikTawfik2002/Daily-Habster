@@ -9,6 +9,14 @@ import { GoPlus } from "react-icons/go";
 const HabitPageTitle = (props) => {
 
   const user = props.user;
+  const addState = props.addState
+  const setAddState = props.setAddState
+
+  const addingState = () => {
+    if(!user){return;}
+    setAddState(!addState);
+  }
+
   console.log(user);
   return (
     <div className="text-white pt-9 lg:w-1/2 w-3/5   mx-auto">
@@ -30,8 +38,8 @@ const HabitPageTitle = (props) => {
 
           <div className="flex flex-row text-5xl lg:text-6xl text-right">
 
-          <Link  className="h-5/6 my-auto bg-slate-600 bg-opacity-30 border-2 border-slate-600 hover:bg-slate-400 rounded-lg mr-2 shadow-2xl" to="/Login">
-          <GoPlus className="my-auto p-3 "/></Link>
+          { !addState && <Link  onClick={addingState} className="h-5/6 my-auto bg-slate-600 bg-opacity-30 border-2 border-slate-600 hover:bg-slate-400 rounded-lg mr-2 shadow-2xl">
+          <GoPlus className="my-auto p-3 "/></Link>}
 
             <Link  className="h-5/6 my-auto bg-slate-600 bg-opacity-30 border-2 border-slate-600 hover:bg-slate-400 rounded-lg mr-2 shadow-2xl" to="/Login">
             <RiLogoutBoxRLine className="my-auto p-3 "/></Link>

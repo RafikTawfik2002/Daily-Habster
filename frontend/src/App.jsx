@@ -6,7 +6,6 @@ import User from "./pages/User";
 import { Routes as Switch, Route, Link } from "react-router-dom";
 import { useState } from "react";
 
-import Register from "./components/Register";
 
 const App = () => {
   const [logged, setLogged] = useState()

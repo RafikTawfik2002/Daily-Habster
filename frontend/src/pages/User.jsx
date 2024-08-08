@@ -1,8 +1,8 @@
 import React from "react";
 import { useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
-import Login from "../components/Login";
-import Register from "../components/Register";
+import Login from "../components/user/Login";
+import Register from "../components/user/Register";
 import HabitDataService from "../../services/users.js";
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";

@@ -4,7 +4,7 @@ import { BiUser } from "react-icons/bi"
 import {AiOutlineUnlock } from "react-icons/ai"
 import { MdMenuBook } from "react-icons/md";
 import { useState } from "react";
-import HabitDataService from "../../services/users.js"
+import HabitDataService from "../../../services/users.js"
 
 const Register = (props) => {
   const [message, setMessage] = useState("") 
