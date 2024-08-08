@@ -25,7 +25,6 @@ const AddHabit = (props) => {
       };
 
     const discrete = (on) => {
-        console.log("works on toggle")
         setHabit(prevState => ({
             ...prevState,
             discrete: on.toString()
@@ -34,6 +33,7 @@ const AddHabit = (props) => {
 
     const [duration, setDuration] = useState(false);
 
+    // function to validate form
     const validate = () => {
         if(!habit.desc || !habit.endDate){
             setMessage("Please fill all fields")
@@ -53,36 +53,34 @@ const AddHabit = (props) => {
         else{
             setMessage("")
         }
+        let endDateValue = habit.endDate
         if(duration){
-            const d = new Date();
-            d.setDate(d.getDate() + duration);
-            console.log("d : " + d)
-            setHabit(prevState => ({
-                ...prevState,
-                endDate: d
-              }));
+            let d = new Date();
+            d.setDate(d.getDate() + parseInt(habit.endDate));
+            endDateValue = d;
         }
-        // entries validated now sending a post request
-        console.log(habit)
-        HabitDataServices.createHabit(habit)
+        addHabit(endDateValue)
+        }
+        
+
+        // function to add habit
+        const addHabit = (endDateValue) => {
+            const newHabit = {
+                desc: habit.desc,
+                endDate: endDateValue,
+                archived: habit.archived,
+                success: habit.success,
+                discrete: habit.discrete,
+                userID: props.user.userID
+            }
+            
+            
+            HabitDataServices.createHabit(newHabit)
             .then((response) => {
-            console.log("did work " + response.data);
             props.setAddState(false);
             })
             .catch((error) => {
-                if (error.response) {
-                    // The request was made and the server responded with a status code
-                    // that falls out of the range of 2xx
-                    console.error('Response data:', error.response.data);
-                    console.error('Response status:', error.response.status);
-                    console.error('Response headers:', error.response.headers);
-                  } else if (error.request) {
-                    // The request was made but no response was received
-                    console.error('Request data:', error.request);
-                  } else {
-                    // Something happened in setting up the request that triggered an Error
-                    console.error('Error message:', error.message);
-                  }
+                console.log(error)
           });
 
     }
@@ -128,7 +126,7 @@ const AddHabit = (props) => {
                     value={habit.endDate}
                     onChange={handleInputChange}
                     name="endDate" 
-          className=" w-full py-0.5 px-0 text-sm  bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus-text-white focus:border-yellow-200 peer" placeholder="yyyy-mm-dd"
+          className=" w-full py-0.5 px-0 text-sm  bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus-text-white focus:border-yellow-200 peer" placeholder={ !duration ? "yyyy-mm-dd" : "Enter number of days"}
           />
           
         </div>

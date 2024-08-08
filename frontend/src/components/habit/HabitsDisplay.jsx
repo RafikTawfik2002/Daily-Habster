@@ -3,23 +3,30 @@ import HabitDataServices from "../../../services/habits";
 import SingleHabit from "./SingleHabit";
 
 const HabitsDisplay = (props) => {
-  console.log("Habit Diplay Working");
   const user = props.user;
 
   const [habits, setHabits] = useState([]);
 
-  //console.log("user is " + user.userID);
-
   const find = (user) => {
     HabitDataServices.findByUserId(user.userID)
       .then((response) => {
-        console.log("did work " + response.data);
         setHabits(response.data);
       })
       .catch((e) => {
-        console.log("didn't work " + e);
       });
   };
+
+  const deleteHabit = (id) => {
+    //console.log("removing habit with id " + id + " and index " + index)
+    HabitDataServices.deleteHabit(id)
+    .then(response => {
+      setHabits(prevState => {
+        return prevState.filter(habit => habit._id !== id);
+    });
+    })
+    .catch((e) => {
+    });
+  }
 
   useEffect(() => {if(user && user.userID){find(user)}}, [])
 
@@ -29,7 +36,7 @@ const HabitsDisplay = (props) => {
       <div>
         Trying To Display Something
         {habits.length > 0 ? (
-          habits.map((item) => <SingleHabit habit={item} />)
+          habits.map((item, index) => <SingleHabit habit={item} deleteHabit={() => deleteHabit(item._id)} key={item._id}/>)
         ) : (
           <div>{"No Habits to Display"}</div>
         )}
