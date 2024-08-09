@@ -32,15 +32,12 @@ const HabitsDisplay = (props) => {
 
   return (<>
       
-     <div className="text-white flex justify-center items-center">
-      <div>
-        Trying To Display Something
+     <div className="text-white w-full mx-auto flex flex-col justify-center items-center">
         {habits.length > 0 ? (
           habits.map((item, index) => <SingleHabit habit={item} deleteHabit={() => deleteHabit(item._id)} key={item._id}/>)
         ) : (
           <div>{"No Habits to Display"}</div>
         )}
-      </div> 
     </div>
     </>
   );

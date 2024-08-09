@@ -16,8 +16,12 @@ const MainHabits = (props) => {
 
   return (
     <>
-    <HabitPageTitle user={user} addState={addState} setAddState={setAddState}/>
+    <div className="fixed inset-x-0 top-0 pt-0 z-50">
+      <HabitPageTitle user={user} addState={addState} setAddState={setAddState}/>
+    </div>
+    <div className="relative mt-32 overflow-hidden">
     {(addState) ? (<AddHabit setAddState={setAddState} user={user}/>) : (<HabitsDisplay user={user}/>) }
+    </div>
     </>
   );
 };
