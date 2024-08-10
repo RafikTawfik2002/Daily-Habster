@@ -30,9 +30,6 @@ const App = () => {
       </Switch>
 
 
-      <div className="h-[100px]">
-
-      </div>
     
     </>
   );

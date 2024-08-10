@@ -45,20 +45,34 @@ const AddHabit = (props) => {
             setMessage("Invalid Date")
             return;
         }
-        const num = /^[1-9]\d*$/;
+        const num = /^[0-9]\d*$/;
         if(duration && !num.test(habit.endDate)){
             setMessage("Duration must be a number")
             return;
         }
-        else{
-            setMessage("")
-        }
         let endDateValue = habit.endDate
+        // check duration is at least 7
         if(duration){
+            const numOfDays = parseInt(habit.endDate);
+            console.log(numOfDays);
+            if(numOfDays < 7){setMessage("Duration must be at least 7 days"); return;}
             let d = new Date();
-            d.setDate(d.getDate() + parseInt(habit.endDate));
+            d.setDate(d.getDate() + numOfDays);
             endDateValue = d;
         }
+
+        // check countdown lasts at least 7 days
+
+        const now = new Date();
+        const sevenDays = new Date(now.getFullYear() + "-" + (now.getMonth()+1) + "-" + now.getDate());
+        sevenDays.setDate(sevenDays.getDate() + 6);
+
+        if(new Date(endDateValue).getTime() < sevenDays.getTime()){
+            setMessage("End Date must be at least 7 days in the future");
+            return;
+        }
+
+        //Add Habit to database
         addHabit(endDateValue)
         }
         
@@ -119,7 +133,7 @@ const AddHabit = (props) => {
         <div className="w-5/6 pt-6 mx-auto text-gray-300 focus-within:text-yellow-200 flex flex-col items-start">
 
         <label className='py-0.5'>{ !duration ? "Habit End Date" : "Duration in days"} </label>
-          <input type="text" 
+          <input type={!duration ? "date" : "text"}
                     id="endDate"
                     required
                     autoComplete="off"
