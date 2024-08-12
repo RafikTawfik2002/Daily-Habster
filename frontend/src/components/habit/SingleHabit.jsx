@@ -3,6 +3,7 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import { CiEdit } from "react-icons/ci";
 import { IoIosColorPalette } from "react-icons/io";
 import { FcExpand } from "react-icons/fc";
+import LinearBar from "../LinearBar";
 
 const SingleHabit = (props) => {
   const deleteHabit = props.deleteHabit;
@@ -28,76 +29,81 @@ const SingleHabit = (props) => {
   };
 
   return (
-    <div className={` flex flex-row font-thin justify-between w-3/5 text-gray-200  rounded-3xl border-blue-900 rounded-tl-none rounded-bl-none bg-${color}  border-2 bg-opacity-60 blur-30 my-2 backdrop-filter backdrop-blur-xl`}>
+    <div className={` flex flex-col font-thin justify-between w-3/5 text-gray-200  rounded-3xl border-blue-900 rounded-tl-none rounded-bl-none bg-${color}  border-2 bg-opacity-60 blur-30 my-2 backdrop-filter backdrop-blur-xl`}>
       
+      <div className="flex flex-row w-full">
 
-       {/*  Main Display of Habit Data */}
-      <div className="flex flex-col w-full py-3 justify-center">
-          <div className={`px-3 mb-1 rounded-lg  text-base md:text-xl lg:text-4xl self-start leading-extra-tight`}>
-            {habit.desc}
-          </div>
+                  {/*  Main Display of Habit Data */}
+                  <div className="flex flex-col w-full py-3 justify-center">
+                      <div className={`px-3 mb-1 rounded-lg  text-base md:text-xl lg:text-4xl self-start leading-extra-tight`}>
+                        {habit.desc}
+                      </div>
 
-          <div className="flex flex-row items-center">
-                  <div className="pl-3 flex flex-col ">
-                    <div className="text-xs hidden md:hidden lg:block lg:text-sm text-center">Started: &nbsp;</div>
-                    <div className="text-xs hidden md:hidden lg:block lg:text-sm text-center ">Ends: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div> 
-                    
-                </div>
-                <div className=" flex flex-col ">
-                <div className="self-center text-xs md:text-xs lg:text-sm"><i>{dateRender(habit.createdAt)}</i></div>
-                  <div className="self-center text-xs md:text-xs lg:text-sm"><i>{dateRender(habit.endDate)}</i></div>
-                </div>
-          </div>
-      </div>
+                      <div className="flex flex-row items-center">
+                              <div className="pl-3 flex flex-col ">
+                                <div className="text-xs hidden md:hidden lg:block lg:text-sm text-center">Started: &nbsp;</div>
+                                <div className="text-xs hidden md:hidden lg:block lg:text-sm text-center ">Ends: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div> 
+                                
+                            </div>
+                            <div className=" flex flex-col ">
+                            <div className="self-center text-xs md:text-xs lg:text-sm"><i>{dateRender(habit.createdAt)}</i></div>
+                              <div className="self-center text-xs md:text-xs lg:text-sm"><i>{dateRender(habit.endDate)}</i></div>
+                            </div>
+                      </div>
+                  </div>
 
-      
+                  
 
-      {/*  Left Side of the habit display containing icons */}
-      <div className="flex flex-col justify-center">
-        <div className="flex flex-row  m-3 mb-1">
+                  {/*  Left Side of the habit display containing icons */}
+                  <div className="flex flex-col justify-center">
+                    <div className="flex flex-row  m-3 mb-1">
 
-          
+                      
 
-          <div 
-          className="p-2 mx-1 cursor-pointer text-md lg:text-2xl my-auto bg-black bg-opacity-30 border-2 border-slate-600 hover:bg-slate-400 rounded-lg shadow-2xl"
-          onClick={() => setEditState(true)}
-          >
-        <CiEdit/>
-          </div>
+                      <div 
+                      className="p-2 mx-1 cursor-pointer text-md lg:text-2xl my-auto bg-black bg-opacity-30 border-2 border-slate-600 hover:bg-slate-400 rounded-lg shadow-2xl"
+                      onClick={() => setEditState(true)}
+                      >
+                    <CiEdit/>
+                      </div>
 
-          <div 
-          className="p-2 mx-1 cursor-pointer text-md lg:text-2xl my-auto bg-black bg-opacity-30 border-2 border-slate-600 hover:bg-slate-400 rounded-lg shadow-2xl"
-          onClick={deleteHabit}
-          >
-        <RiDeleteBin6Line/>
-          </div>
+                      <div 
+                      className="p-2 mx-1 cursor-pointer text-md lg:text-2xl my-auto bg-black bg-opacity-30 border-2 border-slate-600 hover:bg-slate-400 rounded-lg shadow-2xl"
+                      onClick={deleteHabit}
+                      >
+                    <RiDeleteBin6Line/>
+                      </div>
 
-        </div>
+                    </div>
 
 
-        <div className="flex flex-row justify-center  m-3 mt-1">
+                    <div className="flex flex-row justify-center  m-3 mt-1">
 
-          <div 
-          className="p-2 mx-1 cursor-pointer text-md lg:text-2xl my-auto bg-black bg-opacity-30 border-2 border-slate-600 hover:bg-slate-400 rounded-lg shadow-2xl"
-          
-          >
-        <FcExpand/>
-          </div>
+                      <div 
+                      className="p-2 mx-1 cursor-pointer text-md lg:text-2xl my-auto bg-black bg-opacity-30 border-2 border-slate-600 hover:bg-slate-400 rounded-lg shadow-2xl"
+                      
+                      >
+                    <FcExpand/>
+                      </div>
 
-          <div 
-          className="p-2 mx-1 cursor-pointer text-md lg:text-2xl my-auto bg-black bg-opacity-30 border-2 border-slate-600 hover:bg-slate-400 rounded-lg shadow-2xl"
-          
-          >
-        <IoIosColorPalette/>
-          </div>
-        </div>
+                      <div 
+                      className="p-2 mx-1 cursor-pointer text-md lg:text-2xl my-auto bg-black bg-opacity-30 border-2 border-slate-600 hover:bg-slate-400 rounded-lg shadow-2xl"
+                      
+                      >
+                    <IoIosColorPalette/>
+                      </div>
+                    </div>
 
-       
+                  
 
-      </div>
+                  </div>
     
         
-      {/* {""+editState} */}
+      </div>
+
+      <div className="p-3 pt-1 w-full">
+        {!habit.discrete ? <LinearBar start={habit.createdAt} end={habit.endDate} /> : "I am discrete"}
+      </div>
      
 
  
