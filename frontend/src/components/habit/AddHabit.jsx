@@ -84,7 +84,7 @@ const AddHabit = (props) => {
                 endDate: endDateValue,
                 archived: habit.archived,
                 success: habit.success,
-                discrete: ""+duration,
+                discrete: habit.discrete,
                 userID: props.user.userID
             }
             

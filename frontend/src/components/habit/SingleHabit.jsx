@@ -4,6 +4,7 @@ import { CiEdit } from "react-icons/ci";
 import { IoIosColorPalette } from "react-icons/io";
 import { FcExpand } from "react-icons/fc";
 import LinearBar from "../LinearBar";
+import BlocksBar from "../BlocksBar";
 
 const SingleHabit = (props) => {
   const deleteHabit = props.deleteHabit;
@@ -50,6 +51,12 @@ const SingleHabit = (props) => {
                               <div className="self-center text-xs md:text-xs lg:text-sm"><i>{dateRender(habit.endDate)}</i></div>
                             </div>
                       </div>
+
+
+                      <div className="p-3 pt-1 w-full">
+                        {!habit.discrete ? <LinearBar start={habit.createdAt} end={habit.endDate} /> : <BlocksBar start={habit.createdAt} end={habit.endDate} />}
+                      </div>
+     
                   </div>
 
                   
@@ -101,10 +108,6 @@ const SingleHabit = (props) => {
         
       </div>
 
-      <div className="p-3 pt-1 w-full">
-        {!habit.discrete ? <LinearBar start={habit.createdAt} end={habit.endDate} /> : "I am discrete"}
-      </div>
-     
 
  
     </div>
