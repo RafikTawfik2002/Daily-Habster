@@ -62,7 +62,7 @@ router.post('/', async (request, response) => {
             success: request.body.success,
             discrete: request.body.discrete,
             userID: new ObjectId(request.body.userID),
-            endDate: request.body.endDate
+            endDate: request.body.endDate,
         };
 
         const habit = await Habit.create(newhabit); //using a mongoose.model which has a mongoose Schema

@@ -5,11 +5,16 @@ import { IoIosColorPalette } from "react-icons/io";
 import { FcExpand } from "react-icons/fc";
 import LinearBar from "../LinearBar";
 import BlocksBar from "../BlocksBar";
+import { MdRemoveRedEye } from "react-icons/md";
+import EditModal from "./EditModal";
 
 const SingleHabit = (props) => {
   const deleteHabit = props.deleteHabit;
-  const [editState, setEditState] = useState(false)
-  const [color, setColor] = useState('blue-900')
+  const setEdit = props.setEdit;
+
+  
+
+  
 
   const initData = props.habit;
   const [habit, setHabit] = useState(initData);
@@ -30,7 +35,7 @@ const SingleHabit = (props) => {
   };
 
   return (
-    <div className={` flex flex-col font-thin justify-between w-3/5 text-gray-200  rounded-3xl border-blue-900 rounded-tl-none rounded-bl-none bg-${color}  border-2 bg-opacity-60 blur-30 my-2 backdrop-filter backdrop-blur-xl`}>
+    <div className={` flex flex-col font-thin justify-between w-3/5 text-gray-200  rounded-3xl border-blue-900 rounded-tl-none rounded-bl-none bg-blue-900  border-2 bg-opacity-80 blur-30 my-2 backdrop-filter backdrop-blur-xl`}>
       
       <div className="flex flex-row w-full">
 
@@ -53,29 +58,32 @@ const SingleHabit = (props) => {
                       </div>
 
 
-                      <div className="p-3 pt-1 w-full">
-                        {!habit.discrete ? <LinearBar start={habit.createdAt} end={habit.endDate} /> : <BlocksBar start={habit.createdAt} end={habit.endDate} />}
-                      </div>
+                    
      
                   </div>
 
                   
 
                   {/*  Left Side of the habit display containing icons */}
-                  <div className="flex flex-col justify-center">
-                    <div className="flex flex-row  m-3 mb-1">
+                  <div className="flex flex-col justify-between py-3">
+                    <div className="flex flex-row pr-2">
 
+                    <div 
+                      className="p-2 mr-1 cursor-pointer text-md lg:text-2xl my-auto bg-black bg-opacity-30 border-2 border-slate-600 hover:bg-slate-400 rounded-lg shadow-2xl"
                       
+                      >
+                    <MdRemoveRedEye/>
+                      </div>
 
                       <div 
-                      className="p-2 mx-1 cursor-pointer text-md lg:text-2xl my-auto bg-black bg-opacity-30 border-2 border-slate-600 hover:bg-slate-400 rounded-lg shadow-2xl"
-                      onClick={() => setEditState(true)}
+                      className="p-2 mr-1 cursor-pointer text-md lg:text-2xl my-auto bg-black bg-opacity-30 border-2 border-slate-600 hover:bg-slate-400 rounded-lg shadow-2xl"
+                      onClick={setEdit}
                       >
                     <CiEdit/>
                       </div>
 
                       <div 
-                      className="p-2 mx-1 cursor-pointer text-md lg:text-2xl my-auto bg-black bg-opacity-30 border-2 border-slate-600 hover:bg-slate-400 rounded-lg shadow-2xl"
+                      className="p-2 cursor-pointer text-md lg:text-2xl my-auto bg-black bg-opacity-30 border-2 border-slate-600 hover:bg-slate-400 rounded-lg shadow-2xl"
                       onClick={deleteHabit}
                       >
                     <RiDeleteBin6Line/>
@@ -83,29 +91,15 @@ const SingleHabit = (props) => {
 
                     </div>
 
-
-                    <div className="flex flex-row justify-center  m-3 mt-1">
-
-                      <div 
-                      className="p-2 mx-1 cursor-pointer text-md lg:text-2xl my-auto bg-black bg-opacity-30 border-2 border-slate-600 hover:bg-slate-400 rounded-lg shadow-2xl"
-                      
-                      >
-                    <FcExpand/>
-                      </div>
-
-                      <div 
-                      className="p-2 mx-1 cursor-pointer text-md lg:text-2xl my-auto bg-black bg-opacity-30 border-2 border-slate-600 hover:bg-slate-400 rounded-lg shadow-2xl"
-                      
-                      >
-                    <IoIosColorPalette/>
-                      </div>
-                    </div>
-
                   
 
                   </div>
     
         
+      </div>
+
+      <div className="p-3 pt-1 w-full">
+                        {!habit.discrete ? <LinearBar start={habit.createdAt} end={habit.endDate} /> : <BlocksBar start={habit.createdAt} end={habit.endDate} />}
       </div>
 
 

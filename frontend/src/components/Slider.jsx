@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 
 const Slider = (props) => {
     const setter = props.setter 
-    const [on, setOn] = useState(false);
+    const [on, setOn] = useState(props.initial || false);
     const toggle = () => {
         if(on){
             setOn(false)

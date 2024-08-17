@@ -105,11 +105,11 @@ const AddHabit = (props) => {
 
     <div className=" pt-9 w-[45%]  mx-auto">
        
-      <div className=" bg-slate-800 border text-gray-300 border-slate-400 rounded-md pl-4 pr-4 pt-2 shadow-lg backdrop-filter backdrop-blur-sm bg-opacity-30 justify-center pb-9">
+      <div className=" bg-slate-800 border text-gray-300 border-slate-400 rounded-md pl-4 pr-4 pt-2 shadow-lg backdrop-filter backdrop-blur-md bg-opacity-30 justify-center pb-9">
 
             <TbArrowBackUp onClick={() => {props.setAddState(false)}} className="py-0  cursor-pointer text-3xl p-1 rounded-md  my-auto hover:bg-slate-300 hover:bg-opacity-30 "/>
 
-        <h1 className="text-2xl text-gray-300  text-center rounded-lg mb-6 p-2  ">Start a new habit!</h1>
+        <h1 className="text-2xl text-gray-300  text-center rounded-lg mb-6 p-2  ">You are about to start a new habit !</h1>
         <div className='flex justify-center '>
         <span className=" text-sm text-red-700 bg-white opacity-60 px-0.5 rounded-md">{message}</span>
         </div>
@@ -165,6 +165,7 @@ const AddHabit = (props) => {
             </div>
         </div>
 
+            
         <div className='flex justify-center mt-3'>
 
         <button className="w-3/5 mb-4 text-[18px] mt-8 rounded-full bg-white text-emerald-800 hover:bg-emerald-600 hover:text-white p-2 transition-colors duration-150  mx-auto bg-opacity-60 shadow-lg " onClick={() => validate()}>Create Habit</button>

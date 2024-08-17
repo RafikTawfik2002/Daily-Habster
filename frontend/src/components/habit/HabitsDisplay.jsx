@@ -1,12 +1,22 @@
 import React, { useEffect, useState } from "react";
 import HabitDataServices from "../../../services/habits";
 import SingleHabit from "./SingleHabit";
+import EditModal from "./EditModal";
 
 const HabitsDisplay = (props) => {
   const user = props.user;
 
   const [habits, setHabits] = useState([]);
+  const [edit, setEdit] = useState([false, null]);
 
+  useEffect( () => {
+    if(edit[0]){
+      document.body.classList.add('overflow-hidden');
+    }
+    else{
+      document.body.classList.remove('overflow-hidden');
+    }
+  }, [edit])
   const find = (user) => {
     HabitDataServices.findByUserId(user.userID)
       .then((response) => {
@@ -34,11 +44,12 @@ const HabitsDisplay = (props) => {
       
      <div className="text-white w-full mx-auto flex flex-col justify-center items-center">
         {habits.length > 0 ? (
-          habits.map((item, index) => <SingleHabit habit={item} deleteHabit={() => deleteHabit(item._id)} key={item._id}/>)
+          habits.map((item, index) => <SingleHabit habit={item} deleteHabit={() => deleteHabit(item._id)} setEdit={() => setEdit([true, item])} key={item._id}/>)
         ) : (
           <div>{"No Habits to Display"}</div>
         )}
     </div>
+    {edit[0] && <EditModal habit={edit[1]} setEdit={() => setEdit([false, null])}/>}
     </>
   );
 };

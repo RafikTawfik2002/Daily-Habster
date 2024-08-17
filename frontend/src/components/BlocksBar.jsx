@@ -67,7 +67,7 @@ const BlocksBar = (props) => {
         for(let i = 0; i < days; i++){
             arr[i] = 0;
         }
-        let i = progress
+        let i = progress - 1
         return arr.map(() =>  
         <div className={` flex-1 h-full ${i-- > 0 ? "bg-green-600" : "bg-white"} rounded-lg border-blue-900 border-2 opacity-70`}>
           

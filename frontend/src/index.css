@@ -7,5 +7,6 @@
 { 
     font-size:x-large;
     filter: invert(100%) sepia(9%) saturate(4612%) hue-rotate(177deg) brightness(87%) contrast(98%);
+    
 }
 ::-webkit-calendar-picker-indicator:hover { cursor: pointer; }
