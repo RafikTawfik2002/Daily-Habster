@@ -12,13 +12,13 @@ const HabitsDisplay = (props) => {
   const [del, setDel] = useState([false, null]);
 
   useEffect( () => {
-    if(edit[0]){
+    if(edit[0] || del[0]){
       document.body.classList.add('overflow-hidden');
     }
     else{
       document.body.classList.remove('overflow-hidden');
     }
-  }, [edit])
+  }, [edit, del])
   const find = (user) => {
     HabitDataServices.findByUserId(user.userID)
       .then((response) => {
