@@ -14,7 +14,7 @@ class HabitDataService {
     }
 
     updateHabit(id, data) {
-        return http.put("/habit", data);
+        return http.put(`/habit/${id}`, data);
     }
 
     deleteHabit(id) {

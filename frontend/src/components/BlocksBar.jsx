@@ -18,9 +18,6 @@ const BlocksBar = (props) => {
 
     const days = Math.ceil((maxMilli) / (1000*60*60*24))
 
-
-    console.log("Days: " + days)
-
     const currDate = new Date()
     const startDate = new Date(start)
 
@@ -30,17 +27,14 @@ const BlocksBar = (props) => {
     && currDate.getDate() == startDate.getDate() 
     )
 
-    console.log("Is same day: " + sameday)
-
 
     const zeroStartDate = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
     const initProgress = Math.ceil(( new Date().getTime() - zeroStartDate.getTime()) / (1000*60*60*24))
 
-    console.log("start date: "+ zeroStartDate)
-    console.log("start date milli: "+ zeroStartDate.getTime())
+
 
     const [progress, setProgress] = useState(sameday ? 0 : initProgress)
-    console.log("Initial progress isss: " +progress);
+
 
     //const [progress, setProgress] = useState(1) 
 

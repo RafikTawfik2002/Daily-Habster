@@ -23,7 +23,6 @@ const Login = (props) => {
 
 
   const validate = async () => {
-    console.log(user);
     if(!user.username || !user.password){
       setMessage("Please fill all fields")
       return;

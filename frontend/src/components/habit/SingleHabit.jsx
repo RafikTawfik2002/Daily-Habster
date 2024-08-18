@@ -7,32 +7,19 @@ import LinearBar from "../LinearBar";
 import BlocksBar from "../BlocksBar";
 import { MdRemoveRedEye } from "react-icons/md";
 import EditModal from "./EditModal";
+import DateTools from "../../DateTools";
 
 const SingleHabit = (props) => {
   const deleteHabit = props.deleteHabit;
-  const setEdit = props.setEdit;
-
-  
-
-  
+  const setEdit = props.setEdit;  
 
   const initData = props.habit;
   const [habit, setHabit] = useState(initData);
 
-  const dateRender = (date) => {
-    const d = new Date(date);
+  const startEdit = () => {
+    setEdit([true, habit, setHabit])
+  }
 
-    const year = d.getFullYear();
-    const month = d.getMonth();
-    const day = d.getDate();
-
-    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
-      "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
-    ];
-    return (
-      [day + " ", monthNames[month], " "+year]
-    );
-  };
 
   return (
     <div className={` flex flex-col font-thin justify-between w-3/5 text-gray-200  rounded-3xl border-blue-900 rounded-tl-none rounded-bl-none bg-blue-900  border-2 bg-opacity-80 blur-30 my-2 backdrop-filter backdrop-blur-xl`}>
@@ -52,8 +39,9 @@ const SingleHabit = (props) => {
                                 
                             </div>
                             <div className=" flex flex-col ">
-                            <div className="self-center text-xs md:text-xs lg:text-sm"><i>{dateRender(habit.createdAt)}</i></div>
-                              <div className="self-center text-xs md:text-xs lg:text-sm"><i>{dateRender(habit.endDate)}</i></div>
+                            <div className="self-center text-xs md:text-xs lg:text-sm"><i>{DateTools.dateRender(habit.createdAt)}</i></div>
+                              <div className="self-center text-xs md:text-xs lg:text-sm"><i>
+                                {DateTools.dateRender(DateTools.DurationToDate(habit.createdAt, habit.duration))}</i></div>
                             </div>
                       </div>
 
@@ -77,7 +65,7 @@ const SingleHabit = (props) => {
 
                       <div 
                       className="p-2 mr-1 cursor-pointer text-md lg:text-2xl my-auto bg-black bg-opacity-30 border-2 border-slate-600 hover:bg-slate-400 rounded-lg shadow-2xl"
-                      onClick={setEdit}
+                      onClick={startEdit}
                       >
                     <CiEdit/>
                       </div>
@@ -99,7 +87,7 @@ const SingleHabit = (props) => {
       </div>
 
       <div className="p-3 pt-1 w-full">
-                        {!habit.discrete ? <LinearBar start={habit.createdAt} end={habit.endDate} /> : <BlocksBar start={habit.createdAt} end={habit.endDate} />}
+                        {!habit.discrete ? <LinearBar start={habit.createdAt} duration={habit.duration} /> : <BlocksBar start={habit.createdAt} end={habit.duration} />}
       </div>
 
 

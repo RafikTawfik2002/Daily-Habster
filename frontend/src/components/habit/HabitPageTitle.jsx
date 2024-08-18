@@ -18,7 +18,7 @@ const HabitPageTitle = (props) => {
     setAddState(!addState);
   }
 
-  console.log(user);
+
   return (
 
     <div className="text-white font-thin  lg:w-3/3 w-5/5 ">

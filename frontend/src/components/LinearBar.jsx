@@ -1,32 +1,31 @@
 import React from 'react'
 import { useState, useEffect } from 'react'
+import DateTools from '../DateTools'
 
 
 const LinearBar = (props) => {
     const start = props.start
-    const end = props.end
+    const duration = props.duration
     // bars will indicate when a habit is done
     // and will chaneg the state to success
     // it will also track last updated to get
     // rid of habit if not followed up by user
     const setHabitState = props.setHabitState
 
-    const startMilli = new Date(start).getTime();
-    const maxMilli = new Date(end).getTime() - startMilli;
-    const currMilli = new Date().getTime() - startMilli;
 
-    const [progress, setProgress] = useState(currMilli / maxMilli)
+    const [progress, setProgress] = useState(DateTools.Percentage(start, duration));
 
     //const [progress, setProgress] = useState(1) 
 
 
     useEffect(() => {
-        const start = Date.now();
+
         
         const interval = setInterval(() => {
-          const newTime = (new Date().getTime() - startMilli) / maxMilli;
-          const newProgress = Math.min(newTime, 1);
-          setProgress(newProgress);
+
+          const newProgress = DateTools.Percentage(start, duration)
+
+          setProgress(Math.min(newProgress, 1));
     
           if (newProgress >= 1) {
 
@@ -42,7 +41,7 @@ const LinearBar = (props) => {
       <div
         className={`text-black absolute top-0 left-0 h-full bg-green-600 rounded-md ${progress < 100 && 'rounded-r-none'}`}
         style={{ width: `${Math.max(progress*100, 1)}%` }}
-      >{progress}</div>
+      >{progress} </div>
     </div>
      
     </div>

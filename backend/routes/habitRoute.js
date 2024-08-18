@@ -51,7 +51,7 @@ router.get('/user/:user', async (request, response) => {
 router.post('/', async (request, response) => {
     try {
         //input validation
-        if (!request.body.desc || !request.body.archived || !request.body.discrete || !request.body.userID || !request.body.endDate || !request.body.success){
+        if (!request.body.desc || !request.body.archived || !request.body.discrete || !request.body.userID || !request.body.duration || !request.body.success){
             return response.status(400).send({message: 'Send all required fields'});
         }
 
@@ -62,7 +62,7 @@ router.post('/', async (request, response) => {
             success: request.body.success,
             discrete: request.body.discrete,
             userID: new ObjectId(request.body.userID),
-            endDate: request.body.endDate,
+            duration: request.body.duration,
         };
 
         const habit = await Habit.create(newhabit); //using a mongoose.model which has a mongoose Schema
@@ -77,7 +77,7 @@ router.post('/', async (request, response) => {
 // Update a habit
 router.put('/:id', async (request, response) => {
     try{
-        if (!request.body.desc || !request.body.archived || !request.body.discrete || !request.body.endDate){
+        if (!request.body.desc || !request.body.archived || !request.body.discrete || !request.body.duration){
             return response.status(400).send({message: 'Send all required fields'});
         }
         const { id } = request.params;

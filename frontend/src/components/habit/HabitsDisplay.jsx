@@ -44,12 +44,12 @@ const HabitsDisplay = (props) => {
       
      <div className="text-white w-full mx-auto flex flex-col justify-center items-center">
         {habits.length > 0 ? (
-          habits.map((item, index) => <SingleHabit habit={item} deleteHabit={() => deleteHabit(item._id)} setEdit={() => setEdit([true, item])} key={item._id}/>)
+          habits.map((item, index) => <SingleHabit habit={item} deleteHabit={() => deleteHabit(item._id)} setEdit={setEdit} key={item._id}/>)
         ) : (
           <div>{"No Habits to Display"}</div>
         )}
     </div>
-    {edit[0] && <EditModal habit={edit[1]} setEdit={() => setEdit([false, null])}/>}
+    {edit[0] && <EditModal habit={edit[1]} setHabit={edit[2]} setEdit={() => setEdit([false, null, null])}/>}
     </>
   );
 };

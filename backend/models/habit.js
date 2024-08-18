@@ -23,8 +23,8 @@ const habitSchema = mongoose.Schema(
             type: ObjectId,
             required: true
         },
-        endDate: {
-            type: Date,
+        duration: {
+            type: Number,
             required: true
         }
     },
