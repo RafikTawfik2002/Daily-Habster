@@ -11,13 +11,18 @@ import DateTools from "../../DateTools";
 
 const SingleHabit = (props) => {
   const deleteHabit = props.deleteHabit;
-  const setEdit = props.setEdit;  
+  const setEdit = props.setEdit; 
+  const setDel = props.setDel;   
 
   const initData = props.habit;
   const [habit, setHabit] = useState(initData);
 
   const startEdit = () => {
     setEdit([true, habit, setHabit])
+  }
+
+  const startDel = () => {
+    setDel([true, habit])
   }
 
 
@@ -72,7 +77,7 @@ const SingleHabit = (props) => {
 
                       <div 
                       className="p-2 cursor-pointer text-md lg:text-2xl my-auto bg-black bg-opacity-30 border-2 border-slate-600 hover:bg-slate-400 rounded-lg shadow-2xl"
-                      onClick={deleteHabit}
+                      onClick={startDel}
                       >
                     <RiDeleteBin6Line/>
                       </div>

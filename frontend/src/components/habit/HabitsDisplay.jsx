@@ -2,12 +2,14 @@ import React, { useEffect, useState } from "react";
 import HabitDataServices from "../../../services/habits";
 import SingleHabit from "./SingleHabit";
 import EditModal from "./EditModal";
+import DeleteModal from "./DeleteModal";
 
 const HabitsDisplay = (props) => {
   const user = props.user;
 
   const [habits, setHabits] = useState([]);
-  const [edit, setEdit] = useState([false, null]);
+  const [edit, setEdit] = useState([false, null, null]);
+  const [del, setDel] = useState([false, null]);
 
   useEffect( () => {
     if(edit[0]){
@@ -44,12 +46,13 @@ const HabitsDisplay = (props) => {
       
      <div className="text-white w-full mx-auto flex flex-col justify-center items-center">
         {habits.length > 0 ? (
-          habits.map((item, index) => <SingleHabit habit={item} deleteHabit={() => deleteHabit(item._id)} setEdit={setEdit} key={item._id}/>)
+          habits.map((item, index) => <SingleHabit habit={item} deleteHabit={() => deleteHabit(item._id)} setDel={setDel} setEdit={setEdit}  key={item._id}/>)
         ) : (
           <div>{"No Habits to Display"}</div>
         )}
     </div>
     {edit[0] && <EditModal habit={edit[1]} setHabit={edit[2]} setEdit={() => setEdit([false, null, null])}/>}
+    {del[0] && <DeleteModal habit={del[1]} setDel={() => setDel([false, null, null])} deleteHabit={() => deleteHabit(del[1]._id)}/>}
     </>
   );
 };

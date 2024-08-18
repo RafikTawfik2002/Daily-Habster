@@ -57,12 +57,18 @@ const AddHabit = (props) => {
         }
 
         if(isDuration && habit.duration < 7){
-            setMessage("Duration must be at least 7")
+            setMessage("Habits must last at least 7 days")
             return;
         }
         if(!isDuration){
             //DateTools.DateToDuration(new Date(), habit.duration)
-            addHabit(DateTools.DateToDuration(new Date(), new Date(habit.duration.split('-').map(Number))))
+            const durationVal = DateTools.DateToDuration(new Date(), new Date(habit.duration.split('-').map(Number)))
+            if(durationVal < 7){
+                setMessage("Habits must last at least 7 days ")
+                return;
+            }
+    
+            addHabit(durationVal)
         }
         else if(isDuration){
             addHabit(habit.duration)
