@@ -22,13 +22,23 @@ const EditModal = (props) => {
 
     const [isDuration, setIsDuration] = useState(false);
 
-
     useEffect( () => {
         setHabit(prevState => ({
             ...prevState,
             duration : ""
           }));
     }, [isDuration])
+
+    useEffect( () => {
+        console.log("use effect ran: "+  DateTools.DateToInput(DateTools.DurationToDate(props.habit.createdAt, props.habit.duration)))
+        setHabit(prevState => ({
+            ...prevState,
+            duration : DateTools.DateToInput(DateTools.DurationToDate(props.habit.createdAt, props.habit.duration))
+          }));
+    }, [])
+
+
+
 
     const handleInputChange = event => {
         const { name, value } = event.target; //get name and value from the target
@@ -41,7 +51,7 @@ const EditModal = (props) => {
     const discrete = (on) => {
         setHabit(prevState => ({
             ...prevState,
-            discrete: on.toString()
+            discrete: on
           }))
     }
 
@@ -108,7 +118,7 @@ const EditModal = (props) => {
             HabitDataServices.updateHabit(habit._id, newHabit)
             .then((response) => {
                 props.setHabit(previous => ({...previous, desc: habit.desc,
-                    duration: Number(duration)}))
+                    duration: Number(duration), discrete: habit.discrete}))
                 props.setEdit();
             })
             .catch((error) => {
