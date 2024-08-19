@@ -4,6 +4,7 @@ import SingleHabit from "./SingleHabit";
 import EditModal from "./EditModal";
 import DeleteModal from "./DeleteModal";
 import DateTools from "../../DateTools";
+import ViewModal from "./ViewModal";
 
 const HabitsDisplay = (props) => {
   const user = props.user;
@@ -11,6 +12,8 @@ const HabitsDisplay = (props) => {
   const [habits, setHabits] = useState([]);
   const [edit, setEdit] = useState([false, null, null]);
   const [del, setDel] = useState([false, null]);
+
+  const [view, setView] = useState([false, null])
 
   useEffect( () => {
     if(edit[0] || del[0]){
@@ -100,13 +103,17 @@ const HabitsDisplay = (props) => {
       
      <div className="text-white w-full mx-auto flex flex-col justify-center items-center">
         {habits.length > 0 ? (
-          habits.map((item, index ) => <SingleHabit index={index+1} habit={item} deleteHabit={() => deleteHabit(item._id)} setDel={setDel} setEdit={setEdit}  key={item._id}/>)
+          habits.map((item, index ) =>
+             
+          <SingleHabit index={index+1} habit={item} deleteHabit={() => deleteHabit(item._id)} setDel={setDel} setEdit={setEdit}  key={item._id} setView={setView}/>)
         ) : (
           <div>{"No Habits to Display"}</div>
         )}
     </div>
     {edit[0] && <EditModal habit={edit[1]} setHabit={edit[2]} setEdit={() => setEdit([false, null, null])}/>}
     {del[0] && <DeleteModal habit={del[1]} setDel={() => setDel([false, null, null])} deleteHabit={() => deleteHabit(del[1]._id)}/>}
+    {view[0] && <ViewModal habit={view[1]} exit={() => setView([false, null])}/>}
+
     </>
   );
 };

@@ -75,7 +75,7 @@ const SingleHabit = (props) => {
 
                     <div 
                       className="duration-300 p-2 mr-1 cursor-pointer text-md lg:text-2xl my-auto bg-black bg-opacity-30 border-2 border-slate-600 hover:bg-gray-600 rounded-lg shadow-2xl"
-                      
+                      onClick={() => {props.setView([true, habit])}}
                       >
                     <MdRemoveRedEye/>
                       </div>

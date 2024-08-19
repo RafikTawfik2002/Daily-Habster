@@ -65,6 +65,24 @@ class DateTools {
 
 
       }
+
+      exact(d){
+        const date = new Date(d)
+        const hours = date.getHours();
+        const minutes = date.getMinutes();
+        const dayTime = hours > 12 ? "PM" : "AM";
+        const newHours = hours > 12 ? hours - 12 : hours
+
+        
+        return this.dateRender(date) + "  " + newHours + ":" + minutes + " " + dayTime;
+      }
+
+      exactDurationToDate(s, duration){
+        const start = new Date(s)
+        start.setDate(start.getDate() + duration - 1 );
+        //console.log("Date after duration is: " + startFlat);
+        return start;
+    }
 }
 
 export default new DateTools();
