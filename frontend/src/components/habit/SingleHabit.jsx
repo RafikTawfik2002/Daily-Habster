@@ -10,6 +10,7 @@ import EditModal from "./EditModal";
 import DateTools from "../../DateTools";
 
 const SingleHabit = (props) => {
+  
   const deleteHabit = props.deleteHabit;
   const setEdit = props.setEdit; 
   const setDel = props.setDel;   
@@ -37,8 +38,9 @@ const SingleHabit = (props) => {
                         <span className="font-thin"><i>{props.index + ") "}</i></span>{habit.desc}
                       </div>
 
-                      <div className="flex flex-row items-center">
+                      <div className="flex flex-row items-center mt-2">
                               <div className="pl-3 flex flex-col ">
+                               
                                 <div className="text-xs hidden md:hidden lg:block lg:text-sm text-center">Started: &nbsp;</div>
                                 <div className="text-xs hidden md:hidden lg:block lg:text-sm text-center ">Ends: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div> 
 
@@ -60,6 +62,7 @@ const SingleHabit = (props) => {
 
                       <div className="mt-1 pl-3 text-xs md:text-xs lg:text-sm">
                        <i>Duration: {" " + habit.duration} days</i>
+                       <div className="text-xs  lg:text-sm">archived: {""+habit.archived}</div>
                       </div>
 
 
@@ -71,7 +74,7 @@ const SingleHabit = (props) => {
 
                   {/*  Left Side of the habit display containing icons */}
                   <div className="flex flex-col justify-between py-3">
-                    <div className="flex flex-row pr-2">
+                    <div className="flex flex-row pr-3">
 
                     <div 
                       className="duration-300 p-2 mr-1 cursor-pointer text-md lg:text-2xl my-auto bg-black bg-opacity-30 border-2 border-slate-600 hover:bg-gray-600 rounded-lg shadow-2xl"
@@ -104,7 +107,8 @@ const SingleHabit = (props) => {
       </div>
 
       <div className="p-3 pt-1 w-full">
-                        {!habit.discrete ? <LinearBar start={habit.createdAt} duration={habit.duration} /> : <BlocksBar start={habit.createdAt} end={habit.duration} />}
+                        {!habit.discrete ? <LinearBar setHabit={setHabit} habit={habit} start={habit.createdAt} duration={habit.duration} /> :
+                         <BlocksBar start={habit.createdAt} end={habit.duration} />}
       </div>
 
 
@@ -115,32 +119,5 @@ const SingleHabit = (props) => {
 
 export default SingleHabit;
 
-// <div className="text-4xl flex flex-row items-center pb-2">
 
-// <div className="p-2">
-
-// </div>
-
-// <div className="ml-2 text-3xl shadow-inner shadow-blue-950 bg-opacity-7 rounded-md border-white border-0 bg-blue-900 p-3">{habit.desc}</div>
-// <div className="text-sm">
-//   <button onClick={() => setColor('bg-blue-700')}>blue</button><br />
-//   <button onClick={() => setColor('bg-red-950')}>red</button><br />
-//   <button onClick={() => setColor('bg-green-300')}>green</button><br />
-//   <button onClick={() => setColor('bg-yellow-900')}>green</button><br />
-// </div>
-
-// </div>
-
-// <div>
-// <div className=" text-sm">
-//   Start Date : {dateRender(habit.createdAt)}
-//   <br />
-//   End Date : {dateRender(habit.endDate)}
-//   {/* Archived : {habit.archived ? 'T ' : 'F '}
-// Success : {habit.success ? 'T ' : 'F '}<br /> */}
-//   {/* Discrete : {habit.discrete ? "T " : "F "} */}
- 
-//   {/* Habit ID : {habit._id}<br /> */}
-// </div>
-// </div>
 

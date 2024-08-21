@@ -16,7 +16,8 @@ const EditModal = (props) => {
 
     const initDuration = props.habit.duration
     const initDate = DateTools.dateRender(DateTools.DurationToDate(props.habit.createdAt, props.habit.duration))
-    console.log(initDate + " initial")
+    console.log("from the edit modal")
+    console.log(habit)
 
 
 
@@ -180,7 +181,7 @@ const EditModal = (props) => {
                 />
                 </div>
 
-
+ 
 
 
             <div className='flex justify-between items-center pt-9 text-gray-300 w-5/6  mx-auto'>

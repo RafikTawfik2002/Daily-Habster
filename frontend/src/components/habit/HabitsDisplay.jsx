@@ -46,39 +46,14 @@ const HabitsDisplay = (props) => {
 
   useEffect(() => {if(user && user.userID){find(user)}}, [])
 
-  // comparator based on start date ascending
-
   const ComparStartUp = (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-
-  // comparator based on start date descending
-
-  const ComparStartDown = (a, b) => new Date(a.createdAt).getTime() - new Date(a.createdAt).getTime();
-
-  // comparator based on end date ascending
-
+  const ComparStartDown = (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
   const ComparEndUp = (a, b) => DateTools.DurationToDate(b.createdAt, b.duration).getTime() - DateTools.DurationToDate(a.createdAt, a.duration).getTime();
-
-  // comparator based on end date descending
-
   const ComparEndDown = (a, b) => DateTools.DurationToDate(a.createdAt, a.duration).getTime() - DateTools.DurationToDate(b.createdAt, b.duration).getTime();
-
-    // comparator based on duration ascending
-
-    const ComparDurationUp = (a, b) => a.duration - b.duration;
-
-    // comparator based on duration descending
-  
-    const ComparDurationDown = (a, b) => b.duration - a.duration;
-
-    // comparator based on duration ascending
-
-    const ComparProgressUp = (a, b) => DateTools.Percentage(a.createdAt, a.duration) - DateTools.Percentage(b.createdAt, b.duration)
-
-    // comparator based on duration descending
-      
-    const ComparProgressDown = (a, b) => DateTools.Percentage(b.createdAt, b.duration) - DateTools.Percentage(a.createdAt, a.duration)
-
-
+  const ComparDurationUp = (a, b) => a.duration - b.duration;
+  const ComparDurationDown = (a, b) => b.duration - a.duration;
+  const ComparProgressUp = (a, b) => DateTools.Percentage(a.createdAt, a.duration) - DateTools.Percentage(b.createdAt, b.duration)
+  const ComparProgressDown = (a, b) => DateTools.Percentage(b.createdAt, b.duration) - DateTools.Percentage(a.createdAt, a.duration)
   const comparators = [ComparStartUp, ComparStartDown, ComparEndUp, ComparEndDown, ComparDurationUp, ComparDurationDown, ComparProgressUp, ComparProgressDown]
 
 
@@ -98,14 +73,24 @@ const HabitsDisplay = (props) => {
 
   }}, [props.sortState])
 
+  const filter = () =>{
+    const copyHabits = [...habits]
+    if(props.tab == "Main") return copyHabits.filter(a => (a.archived == false))
+    if(props.tab == "Completed") return copyHabits.filter(a => (a.archived == true))
+    if(props.tab == "Gold") return copyHabits.filter(a => (a.archived == true && a.success == true))
+    
+    return habits
+  }
+
   return (<>
-      {/* <span className="bg-white mx-52">{props.sortState[0] + " " +props.sortState[1]}</span>  */}
+      {/* <span className="bg-white mx-52">{props.tab}</span>  */}
       
      <div className="text-white w-full mx-auto flex flex-col justify-center items-center">
         {habits.length > 0 ? (
-          habits.map((item, index ) =>
-             
-          <SingleHabit index={index+1} habit={item} deleteHabit={() => deleteHabit(item._id)} setDel={setDel} setEdit={setEdit}  key={item._id} setView={setView}/>)
+          filter().map((item, index ) =>
+          <SingleHabit index={index+1} habit={item} deleteHabit={() => deleteHabit(item._id)} setDel={setDel} setEdit={setEdit}  key={item._id} setView={setView}/>
+          
+        )
         ) : (
           <div>{"No Habits to Display"}</div>
         )}

@@ -6,7 +6,7 @@ import AddHabit from "../components/habit/AddHabit.jsx";
 const MainHabits = (props) => {
   const user = props.user;
   const [addState, setAddState] = useState(false)
-  const [tab, setTab] = useState("main")
+  const [tab, setTab] = useState("Main")
   const [sortState, setSortState] = useState(["none", "up"])
 
   useEffect(() => {
@@ -22,7 +22,7 @@ const MainHabits = (props) => {
       <HabitPageTitle user={user} addState={addState} setSortState={setSortState} setAddState={setAddState} tab={tab} setTab={setTab}/>
     </div>
     <div className="relative overflow-hidden pt-32">
-    {(addState) ? (<AddHabit setAddState={setAddState} user={user}/>) : (<HabitsDisplay sortState={sortState} user={user}/>) }
+    {(addState) ? (<AddHabit setAddState={setAddState} user={user}/>) : (<HabitsDisplay sortState={sortState} user={user} tab={tab}/>) }
     </div>
     </>
   );

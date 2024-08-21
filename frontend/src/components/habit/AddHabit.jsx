@@ -55,7 +55,7 @@ const AddHabit = (props) => {
             setMessage("Duration must be a number")
             return;
         }
-
+ 
         if(isDuration && habit.duration < 7){
             setMessage("Habits must last at least 7 days")
             return;

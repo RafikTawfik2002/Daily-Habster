@@ -19,7 +19,7 @@ const ViewModal = (props) => {
 
     <div className='flex flex-col lg:text-lg md:text-lg mx-14 text-md'>
         <div className='flex flex-row w-full justify-center items-center mb-8'>
-        <div className='w-1/4'>Habit: </div> 
+        <div className='w-1/4 lg:text-center'>Habit: </div> 
         <div className='w-3/4 mt-2 p-3 bg-blue-950 border-gray-500 rounded-xl border-0.3'>{habit.desc}</div>
 
         </div>
@@ -56,8 +56,8 @@ const ViewModal = (props) => {
 
         <div className='w-3/4 text-sm mt-1 p-1 bg-blue-950 border-gray-500 rounded-xl border-0.3 lg:w-1/3'>
         <div className=' bg-green-600 bg-opacity-70 rounded-lg font-bold'
-        style={{width: `${((DateTools.Percentage(habit.createdAt, habit.duration)*100).toFixed(2))+"%"}`}}
-        > &nbsp;{Math.round((DateTools.Percentage(habit.createdAt, habit.duration)*100).toFixed(2))}% </div>
+        style={{width: `${Math.min(100, (DateTools.Percentage(habit.createdAt, habit.duration)*100).toFixed(2))+"%"}`}}
+        > &nbsp;{Math.min(100,Math.round((DateTools.Percentage(habit.createdAt, habit.duration)*100).toFixed(2)))}% </div>
         </div>
 
         </div>

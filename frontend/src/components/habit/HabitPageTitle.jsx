@@ -21,6 +21,8 @@ const HabitPageTitle = (props) => {
     setAddState(!addState);
   }
 
+  const [menu, setMenu] = useState(false)
+
   const [sortEnd, setSortEnd] = useState('up')
   const [sortStart, setSortStart] = useState('up')
   const [sortProgress, setSortProgress] = useState('up')
@@ -62,11 +64,27 @@ const progressSortDuration = () => {
     }
   }, [sort, sortStart, sortEnd, sortDuration, sortProgress])
   
+  const closeMenu = () => {setMenu(false)}
+
+  useEffect(() => {
+    // Add event listener to the body when the dropdown is open
+    if (menu) {
+      document.body.addEventListener('click', closeMenu);
+    }
+
+    // Cleanup: Remove event listener from the body when the dropdown is closed
+    else {
+      document.body.removeEventListener('click', closeMenu);
+    };
+  }, [menu]);
+
 
 
   return (
-
-    <div className="text-white font-thin  lg:w-3/3 w-5/5 ">
+    <>
+    <div className="text-white font-thin  lg:w-3/3 w-5/5 "
+    
+    >
       <div className=" w-3/3 lg:w-2/3 mx-auto rounded-xl rounded-t-none bg-black border border-slate-400 border-x-0 border-t-0 p-2 pt-0 shadow-lg backdrop-filter backdrop-blur-lg bg-opacity-60 ">
 
         <div className="w-full shadow-2xl bg-slate-600 rounded-xl rounded-t-none text-gray-300 flex justify-center md:justify-between lg:justify-between items-center">
@@ -74,7 +92,7 @@ const progressSortDuration = () => {
           <div className="lg:flex md:flex hidden pl-5 flex-col p-2">
             <div className=" text-lg lg:text-4xl">
               {" "}
-              <MdMenuBook className="inline -translate-y-1" /> Habit Tracker
+              <MdMenuBook className="inline -translate-y-1" /> Habit Tracker 
             </div>
             <div className="text-sm lg:text-xl">
               {" "}
@@ -83,32 +101,39 @@ const progressSortDuration = () => {
             </div>
           </div>
 
+
+
+
+
           <div className="pr-2 flex flex-row text-5xl lg:text-6xl text-right">
 
 
-          <div  className={` flex-1 flex items-enter bg-black bg-opacity-30 border-2 duration-300 border-slate-600  rounded-lg shadow-2xl rounded-r-none
-          ${props.tab === "main" ? 'bg-yellow-600 cursor-pointer' : 'hover:bg-slate-700 cursor-pointer'}`}
-          onClick={() => {props.setTab("main")}}
+          <div className="mr-2 relative text-base font-bold bg-black bg-opacity-30 hover:bg-slate-800 border-2 duration-300 border-slate-600  rounded-lg flex items-center px-1"
+          onClick={(event) => {setMenu(!menu); event.stopPropagation()}}
           >
-          <p className="my-auto p-3 text-base relative peer/menu">main</p>
+              <div className="relative cursor-pointer duration-300  px-3 py-3 rounded-lg">
+                  {props.tab}   <IoIosArrowDown className="inline"/> 
 
-          </div>   
-
-          <div  className={` flex-1 flex items-center bg-black bg-opacity-30 border-2 duration-300 border-slate-600 border-x-0 rounded-lg shadow-2xl rounded-l-none rounded-r-none
-          ${props.tab === "success" ? 'bg-yellow-600 cursor-pointer' : 'hover:bg-slate-700 cursor-pointer'}`}
-          onClick={() => {props.setTab("success")}}
-          >
-          <p className="my-auto p-3 text-base relative peer/menu">success</p>
-
+                  {menu && <div className="mt-2 z-9999 absolute top-full left-1/2 -translate-x-1/2 bg-slate-800 bg-opacity-100 rounded-lg flex flex-col items-center">
+                    <div className="px-9 w-full py-1 pt-2 hover:bg-slate-700 duration-300 text-center rounded-lg rounded-b-none"
+                    onClick={() => props.setTab("Main")}
+                    > Main </div>
+                    <div className="px-9 w-full py-1 hover:bg-slate-700 duration-300 text-center"
+                     onClick={() => props.setTab("Gold")}
+                    > Gold </div>
+                    <div className="px-9 w-full py-1 pb-2 hover:bg-slate-700 duration-300 text-center rounded-lg rounded-t-none"
+                    onClick={() => props.setTab("Completed")}
+                    > Completed </div>
+                  
+                  
+                  </div>}
+              </div>
+             
           </div>
 
-          <div  className={` flex-1 flex items-center bg-black bg-opacity-30 border-2 duration-300 border-slate-600 rounded-lg mr-2 shadow-2xl rounded-l-none
-          ${props.tab === "archive" ? 'bg-yellow-600 cursor-pointer' : 'hover:bg-slate-700 cursor-pointer'}`}
-          onClick={() => {props.setTab("archive")}}
-          >
-          <p className="my-auto p-3 text-base relative peer/menu">archive</p>
 
-          </div>
+
+          
 
           
           
@@ -142,31 +167,31 @@ const progressSortDuration = () => {
           <div className={`duration-300 px-4 pr-3 cursor-pointer ${sort == "duration" ? "bg-yellow-500" : "hover:bg-yellow-400"}  `}
           onClick={durationSortSwitch}
           >
-            Duration {sortDuration == "up" ?<IoIosArrowUp className="pl-1 inline -translate-y-0.5"/> : <IoIosArrowDown className="pl-1 inline -translate-y-0.5"/>}
+            Duration {sortDuration == "up" ?<IoIosArrowUp className="pl-1 inline pb-1"/> : <IoIosArrowDown className="pl-1 inline pb-1"/>}
           </div>
 
         <div className={`duration-300 px-4 pr-3 cursor-pointer ${sort == "progress" ? "bg-yellow-500" : "hover:bg-yellow-400"}  `}
           onClick={progressSortDuration}
           >
-            Progress {sortProgress == "up" ?<IoIosArrowUp className="pl-1 inline -translate-y-0.5"/> : <IoIosArrowDown className="pl-1 inline -translate-y-0.5"/>}
+            Progress {sortProgress == "up" ?<IoIosArrowUp className="pl-1 inline pb-1"/> : <IoIosArrowDown className="pl-1 inline pb-1"/>}
           </div>
 
         <div className={`duration-300 px-4 pr-3 cursor-pointer ${sort == "start" ? "bg-yellow-500" : "hover:bg-yellow-400"}  `}
           onClick={startSortSwitch}
           >
-            Start Date {sortStart == "up" ?<IoIosArrowUp className="pl-1 inline -translate-y-0.5"/> : <IoIosArrowDown className="pl-1 inline -translate-y-0.5"/>}
+            Start Date {sortStart == "up" ?<IoIosArrowUp className="pl-1 inline pb-1"/> : <IoIosArrowDown className="pl-1 inline pb-1"/>}
           </div>
 
           <div className={`duration-300 px-4 pr-3 cursor-pointer ${sort == "end" ? "bg-yellow-500" : "hover:bg-yellow-400"} rounded-br-lg`}
           onClick={endSortSwitch}
           >
-            End Date {sortEnd == "up" ? <IoIosArrowUp className="pl-1 inline -translate-y-0.5"/> : <IoIosArrowDown className="pl-1 inline -translate-y-0.5"/>}
+            End Date {sortEnd == "up" ? <IoIosArrowUp className="pl-1 inline pb-1"/> : <IoIosArrowDown className="pl-1 inline pb-1"/>}
           </div>
 
-
-            </div>
+               </div>
             </div>}
     </div>
+    </>
   );
 };
 

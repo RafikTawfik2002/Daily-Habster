@@ -2,6 +2,7 @@
 import { DateTime } from 'luxon'
 class DateTools {
 
+    // formatting to YYYY/MM/DD
     DateToInput(date){
         const newDate = new Date(date);
         const month = newDate.getMonth() + 1;
@@ -10,6 +11,7 @@ class DateTools {
         return newDate.getFullYear() + "-" + (month <= 9 ? "0" : "") + month + "-" + (day <= 9 ? "0" : "") + day; 
     }
 
+    
     DateToDuration(start, end){
 
         const startDate = new Date(start);
@@ -19,16 +21,22 @@ class DateTools {
 
         const timeDifference = endFlat.getTime() - startFlat.getTime();
 
-        return timeDifference / (1000 * 60 * 60 * 24) + 1;
+        return timeDifference / (1000 * 60 * 60 * 24);
     }
 
     DurationToDate(start, duration){
         const startDate = new Date(start);
         const startFlat = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
-        startFlat.setDate(startFlat.getDate() + duration - 1 );
+        startFlat.setDate(startFlat.getDate() + duration  );
         //console.log("Date after duration is: " + startFlat);
         return startFlat;
     }
+
+    DurationToDateExact(start, duration){
+      const startDate = new Date(start);
+      startDate.setDate(startDate.getDate() + duration  );
+      return startDate;
+  }
 
     dateRender = (date) => {
         const d = new Date(date);
@@ -54,9 +62,10 @@ class DateTools {
       }
 
       Percentage(start, duration){
+       //console.log("percentage: " + start)
         const startDate = new Date(start);
-        const endDate = this.DurationToDate(start, duration);
-        
+        const endDate = this.DurationToDateExact(start, duration);
+       //console.log(endDate)
 
         const totalMilli = (endDate.getTime() - startDate.getTime());
         const currMilli = (new Date().getTime() - startDate.getTime());
@@ -79,7 +88,7 @@ class DateTools {
 
       exactDurationToDate(s, duration){
         const start = new Date(s)
-        start.setDate(start.getDate() + duration - 1 );
+        start.setDate(start.getDate() + duration );
         //console.log("Date after duration is: " + startFlat);
         return start;
     }
