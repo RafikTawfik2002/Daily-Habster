@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import HabitDataServices from "../../../services/habits";
-import SingleHabit from "./SingleHabit";
-import EditModal from "./EditModal";
-import DeleteModal from "./DeleteModal";
+import SingleHabitTab from "./SingleHabitTab";
+import EditModal from "./modals/EditModal";
+import DeleteModal from "./modals/DeleteModal";
 import DateTools from "../../DateTools";
-import ViewModal from "./ViewModal";
+import ViewModal from "./modals/ViewModal";
+
 
 const HabitsDisplay = (props) => {
   const user = props.user;
@@ -88,7 +89,7 @@ const HabitsDisplay = (props) => {
      <div className="text-white w-full mx-auto flex flex-col justify-center items-center">
         {habits.length > 0 ? (
           filter().map((item, index ) =>
-          <SingleHabit index={index+1} habit={item} deleteHabit={() => deleteHabit(item._id)} setDel={setDel} setEdit={setEdit}  key={item._id} setView={setView}/>
+          <SingleHabitTab tab={props.tab} index={index+1} habit={item} deleteHabit={() => deleteHabit(item._id)} setDel={setDel} setEdit={setEdit}  key={item._id} setView={setView}/>
           
         )
         ) : (

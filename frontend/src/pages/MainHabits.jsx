@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import HabitPageTitle from "../components/habit/HabitPageTitle.jsx";
 import HabitsDisplay from "../components/habit/HabitsDisplay.jsx";
-import AddHabit from "../components/habit/AddHabit.jsx";
+import AddHabit from "../components/habit/modals/AddHabit.jsx";
 
 const MainHabits = (props) => {
   const user = props.user;
@@ -21,7 +21,7 @@ const MainHabits = (props) => {
     <div className="fixed inset-x-0 top-0 pt-0 z-50 mb-32">
       <HabitPageTitle user={user} addState={addState} setSortState={setSortState} setAddState={setAddState} tab={tab} setTab={setTab}/>
     </div>
-    <div className="relative overflow-hidden pt-32">
+    <div className="relative overflow-hidden md:pt-28 lg:pt-32 pt-24 ">
     {(addState) ? (<AddHabit setAddState={setAddState} user={user}/>) : (<HabitsDisplay sortState={sortState} user={user} tab={tab}/>) }
     </div>
     </>

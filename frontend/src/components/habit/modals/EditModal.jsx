@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { TbArrowBackUp } from "react-icons/tb";
-import HabitDataServices from "../../../services/habits"
-import Slider from "../Slider";
-import DateTools from "../../DateTools";
-import habits from "../../../services/habits";
-import { duration } from "@mui/material";
+import HabitDataServices from "../../../../services/habits"
+import Slider from "../../Slider";
+import DateTools from "../../../DateTools";
+import habits from "../../../../services/habits";
+import HabitDisplay from "../HabitsDisplay"
 
 
 const EditModal = (props) => {
@@ -85,6 +85,7 @@ const EditModal = (props) => {
             if(!isDuration){
                 //DateTools.DateToDuration(new Date(), habit.duration)
                 const durationSet = DateTools.DateToDuration(habit.createdAt, new Date(habit.duration.split('-').map(Number)))
+                console.log("calculating duration is: " + durationSet)
                 if(durationSet < initDuration ){
                     setMessage("Duration can only be extended")
                     return;

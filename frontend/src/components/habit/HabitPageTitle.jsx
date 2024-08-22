@@ -81,15 +81,15 @@ const progressSortDuration = () => {
 
 
   return (
-    <>
-    <div className="text-white font-thin  lg:w-3/3 w-5/5 "
+    
+    <div className="text-white font-thin  w-full "
     
     >
-      <div className=" w-3/3 lg:w-2/3 mx-auto rounded-xl rounded-t-none bg-black border border-slate-400 border-x-0 border-t-0 p-2 pt-0 shadow-lg backdrop-filter backdrop-blur-lg bg-opacity-60 ">
+      <div className=" w-full lg:w-2/3 mx-auto rounded-xl rounded-t-none bg-slate-700 border border-slate-400 border-x-0 border-t-0 p-2 pt-0 shadow-lg ">
 
-        <div className="w-full shadow-2xl bg-slate-600 rounded-xl rounded-t-none text-gray-300 flex justify-center md:justify-between lg:justify-between items-center">
+        <div className="w-full shadow-2xl bg-slate-600 rounded-xl rounded-t-none text-gray-300 flex justify-between items-center">
 
-          <div className="lg:flex md:flex hidden pl-5 flex-col p-2">
+          <div className="flex pl-5 flex-col p-2">
             <div className=" text-lg lg:text-4xl">
               {" "}
               <MdMenuBook className="inline -translate-y-1" /> Habit Tracker 
@@ -105,23 +105,23 @@ const progressSortDuration = () => {
 
 
 
-          <div className="pr-2 flex flex-row text-5xl lg:text-6xl text-right">
+          <div className="pr-2 flex flex-row text-5xl lg:text-6xl">
 
 
-          <div className="mr-2 relative text-base font-bold bg-black bg-opacity-30 hover:bg-slate-800 border-2 duration-300 border-slate-600  rounded-lg flex items-center px-1"
+          <div className="mr-2 text-base cursor-pointer font-bold bg-black bg-opacity-30 hover:bg-slate-800 border-2 duration-300 border-slate-600  rounded-lg flex items-center px-1"
           onClick={(event) => {setMenu(!menu); event.stopPropagation()}}
           >
-              <div className="relative cursor-pointer duration-300  px-3 py-3 rounded-lg">
+              <div className="relative duration-300 items-center  px-3 py-3 rounded-lg">
                   {props.tab}   <IoIosArrowDown className="inline"/> 
 
-                  {menu && <div className="mt-2 z-9999 absolute top-full left-1/2 -translate-x-1/2 bg-slate-800 bg-opacity-100 rounded-lg flex flex-col items-center">
-                    <div className="px-9 w-full py-1 pt-2 hover:bg-slate-700 duration-300 text-center rounded-lg rounded-b-none"
+                  {menu && <div className="mt-1 z-50 absolute top-full left-1/2 -translate-x-1/2 bg-slate-800 bg-opacity-100 rounded-lg flex flex-col items-center">
+                    <div className="px-9 w-full py-1 pt-2 hover:bg-slate-700 duration-300 mx-1 rounded-lg rounded-b-none"
                     onClick={() => props.setTab("Main")}
                     > Main </div>
-                    <div className="px-9 w-full py-1 hover:bg-slate-700 duration-300 text-center"
+                    <div className="px-9 w-full py-1 hover:bg-slate-700 duration-300 mx-1"
                      onClick={() => props.setTab("Gold")}
                     > Gold </div>
-                    <div className="px-9 w-full py-1 pb-2 hover:bg-slate-700 duration-300 text-center rounded-lg rounded-t-none"
+                    <div className="px-9 w-full py-1 pb-2 hover:bg-slate-700 duration-300  mx-1 rounded-lg rounded-t-none"
                     onClick={() => props.setTab("Completed")}
                     > Completed </div>
                   
@@ -140,10 +140,10 @@ const progressSortDuration = () => {
 
           
 
-          { (!addState && user) && <Link  onClick={addingState} className="duration-300 h-5/6 my-auto bg-black bg-opacity-30 border-2 border-slate-600 hover:bg-slate-700 rounded-lg mr-2 shadow-2xl">
+          { (!addState && user) && <Link  onClick={addingState} className="duration-300 h-5/6 my-auto bg-black bg-opacity-30 border-2 border-slate-600 hover:bg-slate-800 rounded-lg mr-2 shadow-2xl">
           <GoPlus className="my-auto p-3 "/></Link>}
 
-            <Link  className="h-5/6 my-auto bg-black bg-opacity-30 border-2 duration-300 border-slate-600 hover:bg-gray-700 rounded-lg mr-2 shadow-2xl" to="/Login">
+            <Link  className="h-5/6 my-auto bg-black bg-opacity-30 border-2 duration-300 border-slate-600 hover:bg-slate-800 rounded-lg mr-2 shadow-2xl" to="/Login">
             <RiLogoutBoxRLine className="my-auto p-3"/></Link>
 
 
@@ -157,7 +157,7 @@ const progressSortDuration = () => {
 
       </div>
             {!addState && <div className="flex flex-row justify-center">
-          <div className="inline-flex flex-row justify-center text-black text-center mx-auto bg-opacity-80 bg-yellow-200 rounded-lg rounded-t-none">
+          <div className="inline-flex flex-row justify-center text-black text-xs md:text-base lg:text-base text-center mx-auto bg-opacity-80 bg-yellow-200 rounded-lg rounded-t-none">
 
 
           <div className="px-4 cursor-default"
@@ -191,7 +191,7 @@ const progressSortDuration = () => {
                </div>
             </div>}
     </div>
-    </>
+    
   );
 };
 

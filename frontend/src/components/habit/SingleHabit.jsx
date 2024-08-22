@@ -1,12 +1,8 @@
 import React, { useState } from "react";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { CiEdit } from "react-icons/ci";
-import { IoIosColorPalette } from "react-icons/io";
-import { FcExpand } from "react-icons/fc";
 import LinearBar from "../LinearBar";
-import BlocksBar from "../BlocksBar";
 import { MdRemoveRedEye } from "react-icons/md";
-import EditModal from "./EditModal";
 import DateTools from "../../DateTools";
 
 const SingleHabit = (props) => {
@@ -28,7 +24,7 @@ const SingleHabit = (props) => {
 
 
   return (
-    <div className={` flex flex-col font-thin justify-between w-3/5 text-gray-300  rounded-3xl border-blue-900 rounded-tl-none rounded-bl-none bg-blue-900  border-2 bg-opacity-80 blur-30 my-2 backdrop-filter backdrop-blur-xl`}>
+    <div className={` flex flex-col font-thin justify-between w-11/12 md:w-3/5 lg:w-3/5 text-gray-300  rounded-3xl border-blue-900 rounded-tl-none rounded-bl-none bg-blue-900  border-2 bg-opacity-80 blur-30 my-2 backdrop-filter backdrop-blur-xl`}>
       
       <div className="flex flex-row w-full">
 
@@ -62,7 +58,6 @@ const SingleHabit = (props) => {
 
                       <div className="mt-1 pl-3 text-xs md:text-xs lg:text-sm">
                        <i>Duration: {" " + habit.duration} days</i>
-                       <div className="text-xs  lg:text-sm">archived: {""+habit.archived}</div>
                       </div>
 
 
@@ -99,6 +94,12 @@ const SingleHabit = (props) => {
 
                     </div>
 
+                    <div className=" w-full h-full pt-3">
+                      <div className=" flex justify-center items-center rounded-lg h-full mr-3 border border-white bg-blue-950">
+                            <span className="text-center">Button Here</span>
+                      </div>
+                    </div>
+
                   
 
                   </div>
@@ -107,8 +108,7 @@ const SingleHabit = (props) => {
       </div>
 
       <div className="p-3 pt-1 w-full">
-                        {!habit.discrete ? <LinearBar setHabit={setHabit} habit={habit} start={habit.createdAt} duration={habit.duration} /> :
-                         <BlocksBar start={habit.createdAt} end={habit.duration} />}
+                        <LinearBar setHabit={setHabit} habit={habit} start={habit.createdAt} duration={habit.duration} />
       </div>
 
 

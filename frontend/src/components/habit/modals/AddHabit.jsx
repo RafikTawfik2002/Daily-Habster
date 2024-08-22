@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import Slider from '../Slider';
+import Slider from '../../Slider';
 import { TbArrowBackUp } from "react-icons/tb";
-import HabitDataServices from "../../../services/habits"
-import DateTools from '../../DateTools';
+import HabitDataServices from "../../../../services/habits"
+import DateTools from '../../../DateTools';
 
 const AddHabit = (props) => {
     

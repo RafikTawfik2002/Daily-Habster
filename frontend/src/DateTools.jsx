@@ -19,7 +19,11 @@ class DateTools {
         const endDate = new Date(end);
         const endFlat = new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate());
 
-        const timeDifference = endFlat.getTime() - startFlat.getTime();
+        // ensuring offsets are the same
+        const startOffset = startFlat.getTimezoneOffset()
+        const endOffset = endFlat.getTimezoneOffset()
+
+        const timeDifference = endFlat.getTime() - startFlat.getTime() - (endOffset - startOffset)*60000;
 
         return timeDifference / (1000 * 60 * 60 * 24);
     }
@@ -29,6 +33,7 @@ class DateTools {
         const startFlat = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
         startFlat.setDate(startFlat.getDate() + duration  );
         //console.log("Date after duration is: " + startFlat);
+        
         return startFlat;
     }
 
@@ -79,11 +84,12 @@ class DateTools {
         const date = new Date(d)
         const hours = date.getHours();
         const minutes = date.getMinutes();
+        const newMinute = minutes < 10 ? "0"+minutes : minutes
         const dayTime = hours > 12 ? "PM" : "AM";
         const newHours = hours > 12 ? hours - 12 : hours
 
         
-        return this.dateRender(date) + "  " + newHours + ":" + minutes + " " + dayTime;
+        return this.dateRender(date) + "  " + newHours + ":" + newMinute + " " + dayTime;
       }
 
       exactDurationToDate(s, duration){
@@ -91,6 +97,12 @@ class DateTools {
         start.setDate(start.getDate() + duration );
         //console.log("Date after duration is: " + startFlat);
         return start;
+    }
+
+    DaysPassed(progress, duration){
+      const all =  progress * duration
+      const whole = Math.floor(all)
+      return [whole, all - whole]
     }
 }
 
