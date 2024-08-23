@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import DateTools from '../DateTools'
 import HabitsDataServices from "../../services/habits"
 
@@ -7,20 +7,31 @@ const CheckIn = (props) => {
     // setParen used to update habit given habit id and new habit
     const setParen = props.setParen
 
+
     const [time, setTime] = useState(DateTools.RemainToTime(1-DateTools.DayNumber(habit.createdAt)[1]))
 
     // console.log("Day Number: " +DateTools.DayNumber(habit.createdAt)[0])
     // console.log("Last Login Day Number: " +habit.lastLogin + "\n\n")
     const [CheckedIn, setCheckedIn] = useState(DateTools.DayNumber(habit.createdAt)[0] == habit.lastLogin)
 
+    const checkedInRef = useRef(CheckedIn);
+
+    useEffect(() => {
+      checkedInRef.current = CheckedIn;
+    }, [CheckedIn]);
+
+    useEffect(() => {
+      if(time == "00:00:00"){
+        props.setCheckIn(checkedInRef.current)
+        setCheckedIn(false)
+      }
+    }, [time])
+ 
+
     useEffect(() => {
         // Set up the timer to update every second
         const intervalId = setInterval(() => {
           const currentTime = DateTools.RemainToTime(1-DateTools.DayNumber(habit.createdAt)[1])
-          if(currentTime == "00:00:00"){
-            
-            setCheckedIn(false)
-        }
             
 
           setTime(currentTime)
@@ -63,6 +74,7 @@ const CheckIn = (props) => {
                 lastLogin: newLogin
               })
               setCheckedIn(DateTools.DayNumber(habit.createdAt)[0] == newLogin)
+              console.log("updated setChecked in to : " + (DateTools.DayNumber(habit.createdAt)[0] == newLogin))
             })
             .catch((error) => {
               console.log(error);
@@ -72,7 +84,7 @@ const CheckIn = (props) => {
 
 
   return (
-
+    <>
     <button 
     onClick={() => incrementLastLogin()}
     className={`w-full block mr-3  rounded-lg bg-black bg-opacity-10 duration-300 
@@ -91,6 +103,7 @@ const CheckIn = (props) => {
         (<div className='bg-yellow-300 bg-opacity-30 h-full rounded-lg'><i>Gold Status Achieved</i></div>)
         }
     </button>
+    </>
   )
 }
 

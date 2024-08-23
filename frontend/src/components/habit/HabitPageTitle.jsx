@@ -78,6 +78,10 @@ const progressSortDuration = () => {
     };
   }, [menu]);
 
+  useEffect(() => {
+    if(!addState) {props.setTab("Main")}
+  }, [addState])
+
 
 
   return (
@@ -108,7 +112,7 @@ const progressSortDuration = () => {
           <div className="pr-2 flex flex-row text-5xl lg:text-6xl">
 
 
-          <div className="mr-2 text-base cursor-pointer font-bold bg-black bg-opacity-30 hover:bg-slate-800 border-2 duration-300 border-slate-600  rounded-lg flex items-center px-1"
+          {!addState && <div className="mr-2 text-base cursor-pointer font-bold bg-black bg-opacity-30 hover:bg-slate-800 border-2 duration-300 border-slate-600  rounded-lg flex items-center px-1"
           onClick={(event) => {setMenu(!menu); event.stopPropagation()}}
           >
               <div className="relative duration-300 items-center  px-3 py-3 rounded-lg">
@@ -129,7 +133,7 @@ const progressSortDuration = () => {
                   </div>}
               </div>
              
-          </div>
+          </div>}
 
 
 

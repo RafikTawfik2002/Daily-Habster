@@ -13,10 +13,11 @@ const LinearBar = (props) => {
   // rid of habit if not followed up by user
   const setHabitState = props.setHabitState;
 
+
   const [progress, setProgress] = useState(
     Math.min(1, DateTools.Percentage(start, duration))
   );
-
+  console.log(progress)
   //const [progress, setProgress] = useState(1)
 
   useEffect(() => {
@@ -69,15 +70,13 @@ const LinearBar = (props) => {
   const Bar = (props) => {
     const progress = props.progress;
     return (
-      <div className="w-full h-6 bg-gray-800 bg-opacity-30 rounded-lg border-blue-800 border-2">
+      <div className="w-full h-6 bg-gray-800 bg-opacity-30 rounded-lg rounded-l-none border-blue-800 border-2 ">
         <div className={`relative h-full bg-gray-800 bg-opacity-30 rounded-lg`}>
           <div
-            className={`text-whit flex items-center pl-2 font-bold absolute top-0 left-0 h-full bg-gradient-to-r from-green-700 to-green-500 rounded-md ${
-              progress < 1 && "rounded-r-none"
-            }`}
-            style={{ width: `${Math.max(progress * 100, 1)}%` }}
+            className={`text-whit flex items-center font-bold absolute top-0 left-0 h-full bg-gradient-to-r from-green-700 to-green-500 rounded-lg rounded-l-none `}
+            style={{ width: `${progress * 100}%` }}
           >
-            {Math.round(progress * 100)}%{" "}
+            &nbsp;&nbsp;{Math.floor(progress * 100)}%
           </div>
         </div>
       </div>
@@ -93,7 +92,7 @@ const LinearBar = (props) => {
     for (let i = 0; i < count; i++) {
       divs.push(
         <div
-          className={`text-whit flex items-center font-bold border-blue-800 border-2 bg-opacity-30 bg-gray-800 w-full rounded-lg 
+          className={`text-whit flex items-center font-bold border-blue-800 border-2 bg-opacity-30 bg-gray-800 w-full rounded-lg rounded-l-none
       ${days > 0 && "pl-2  bg-gradient-to-r from-green-700 to-green-500"}
       `}
           key={i}

@@ -87,9 +87,10 @@ class DateTools {
         const newMinute = minutes < 10 ? "0"+minutes : minutes
         const dayTime = hours > 12 ? "PM" : "AM";
         const newHours = hours > 12 ? hours - 12 : hours
+        const newNewHours = newHours == 0 ? 12 : newHours
 
         
-        return this.dateRender(date) + "  " + newHours + ":" + newMinute + " " + dayTime;
+        return this.dateRender(date) + "  " + newNewHours + ":" + newMinute + " " + dayTime;
       }
 
       exactDurationToDate(s, duration){

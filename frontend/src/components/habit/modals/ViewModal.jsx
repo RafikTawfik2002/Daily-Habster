@@ -56,8 +56,8 @@ const ViewModal = (props) => {
 
         <div className='w-3/4 text-sm mt-1 p-1 bg-blue-950 border-gray-500 rounded-xl border-0.3 lg:w-1/3'>
         <div className=' bg-green-600 bg-opacity-70 rounded-lg font-bold'
-        style={{width: `${Math.min(100, (DateTools.Percentage(habit.createdAt, habit.duration)*100).toFixed(2))+"%"}`}}
-        > &nbsp;{Math.min(100,Math.round((DateTools.Percentage(habit.createdAt, habit.duration)*100).toFixed(2)))}% </div>
+        style={{width: `${Math.min(100, (Math.floor(DateTools.Percentage(habit.createdAt, habit.duration)*100)))+"%"}`}}
+        > &nbsp;{Math.min(100,Math.floor((DateTools.Percentage(habit.createdAt, habit.duration)*100)))}% </div>
         </div>
 
         </div>

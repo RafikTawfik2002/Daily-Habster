@@ -23,6 +23,8 @@ const SingleHabit = (props) => {
     setDel([true, habit])
   }
 
+  const [checkIn, setCheckIn] = useState( DateTools.LoggedWithin24Hours(habit.createdAt, habit.lastLogin))
+
 
   return (
     <div className={` flex flex-col font-thin justify-between w-11/12 md:w-3/5 lg:w-3/5 text-gray-300  rounded-3xl border-blue-900 rounded-tl-none rounded-bl-none bg-blue-900  border-2 bg-opacity-80 blur-30 my-2 backdrop-filter backdrop-blur-xl`}>
@@ -96,7 +98,7 @@ const SingleHabit = (props) => {
                     </div>
 
                     <div className=" w-full h-full pt-3 mr-3 flex">
-                    { DateTools.LoggedWithin24Hours(habit.createdAt, habit.lastLogin) && <CheckIn setHabit={setHabit} habit={habit} setParen={props.setParen}/>}
+                    { checkIn && <CheckIn setCheckIn={setCheckIn} setHabit={setHabit} habit={habit} setParen={props.setParen}/>}
                     </div>
 
                   

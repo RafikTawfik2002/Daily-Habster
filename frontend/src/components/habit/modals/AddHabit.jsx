@@ -108,9 +108,9 @@ const AddHabit = (props) => {
 
     <div className=" pt-9 w-[45%]  mx-auto">
        
-      <div className=" bg-slate-800 border text-gray-300 border-slate-400 rounded-md pl-4 pr-4 pt-2 shadow-lg backdrop-filter backdrop-blur-md bg-opacity-30 justify-center pb-9">
+      <div className=" bg-slate-800 border text-gray-300 border-slate-400 rounded-3xl pl-4 pr-4 pt-2 shadow-lg backdrop-filter backdrop-blur-md bg-opacity-30 justify-center pb-9">
 
-            <TbArrowBackUp onClick={() => {props.setAddState(false)}} className="py-0  cursor-pointer text-3xl p-1 rounded-md  my-auto hover:bg-slate-300 hover:bg-opacity-30 "/>
+            <TbArrowBackUp onClick={() => {props.setAddState(false)}} className="py-0  cursor-pointer text-3xl rounded-md  my-auto  "/>
 
         <h1 className="text-2xl text-gray-300  text-center rounded-lg mb-6 p-2  ">Time for a new Habit !</h1>
         <div className='flex justify-center '>
@@ -150,7 +150,7 @@ const AddHabit = (props) => {
         
         <div className='flex justify-between items-center pt-9 text-gray-300 w-5/6  mx-auto'>
             <div>
-            Track Days Only
+            Block View
             </div>
             <div>
 
