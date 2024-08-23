@@ -188,7 +188,7 @@ const EditModal = (props) => {
 
             <div className='flex justify-between items-center pt-9 text-gray-300 w-5/6  mx-auto'>
                 <div>
-                Track Days Only
+                Block View
                 </div>
                 <div>
 

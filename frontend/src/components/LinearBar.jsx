@@ -92,20 +92,20 @@ const LinearBar = (props) => {
     for (let i = 0; i < count; i++) {
       divs.push(
         <div
-          className={`text-whit flex items-center font-bold border-blue-800 border-2 bg-opacity-30 bg-gray-800 w-full rounded-lg rounded-l-none
-      ${days > 0 && "pl-2  bg-gradient-to-r from-green-700 to-green-500"}
+          className={`text-whit flex items-center font-bold border-blue-800 border bg-opacity-30 bg-gray-800 w-full rounded-lg rounded-l-none
+      ${days > 0 && "  bg-gradient-to-r from-green-700 to-green-500"}
       `}
           key={i}
         >
-          {i == 0 && days != 0 && Math.round(progress * 100) + "%"}
+          {i == 0 && days != 0 && <p className="absolute top-0 left-2">{Math.round(progress * 100) + "%"}</p>}
           {days == 0 && (
            <> <div
-              className={`  items-center bg-gradient-to-r from-green-700 to-green-500 rounded-lg rounded-r-none h-full`}
-              style={{ width: `${Math.max(remain * 100,1)}%` }}
+              className={`  items-center bg-gradient-to-r from-green-700 to-green-500 rounded-lg rounded-l-none h-full`}
+              style={{ width: `${Math.floor(Math.min(remain * 100,100))}%` }}
             >
   
             </div>
-             {i == 0 && <p className="absolute top-0 left-2">{Math.round(progress * 100) + "%"}</p>}</>
+             {i == 0 && <p className="absolute top-0 left-2">{Math.floor(progress * 100) + "%"}</p>}</>
           )}
         </div>
       );
