@@ -63,6 +63,7 @@ router.post('/', async (request, response) => {
             discrete: request.body.discrete,
             userID: new ObjectId(request.body.userID),
             duration: request.body.duration,
+            lastLogin: 0
         };
 
         const habit = await Habit.create(newhabit); //using a mongoose.model which has a mongoose Schema
@@ -76,8 +77,10 @@ router.post('/', async (request, response) => {
 
 // Update a habit
 router.put('/:id', async (request, response) => {
+    console.log("PUT worked" + request.body)
+    console.log(request.body)
     try{
-        if (!request.body.desc || !request.body.archived || !request.body.discrete || !request.body.duration){
+        if (!request.body.desc || !request.body.archived || !request.body.discrete || !request.body.duration || !request.body.lastLogin){
             return response.status(400).send({message: 'Send all required fields'});
         }
         const { id } = request.params;

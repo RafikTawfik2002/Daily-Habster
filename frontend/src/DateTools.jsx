@@ -104,6 +104,37 @@ class DateTools {
       const whole = Math.floor(all)
       return [whole, all - whole]
     }
+
+    // functions concerned with the check in feature
+
+    DayNumber(start){
+      const curr = new Date()
+      const startDate = new Date(start)
+      const all = (curr.getTime() - startDate.getTime()) / (1000*60*60*24) + 1
+      const whole = Math.floor(all)
+      return [whole, all - whole]
+    }
+
+    LoggedWithin24Hours(start, lastLogin){
+      const daysPassed = this.DayNumber(start)[0]
+      console.log("Days passed since habit started is: " + daysPassed)
+      console.log("last login: " + lastLogin)
+      return lastLogin >= (daysPassed - 1)
+    }
+
+    RemainToTime(remain){
+      const remainHours = Math.floor(remain*24)
+      const remainMinutes = Math.floor(remain*60*24 - remainHours*60)
+      const remainSec = Math.floor(remain*60*60*24 - remainHours*60*60 - remainMinutes*60)
+
+      const padHours = remainHours < 10 ? "0" : ""
+      const padMinutes = remainMinutes < 10 ? "0" : ""
+      const padSecondes = remainSec < 10 ? "0" : ""
+
+
+
+      return padHours + remainHours +":" + padMinutes + remainMinutes+":"+ padSecondes + remainSec
+    }
 }
 
 export default new DateTools();

@@ -45,6 +45,7 @@ const HabitsDisplay = (props) => {
     });
   }
 
+
   useEffect(() => {if(user && user.userID){find(user)}}, [])
 
   const ComparStartUp = (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
@@ -78,9 +79,20 @@ const HabitsDisplay = (props) => {
     const copyHabits = [...habits]
     if(props.tab == "Main") return copyHabits.filter(a => (a.archived == false))
     if(props.tab == "Completed") return copyHabits.filter(a => (a.archived == true))
-    if(props.tab == "Gold") return copyHabits.filter(a => (a.archived == true && a.success == true))
+    if(props.tab == "Gold") return copyHabits.filter(a => (a.archived == true && a.duration == a.lastLogin))
     
     return habits
+  }
+  // used to update the habit in the array by replacing it
+  // function used by child components 
+  const updateHabits = (id, habit) => {
+    console.log("new habit to log in")
+    console.log(habit)
+    setHabits(prevState => {
+      return prevState.map(item => item._id == id ? habit : item);
+    })
+
+    
   }
 
   return (<>
@@ -89,7 +101,7 @@ const HabitsDisplay = (props) => {
      <div className="text-white w-full mx-auto flex flex-col justify-center items-center">
         {habits.length > 0 ? (
           filter().map((item, index ) =>
-          <SingleHabitTab tab={props.tab} index={index+1} habit={item} deleteHabit={() => deleteHabit(item._id)} setDel={setDel} setEdit={setEdit}  key={item._id} setView={setView}/>
+          <SingleHabitTab setParen={updateHabits} tab={props.tab} index={index+1} habit={item} deleteHabit={() => deleteHabit(item._id)} setDel={setDel} setEdit={setEdit}  key={item._id} setView={setView}/>
           
         )
         ) : (

@@ -16,7 +16,7 @@ const SingleHabitDone = (props) => {
       }
   
     return (
-      <div className={` flex flex-col font-thin justify-between w-11/12 lg:w-3/5 ${props.habit.success == true ? " bg-yellow-300 bg-opacity-60 text-black" : "text-gray-300"}  border-gray-800 border-2  bg-opacity-30   rounded-3xl rounded-tl-none rounded-bl-none   blur-30 my-2 backdrop-filter backdrop-blur-xl`}>
+      <div className={` flex flex-col font-thin justify-between w-11/12 lg:w-3/5 ${props.habit.duration == props.habit.lastLogin ? " bg-yellow-300 bg-opacity-60 text-black" : "text-gray-300"}  border-gray-800 border-2  bg-opacity-30   rounded-3xl rounded-tl-none rounded-bl-none   blur-30 my-2 backdrop-filter backdrop-blur-xl`}>
         
         <div className="flex flex-row w-full">
   

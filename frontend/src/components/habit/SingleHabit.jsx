@@ -4,6 +4,7 @@ import { CiEdit } from "react-icons/ci";
 import LinearBar from "../LinearBar";
 import { MdRemoveRedEye } from "react-icons/md";
 import DateTools from "../../DateTools";
+import CheckIn from "../CheckIn";
 
 const SingleHabit = (props) => {
   
@@ -57,7 +58,7 @@ const SingleHabit = (props) => {
                       </div>
 
                       <div className="mt-1 pl-3 text-xs md:text-xs lg:text-sm">
-                       <i>Duration: {" " + habit.duration} days</i>
+                       <i>Duration: {" " + habit.duration} days</i><br />
                       </div>
 
 
@@ -94,10 +95,8 @@ const SingleHabit = (props) => {
 
                     </div>
 
-                    <div className=" w-full h-full pt-3">
-                      <div className=" flex justify-center items-center rounded-lg h-full mr-3 border border-white bg-blue-950">
-                            <span className="text-center">Button Here</span>
-                      </div>
+                    <div className=" w-full h-full pt-3 mr-3 flex">
+                    { DateTools.LoggedWithin24Hours(habit.createdAt, habit.lastLogin) && <CheckIn setHabit={setHabit} habit={habit} setParen={props.setParen}/>}
                     </div>
 
                   
@@ -108,7 +107,7 @@ const SingleHabit = (props) => {
       </div>
 
       <div className="p-3 pt-1 w-full">
-                        <LinearBar setHabit={setHabit} habit={habit} start={habit.createdAt} duration={habit.duration} />
+                        <LinearBar setParen={props.setParen} setHabit={setHabit} habit={habit} start={habit.createdAt} duration={habit.duration} />
       </div>
 
 

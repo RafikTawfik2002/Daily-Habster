@@ -26,6 +26,10 @@ const habitSchema = mongoose.Schema(
         duration: {
             type: Number,
             required: true
+        },
+        lastLogin: {
+            type: Number,
+            required: true
         }
     },
     {

@@ -5,7 +5,7 @@ import SingleHabitDone from './SingleHabitDone'
 const SingleHabitTab = (props) => {
   return (
     <>
-    {props.tab == "Main" ? <SingleHabit {...props} /> : <SingleHabitDone {...props}/>}
+    {props.tab == "Main" && props.habit.archived == false ?<SingleHabit {...props} /> : <SingleHabitDone {...props}/>}
     </>
   )
 }

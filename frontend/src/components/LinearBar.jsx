@@ -25,6 +25,8 @@ const LinearBar = (props) => {
 
       setProgress(Math.min(newProgress, 1));
 
+      
+
       if (newProgress >= 1) {
         clearInterval(interval);
         const updatedHabit = {
@@ -32,18 +34,28 @@ const LinearBar = (props) => {
           archived: "" + true,
           success: "" + habit.success,
           discrete: "" + habit.discrete,
+          duration: "" + habit.duration,
+          lastLogin: "" + habit.lastLogin 
         };
+
+        
         console.log("updated habit is : ");
         console.log(updatedHabit);
         HabitsDataServices.updateHabit(habit._id, updatedHabit)
           .then((response) => {
-            console.log("updated to archived true successfully");
+            console.log("updated to archived true successfullyy");
             props.setHabit({
               ...habit,
               archived: true,
               success: habit.success,
               discrete: habit.discrete,
             });
+            props.setParen(habit._id, {
+              ...habit,
+              archived: true,
+              success: habit.success,
+              discrete: habit.discrete,
+            })
           })
           .catch((error) => {
             console.log(error);

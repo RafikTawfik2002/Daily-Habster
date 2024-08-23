@@ -111,7 +111,8 @@ const EditModal = (props) => {
                 archived: ""+habit.archived,
                 success: ""+habit.success,
                 discrete: ""+habit.discrete,
-                userID: habit.userID
+                userID: habit.userID,
+                lastLogin: ""+ (habit.lastLogin || 0)
             }
             console.log(newHabit)
             console.log(habit._id)
