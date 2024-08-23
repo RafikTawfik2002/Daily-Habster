@@ -18,7 +18,9 @@ const CheckIn = (props) => {
         const intervalId = setInterval(() => {
           const currentTime = DateTools.RemainToTime(1-DateTools.DayNumber(habit.createdAt)[1])
           if(currentTime == "00:00:00"){
-            clearInterval(intervalId); }
+            
+            setCheckedIn(false)
+        }
             
 
           setTime(currentTime)

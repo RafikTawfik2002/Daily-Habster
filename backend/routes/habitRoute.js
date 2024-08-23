@@ -77,7 +77,6 @@ router.post('/', async (request, response) => {
 
 // Update a habit
 router.put('/:id', async (request, response) => {
-    console.log("PUT worked" + request.body)
     console.log(request.body)
     try{
         if (!request.body.desc || !request.body.archived || !request.body.discrete || !request.body.duration || !request.body.lastLogin){
