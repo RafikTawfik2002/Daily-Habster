@@ -29,8 +29,8 @@ const SingleHabitDone = (props) => {
                         <div className="flex flex-row items-center mt-2">
                                 <div className="pl-3 flex flex-col ">
                                  
-                                  <div className="text-xs hidden md:hidden lg:block lg:text-sm text-center">Started: &nbsp;</div>
-                                  <div className="text-xs hidden md:hidden lg:block lg:text-sm text-center ">Ends: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div> 
+                                  <div className="text-xs hidden md:hidden lg:block lg:text-sm text-center">Started: &nbsp;&nbsp;&nbsp;&nbsp;</div>
+                                  <div className="text-xs hidden md:hidden lg:block lg:text-sm text-center ">Ended: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div> 
   
                                   
                                   

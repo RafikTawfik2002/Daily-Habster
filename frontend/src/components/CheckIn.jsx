@@ -87,20 +87,21 @@ const CheckIn = (props) => {
     <>
     <button 
     onClick={() => incrementLastLogin()}
-    className={`w-full block mr-3  rounded-lg bg-black bg-opacity-10 duration-300 
+    className={`w-full  mt-2 flex flex-col items-center px-2 mr-3 py-1  whitespace-nowrap  rounded-lg bg-black bg-opacity-10 duration-300 md:text-sm text-sm lg:text-md
         ${CheckedIn ? "cursor-default" : "  border-slate-300 bg-opacity-30 border hover:bg-slate-600 hover:border-white cursor-pointer"}
         `}>
         { habit.lastLogin < habit.duration ? 
             (<>
-        <div>
-           <i>{CheckedIn ? "Come back in" : "Click me in"} </i>
+        <div className=''>
+           <i>{CheckedIn ? "Come back in" : "Check in within"} </i> 
+        </div>
+        <div className=''>
+          {time}
         </div>
 
-        <div>
-            {time}
-        </div>
+      
         </> ):
-        (<div className='bg-yellow-300 bg-opacity-30 h-full rounded-lg'><i>Gold Status Achieved</i></div>)
+        (<div className='px-2 bg-gradient-to-tl from-yellow-600 to-yellow-500 bg-opacity-30 h-full rounded-lg text-black'><i>Gold Status Achieved</i></div>)
         }
     </button>
     </>

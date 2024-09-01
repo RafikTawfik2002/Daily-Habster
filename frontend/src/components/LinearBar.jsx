@@ -81,7 +81,7 @@ const LinearBar = (props) => {
         </div>
       </div>
     );
-  };
+  }; 
   function DivsRenderer({ count }) {
     const divs = [];
 
@@ -97,7 +97,7 @@ const LinearBar = (props) => {
       `}
           key={i}
         >
-          {i == 0 && days != 0 && <p className="absolute top-0 left-2">{Math.round(progress * 100) + "%"}</p>}
+          {i == 0 && days != 0 && <p className="absolute top-0 left-2">{Math.floor(progress * 100) + "%"}</p>}
           {days == 0 && (
            <> <div
               className={`  items-center bg-gradient-to-r from-green-700 to-green-500 rounded-lg rounded-l-none h-full`}
@@ -105,7 +105,8 @@ const LinearBar = (props) => {
             >
   
             </div>
-             {i == 0 && <p className="absolute top-0 left-2">{Math.floor(progress * 100) + "%"}</p>}</>
+             {i == 0 && <p className="absolute top-0 left-2">{Math.floor(progress * 100) + "%"}</p>}
+             </>
           )}
         </div>
       );

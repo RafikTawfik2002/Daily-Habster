@@ -26,10 +26,10 @@ const DeleteModal = (props) => {
                 <div className='mt-2 p-3 bg-blue-950 border-gray-500 rounded-xl border-0.3'>{habit.desc}</div>
 
                 <div className='mt-4 text-sm'>Started: </div> 
-                <div className='text-center text-sm mt-1 p-1 bg-blue-950 border-gray-500 rounded-xl border-0.3 w-1/2 lg:w-1/3'><i>{DateTools.dateRender(habit.createdAt)}</i></div>
+                <div className='pl-3  text-sm mt-1 p-1 bg-blue-950 border-gray-500 rounded-xl border-0.3 w-1/2 lg:w-1/3'><i>{DateTools.dateRender(habit.createdAt)}</i></div>
                 
                 <div className='text-sm mt-2'>Ends: </div> 
-                <div className='text-center text-sm mt-1 p-1 bg-blue-950 border-gray-500 rounded-xl border-0.3 w-1/2 lg:w-1/3'><i>{DateTools.dateRender(DateTools.DurationToDate(habit.createdAt, habit.duration))}</i></div>
+                <div className='pl-3 text-sm mt-1 p-1 bg-blue-950 border-gray-500 rounded-xl border-0.3 w-1/2 lg:w-1/3'><i>{DateTools.dateRender(DateTools.DurationToDate(habit.createdAt, habit.duration))}</i></div>
                
 
                 <div className="mt-10 mb-4 text-center lg:text-2xl md:text-xl text-md"> Are you sure you want to delete this habit ?</div>

@@ -30,6 +30,10 @@ const habitSchema = mongoose.Schema(
         lastLogin: {
             type: Number,
             required: true
+        },
+        text: {
+            type: String,
+            required: false
         }
     },
     {

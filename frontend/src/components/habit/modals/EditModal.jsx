@@ -112,7 +112,8 @@ const EditModal = (props) => {
                 success: ""+habit.success,
                 discrete: ""+habit.discrete,
                 userID: habit.userID,
-                lastLogin: ""+ (habit.lastLogin || 0)
+                lastLogin: ""+ (habit.lastLogin || 0),
+                text: habit.text
             }
             console.log(newHabit)
             console.log(habit._id)
@@ -121,7 +122,7 @@ const EditModal = (props) => {
             HabitDataServices.updateHabit(habit._id, newHabit)
             .then((response) => {
                 props.setHabit(previous => ({...previous, desc: habit.desc,
-                    duration: Number(duration), discrete: habit.discrete}))
+                    duration: Number(duration), discrete: habit.discrete, text: habit.text}))
                 props.setEdit();
             })
             .catch((error) => {
@@ -147,15 +148,31 @@ const EditModal = (props) => {
         <div className="flex flex-col mx-14 lg:text-lg md:text-lg text-md">
 
                 <div>
-                <label className="p-3 pt-0 pl-0">Habit Description:</label>
-                <textarea 
+                <label className="p-3 pt-0 pl-0">Habit Title:</label>
+                <input 
                 className="bg-blue-950 rounded-xl w-full mt-2 text-2xl"
                 name="desc"
                 value={habit.desc}
                 autoComplete="off"
                 onChange={handleInputChange}
                 >
+
+                
                     
+                
+                </input>
+                </div>
+
+                <div className="mt-8">
+                <label className=" pt-0 pl-0">Habit Description:</label>
+                <textarea 
+                className="bg-blue-950 min-h-20 rounded-xl w-full mt-2 text-xs"
+                name="text"
+                value={habit.text}
+                autoComplete="off"
+                onChange={handleInputChange}
+                >
+
                 
                 </textarea>
                 </div>

@@ -17,13 +17,13 @@ const HabitsDisplay = (props) => {
   const [view, setView] = useState([false, null])
 
   useEffect( () => {
-    if(edit[0] || del[0]){
+    if(edit[0] || del[0] || view[0]){
       document.body.classList.add('overflow-hidden');
     }
     else{
       document.body.classList.remove('overflow-hidden');
     }
-  }, [edit, del])
+  }, [edit, del, view])
   const find = (user) => {
     HabitDataServices.findByUserId(user.userID)
       .then((response) => {
@@ -66,7 +66,7 @@ const HabitsDisplay = (props) => {
     const comparVal = [0]
     if(props.sortState[0] == "end"){comparVal[0] = 2}
     else if(props.sortState[0] == "duration"){comparVal[0] = 4}
-    else if(props.sortState[0] == "progress"){comparVal[0] = 6}
+    else if(props.sortState[0] == "progress"){if(props.tab != "Main"){return}comparVal[0] = 6}
     if(props.sortState[1] == "down"){comparVal[0]+=1}
 
     habitsCopy.sort(comparators[comparVal[0]]);

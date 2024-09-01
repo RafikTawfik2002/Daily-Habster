@@ -8,6 +8,7 @@ const AddHabit = (props) => {
     
     const initHabit = {
         desc: "",
+        text: "",
         duration: "",
         archived: "false",
         success: "false",
@@ -84,6 +85,7 @@ const AddHabit = (props) => {
         const addHabit = (duration) => {
             const newHabit = {
                 desc: habit.desc,
+                text: habit.text,
                 duration: duration,
                 archived: habit.archived,
                 success: habit.success,
@@ -120,7 +122,7 @@ const AddHabit = (props) => {
 
         <div className="w-5/6 mx-auto text-gray-300 focus-within:text-yellow-200 flex flex-col items-start">
 
-        <label className='py-0.5'>Habit Description : </label>
+        <label className='py-0.5'>Habit Title : </label>
           <input type="text" 
                     id="desc"
                     required
@@ -128,6 +130,20 @@ const AddHabit = (props) => {
                     value={habit.desc}
                     onChange={handleInputChange}
                     name="desc" 
+          className=" w-full py-0.5 px-0 text-sm  bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus-text-white focus:border-yellow-200 peer" placeholder="Enter Habit Title"
+          />
+          
+        </div>
+
+        <div className="w-5/6 pt-6 mx-auto text-gray-300 focus-within:text-yellow-200 flex flex-col items-start">
+        <label className='py-0.5'>Habit Description: {"("}Optional{")"}</label>
+          <textarea type="text" 
+                    id="text"
+                    name="text"
+                    autoComplete="off"
+                    value={habit.text}
+                    onChange={handleInputChange}
+                     
           className=" w-full py-0.5 px-0 text-sm  bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus-text-white focus:border-yellow-200 peer" placeholder="Enter Habit Description"
           />
           

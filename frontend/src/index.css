@@ -11,3 +11,33 @@
 }
 ::-webkit-calendar-picker-indicator:hover { cursor: pointer; }
 
+::-webkit-scrollbar {
+    width: 12px; /* Width of the scrollbar */
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0); /* Transparent track */
+    border: none;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(88, 70, 189, 0.2); /* 50% transparent handle */
+    border-radius: 255px; /* Rounded corners */
+    border: none;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.7); /* Darker on hover */
+    cursor: default;
+}
+
+::-webkit-scrollbar-corner {
+    background-color: transparent; /* Makes the corner area transparent */
+    border: none; /* Ensures no border around the corner */
+}
+
+
+body {
+    scrollbar-width: thin; /* Thin scrollbar */
+    scrollbar-color: rgba(88, 70, 189, 0.2) rgba(255, 255, 255, 0); /* thumb color, track color */
+}

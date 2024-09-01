@@ -76,7 +76,7 @@ const Login = (props) => {
           />
           <label htmlFor=""
           className="absolute text-sm text-white duration-150 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6" 
-          >Email, Username, Phone</label>
+          >Username</label>
           <BiUser className="absolute top-4 right-4"/>
         </div>
 
@@ -99,8 +99,11 @@ const Login = (props) => {
 
         <button className="w-full mb-4 text-[18px] mt-6 rounded-full bg-white text-emerald-800 hover:bg-emerald-600 hover:text-white py-2 transition-colors duration-150" onClick={()=>validate()}>Login</button>
 
-        <div>
-          <span className="m-4">New Here? <Link className="text-blue-500" onClick={() => toRegister()}>Create an Account</Link></span>
+        <div className="text-center text-sm">
+          <span className="m-4">Don't have an account? <Link className="text-blue-500" onClick={() => toRegister()}>Sign up</Link></span>
+        </div>
+        <div className="mt-2 text-center text-sm">
+          <span className="m-4 "> Forgot <Link className="text-blue-500" onClick={() => toRegister()}>useranme / password</Link> ?</span>
         </div>
 
 
