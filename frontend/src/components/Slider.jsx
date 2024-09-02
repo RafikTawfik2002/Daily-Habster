@@ -13,9 +13,9 @@ const Slider = (props) => {
             setter(true)
         }
     }
-    useEffect(() => {
-        setter(false)
-    },[])
+    // useEffect(() => {
+    //     setter(props.initial)
+    // },[])
   return (
 
     // Silde Container

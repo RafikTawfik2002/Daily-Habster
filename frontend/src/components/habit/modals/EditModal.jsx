@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { TbArrowBackUp } from "react-icons/tb";
 import HabitDataServices from "../../../../services/habits"
 import Slider from "../../Slider";
@@ -9,10 +9,11 @@ import HabitDisplay from "../HabitsDisplay"
 
 const EditModal = (props) => {
 
-    console.log(props.habit)
 
     const [message, setMessage] = useState("")
-    const [habit, setHabit] = useState(props.habit)
+    const [habit, setHabit] = useState({...props.habit, duration: DateTools.DateToInput(DateTools.DurationToDate(props.habit.createdAt, props.habit.duration))})
+
+    console.log(habit)
 
     const initDuration = props.habit.duration
     const initDate = DateTools.dateRender(DateTools.DurationToDate(props.habit.createdAt, props.habit.duration))
@@ -22,27 +23,43 @@ const EditModal = (props) => {
 
 
     const [isDuration, setIsDuration] = useState(false);
+    const hasMounted = useRef(false);
+
+
+    // useEffect( () => {
+    //     console.log("use effect 2 ran")
+    //     console.log(habit)
+    //     setHabit(prevState => ({
+    //         ...prevState,
+    //         duration : DateTools.DateToInput(DateTools.DurationToDate(props.habit.createdAt, props.habit.duration))
+    //       }));
+    // }, [])
 
     useEffect( () => {
+        if(hasMounted.current){
+        console.log("use effect 1 ran")
+        console.log(habit)
         setHabit(prevState => ({
             ...prevState,
             duration : ""
           }));
+        }
+        else{
+            hasMounted.current = true
+        }
+
     }, [isDuration])
 
-    useEffect( () => {
-        console.log("use effect ran: "+  DateTools.DateToInput(DateTools.DurationToDate(props.habit.createdAt, props.habit.duration)))
-        setHabit(prevState => ({
-            ...prevState,
-            duration : DateTools.DateToInput(DateTools.DurationToDate(props.habit.createdAt, props.habit.duration))
-          }));
-    }, [])
+
+
+
 
 
 
 
     const handleInputChange = event => {
         const { name, value } = event.target; //get name and value from the target
+        console.log("handle input ran")
         setHabit(prevState => ({
             ...prevState,
             [name]: value
@@ -50,6 +67,7 @@ const EditModal = (props) => {
       };
 
     const discrete = (on) => {
+        console.log("discrete ran: " + on)
         setHabit(prevState => ({
             ...prevState,
             discrete: on
@@ -115,12 +133,12 @@ const EditModal = (props) => {
                 lastLogin: ""+ (habit.lastLogin || 0),
                 text: habit.text
             }
-            console.log(newHabit)
-            console.log(habit._id)
             
             
             HabitDataServices.updateHabit(habit._id, newHabit)
             .then((response) => {
+                console.log("Setting habit discrete value to")
+                console.log(habit)
                 props.setHabit(previous => ({...previous, desc: habit.desc,
                     duration: Number(duration), discrete: habit.discrete, text: habit.text}))
                 props.setEdit();
@@ -210,7 +228,6 @@ const EditModal = (props) => {
                 <div>
 
                 <Slider setter={discrete} initial={habit.discrete}/>
-                
                 </div>
             </div>
 

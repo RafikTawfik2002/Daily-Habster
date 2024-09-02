@@ -17,7 +17,7 @@ const LinearBar = (props) => {
   const [progress, setProgress] = useState(
     Math.min(1, DateTools.Percentage(start, duration))
   );
-  console.log(progress)
+  //console.log(progress)
   //const [progress, setProgress] = useState(1)
 
   useEffect(() => {

@@ -110,7 +110,7 @@ const AddHabit = (props) => {
 
     <div className=" pt-9 w-[45%]  mx-auto">
        
-      <div className=" bg-slate-800 border text-gray-300 border-slate-400 rounded-3xl pl-4 pr-4 pt-2 shadow-lg backdrop-filter backdrop-blur-md bg-opacity-30 justify-center pb-9">
+      <div className=" bg-slate-800 border text-gray-300 border-slate-400 rounded-3xl pl-5 pr-4 pt-5 shadow-lg backdrop-filter backdrop-blur-md bg-opacity-30 justify-center pb-9">
 
             <TbArrowBackUp onClick={() => {props.setAddState(false)}} className="py-0  cursor-pointer text-3xl rounded-md  my-auto  "/>
 
