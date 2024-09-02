@@ -10,6 +10,7 @@ import ViewModal from "./modals/ViewModal";
 const HabitsDisplay = (props) => {
   const user = props.user;
 
+
   const [habits, setHabits] = useState([]);
   const [edit, setEdit] = useState([false, null, null]);
   const [del, setDel] = useState([false, null]);

@@ -4,7 +4,7 @@ class UserDataService {
     getByUsername(username){
         return http.get(`/login/username/${username}`) // what goes in the url as a query or body request
     }
-
+ 
     getById(id) {
         return http.get(`/login/${id}`)
     }
@@ -19,6 +19,10 @@ class UserDataService {
 
     deleteUser() {
         return http.delete(`/login/${id}`);
+    }
+
+    authenticate(body) {
+        return http.post(`/login/authenticate`, body);
     }
 
 }

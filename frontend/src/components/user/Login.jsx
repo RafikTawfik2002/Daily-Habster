@@ -5,6 +5,8 @@ import {AiOutlineUnlock } from "react-icons/ai"
 import { MdMenuBook } from "react-icons/md";
 import HabitDataService from "../../../services/users.js"
 import { useState } from "react";
+import { IoEyeOffOutline } from "react-icons/io5";
+import { FiEye } from "react-icons/fi";
 
 
 const Login = (props) => {
@@ -21,6 +23,8 @@ const Login = (props) => {
   const [user, setUser] = useState(initialUserState);
   const [message, setMessage] = useState("") 
 
+  const [passHidden, setPassHidden] = useState(true)
+
 
   const validate = async () => {
     if(!user.username || !user.password){
@@ -30,16 +34,15 @@ const Login = (props) => {
 
     try{
       // check if user exists
-      const isUser = await HabitDataService.getByUsername(user.username); 
+      // const isUser = await HabitDataService.getByUsername(user.username); 
 
-      // chech if user exists abd password is matching
-      if(isUser.data.length == 0 || isUser.data[0].passWord != user.password){
-        setMessage("Wrong username or password"); return;}
+      const isAuthentic = await HabitDataService.authenticate({username: user.username, password: user.password});
+
         
-      await props.filled(user.username);
+      await props.filled(isAuthentic.data);
     }
     catch(e){
-      setMessage("could not connect to server")
+      setMessage("Wrong username or password")
       console.log(e)
     }
 
@@ -61,40 +64,44 @@ const Login = (props) => {
       <div className="bg-slate-800 border border-slate-400 rounded-md p-8 shadow-lg backdrop-filter backdrop-blur-sm bg-opacity-30 relative">
       <div className="text-2xl text-gray-300 shadow-2xl rounded-lg bg-opacity-10 text-center mb-4 p-2"> <MdMenuBook className="inline -translate-y-1"/> Habit Tracker</div>
         <h1 className="text-4xl text-white font-bold text-center rounded-lg mb-6 p-2">Login</h1>
-        <span className="text-sm text-red-700">{message}</span>
+        {message && <div className="text-center mb-3 "><span className="px-2 py-1 rounded-lg bg-opacity-60 bg-gray-200 text-sm text-red-700">{message}</span></div>}
 
 
-        <div className="relative my-4">
+
+
+        <div className="flex flex-col items-start relative">
+
+        <label className='py-0.5 text-xs'>Username </label>
           <input type="text" 
                     id="username"
                     required
-                    autoComplete="off"
+                    autoComplete="on"
                     value={user.username}
                     onChange={handleInputChange}
                     name="username" 
-          className="block w-72 py-2.3 px-0 text-sm text-white bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus-text-white focus:border-blue-600 peer" placeholder=""
+          className=" block w-72 py-0.5 px-0 text-sm  bg-transparent border-0 border-b-2 border-gray-300 focus:border-gray-300 focus:ring-0 " placeholder="Enter Habit Title"
           />
-          <label htmlFor=""
-          className="absolute text-sm text-white duration-150 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6" 
-          >Username</label>
-          <BiUser className="absolute top-4 right-4"/>
+          <BiUser className="absolute top-6 right-1"/>
+          
         </div>
 
-        <div className="relative my-4">
-          <input type="password" 
+        <div className="w-full mt-5 mb-5 flex flex-col items-start relative">
+
+        <label className='py-0.5 text-xs '>Password </label>
+        <input type={passHidden ? "password" : "text"}
                     id="password"
                     required
                     autoComplete="off"
                     value={user.password}
                     onChange={handleInputChange}
                     name="password" 
-          className="block w-72 py-2.3 px-0 text-sm text-white bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus-text-white focus:border-blue-600 peer" placeholder=""
+          className=" block w-72 py-0.5 px-0 text-sm  bg-transparent border-0 border-b-2 border-gray-300 focus:border-gray-300 focus:ring-0 " placeholder="Enter Habit Title"
           />
-          <label htmlFor=""
-          className="absolute text-sm text-white duration-150 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6" 
-          >Your Password</label>
-          <AiOutlineUnlock className="absolute top-4 right-4"/>
+         {passHidden ? <IoEyeOffOutline className="cursor-pointer absolute top-6 right-1" onClick={() => setPassHidden(false)}/> : <FiEye className=" cursor-pointer absolute top-6 right-1" onClick={() => setPassHidden(true)}/>}
+          
         </div>
+
+
 
 
         <button className="w-full mb-4 text-[18px] mt-6 rounded-full bg-white text-emerald-800 hover:bg-emerald-600 hover:text-white py-2 transition-colors duration-150" onClick={()=>validate()}>Login</button>

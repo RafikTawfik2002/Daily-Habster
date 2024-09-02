@@ -2,8 +2,10 @@ import express from 'express';
 import { User } from '../models/user.js';
 import { Habit } from '../models/habit.js';
 import mongodb, { ObjectId } from "mongodb"
+import bcrypt from 'bcrypt'
 
 const router = express.Router();
+
 
 // get method for getting users
 
@@ -49,34 +51,76 @@ router.get('/username/:username', async (request, response) => {
     }
 })
 
+// create a new user
 router.post('/', async (request, response) => {
     try {
         //input validation
-        if (!request.body.userID || !request.body.name || !request.body.passWord || !request.body.userName){
+        if (!request.body.userID || !request.body.email || !request.body.passWord || !request.body.userName){
             return response.status(400).send({message: 'Send all required fields'});
         }
 
-        const google = request.body.google || false
         const newID = new ObjectId(request.body.userID)
 
         const found = await User.find({userName: request.body.userName}).exec() 
         console.log(found.length)
         if(found.length > 0){throw new Error('username already exists');}
 
-        
+        const hashedPassword = await bcrypt.hash(request.body.passWord, 10);
         //initialize a new user
         const newUser = {
             _id: newID,
             userID: newID,
             userName: request.body.userName,
-            name: request.body.name,
-            passWord: request.body.passWord,
-            google: google
+            email: request.body.email,
+            passWord: hashedPassword,
+            verified: false
         };
 
         const user = await User.create(newUser); //using a mongoose.model which has a mongoose Schema
 
-        return response.status(201).send(user);
+        const res = {
+            userID: user.userID,
+            userName: user.userName,
+            email: user.email,
+            createdAt: user.createdAt
+        }
+
+        return response.status(201).send(res);
+    } catch (error) {
+        console.log(error.message);
+        response.status(500).send({ message: error.message });
+    }
+});
+
+router.post('/authenticate', async (request, response) => {
+    try {
+        //input validation
+        if (!request.body.username || !request.body.password){
+            return response.status(400).send({message: 'Send all required fields'});
+        }
+
+
+        const found = await User.find({userName: request.body.username}).exec() 
+
+        if(found.length == 0){throw new Error('username or password are incorrect');}
+
+        const user = found[0]
+        const password = user.passWord
+
+        const isMatch = await bcrypt.compare(request.body.password, password)
+
+        if(!isMatch){throw new Error('username or password are incorrect');}
+
+        // data to send back to frontend
+        const res = {
+            userID: user.userID,
+            userName: user.userName,
+            email: user.email,
+            createdAt: user.createdAt
+        }
+
+
+        return response.status(201).send(res);
     } catch (error) {
         console.log(error.message);
         response.status(500).send({ message: error.message });

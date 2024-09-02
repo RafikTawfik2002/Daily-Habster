@@ -9,7 +9,7 @@ import { useState } from "react";
 
 const App = () => {
   const [logged, setLogged] = useState()
-  const [user, setUser] = useState()
+  const [user, setUser] = useState() // user should represent the userID and not the while user entry 
   return (
     <>
     <div

@@ -19,10 +19,9 @@ const User = (props) => {
   }, []);
   // user information, once obtained we can transition to the habit page
 
-  const fillLog = async (username) => {
-    const user = await HabitDataService.getByUsername(username);
+  const fillLog = async (user) => {
     props.setLogged(true);
-    props.setUser(user.data[0]);
+    props.setUser(user); 
     navigate("/Home")
   };
 

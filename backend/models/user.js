@@ -1,4 +1,4 @@
-import { ObjectId } from "mongodb";
+import { ObjectId, Timestamp } from "mongodb";
 import mongoose from "mongoose";
 
 const userSchema = mongoose.Schema(
@@ -15,7 +15,7 @@ const userSchema = mongoose.Schema(
             type: String,
             required: true
         },
-        name: {
+        email: {
             type: String,
             required: true,
         },
@@ -23,11 +23,14 @@ const userSchema = mongoose.Schema(
             type: String,
             required: false
         },
-        google: {
+        verified: {
             type: Boolean,
-            required: true
+            required: false
         }
         
+    },
+    {
+        timestamps: true
     }
 );
 

@@ -9,7 +9,7 @@ import HabitDataService from "../../../services/users.js"
 const Register = (props) => {
   const [message, setMessage] = useState("") 
   const initialUserState = {
-    name: "",
+    email: "",
     username: "",
     password: "",
     confirmpassword: ""
@@ -27,11 +27,11 @@ const Register = (props) => {
   }
 
   const validate = async () => {
-    if(!user.name || !user.username || !user.password || !user.confirmpassword){
+    if(!user.email || !user.username || !user.password || !user.confirmpassword){
       setMessage("Please fill all fields")
       return
     }
-    else if(!validateEmail(user.name)){
+    else if(!validateEmail(user.email)){
       setMessage("Email not valid")
       return
     }
@@ -43,12 +43,13 @@ const Register = (props) => {
     const userArg = {
       userID : Math.floor(Math.random() * 10),
       userName : user.username,
-      name: user.name,
+      email: user.email,
       passWord: user.password
     }
     try{
-      await HabitDataService.createUser(userArg);
-      props.filled(user.username);
+      const newUser = await HabitDataService.createUser(userArg);
+
+      props.filled(newUser.data);
     }
     catch(e){
       setMessage("username may be taken")
@@ -68,7 +69,7 @@ const Register = (props) => {
   return (
     <div
     className="text-white h-[100vh] flex justify-center items-center bg-cover"
-    
+     
   >
     <div>
       <div className="bg-slate-800 border border-slate-400 rounded-md p-8 shadow-lg backdrop-filter backdrop-blur-sm bg-opacity-30 relative">
@@ -97,12 +98,12 @@ const Register = (props) => {
 
         <div className="relative my-4">
           <input type="email" 
-          id="name"
+          id="email"
           required
           autoComplete="off"
-          value={user.name}
+          value={user.email}
           onChange={handleInputChange}
-          name="name" 
+          name="email" 
           className="block w-72 py-2.3 px-0 text-sm text-white bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus-text-white focus:border-blue-600 peer" placeholder=""
           />
           <label htmlFor=""

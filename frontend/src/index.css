@@ -41,3 +41,14 @@ body {
     scrollbar-width: thin; /* Thin scrollbar */
     scrollbar-color: rgba(88, 70, 189, 0.2) rgba(255, 255, 255, 0); /* thumb color, track color */
 }
+
+:-webkit-autofill,
+:-webkit-autofill:hover, 
+:-webkit-autofill:focus, 
+:-webkit-autofill:active{
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: #ffffff !important;
+    box-shadow: inset 0 0 0 0 #ffffff29;
+    caret-color: white;
+
+}

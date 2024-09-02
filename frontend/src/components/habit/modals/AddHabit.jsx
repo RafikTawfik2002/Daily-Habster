@@ -118,7 +118,7 @@ const AddHabit = (props) => {
         <div className='flex justify-center '>
         <span className=" text-sm text-red-700 bg-white opacity-60 px-0.5 rounded-md">{message}</span>
         </div>
-
+ 
 
         <div className="w-5/6 mx-auto text-gray-300 focus-within:text-yellow-200 flex flex-col items-start">
 
