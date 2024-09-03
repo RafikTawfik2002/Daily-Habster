@@ -5,6 +5,7 @@ import WelcomePage from "./pages/WelcomePage";
 import User from "./pages/User";
 import { Routes as Switch, Route, Link } from "react-router-dom";
 import { useState } from "react";
+import Profile from "./pages/Profile";
 
 
 const App = () => {
@@ -26,6 +27,7 @@ const App = () => {
             {/* <Route exact path='/' element={logged ? <MainHabits user={user} setUser={setUser} setLogged={setLogged}/> : <User setUser={setUser} setLogged={setLogged}/>} /> */}
             <Route exact path='/' element={<WelcomePage />} />
             <Route exact path='/Login' element={<User setUser={setUser} setLogged={setLogged}/>} />
+            <Route exact path='/Profile' element={<Profile user={user} setUser={setUser} logged={logged} setLogged={setLogged}/>} />
             <Route exact path='/Home' element={<MainHabits user={user} setUser={setUser} setLogged={setLogged}/>} />
       </Switch>
 

@@ -37,7 +37,7 @@ const SingleHabit = (props) => {
                   {/*  Main Display of Habit Data */}
                   <div className="flex flex-col w-full py-3">
                       <div className={`px-3 mb-2 rounded-lg  text-xl md:text-xl lg:text-3xl self-start leading-extra-tight font-normal`}>
-                        <span className="font-thin">{props.index + ") "}</span>{habit.desc} Discrete {""+ habit.discrete}
+                        <span className="font-thin">{props.index + ") "}</span>{habit.desc} 
                       </div>
 
                       <div className="flex flex-row items-center pl-3">

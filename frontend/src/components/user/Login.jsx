@@ -37,7 +37,8 @@ const Login = (props) => {
       // const isUser = await HabitDataService.getByUsername(user.username); 
 
       const isAuthentic = await HabitDataService.authenticate({username: user.username, password: user.password});
-
+      console.log("LOGIN DATA IS")
+      console.log(isAuthentic.data)
         
       await props.filled(isAuthentic.data);
     }

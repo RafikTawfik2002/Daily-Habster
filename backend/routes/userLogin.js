@@ -119,6 +119,9 @@ router.post('/authenticate', async (request, response) => {
             createdAt: user.createdAt
         }
 
+        console.log("BACKEND SENDING")
+        console.log(res)
+
 
         return response.status(201).send(res);
     } catch (error) {
