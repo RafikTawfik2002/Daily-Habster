@@ -25,6 +25,10 @@ class UserDataService {
         return http.post(`/login/authenticate`, body);
     }
 
+    updatePassword(id, body){
+        return http.put(`/login/password/${id}`, body)
+    }
+
 }
 
 export default new UserDataService();

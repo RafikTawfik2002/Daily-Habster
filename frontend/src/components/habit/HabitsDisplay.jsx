@@ -11,11 +11,17 @@ import Spinner from "../Spinner";
 const HabitsDisplay = (props) => {
   const user = props.user;
 
+  const sleep = ms => {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
   const [habits, setHabits] = useState([]);
   const [edit, setEdit] = useState([false, null, null]);
   const [del, setDel] = useState([false, null]);
 
   const [view, setView] = useState([false, null])
+
+  const [loading, setLoading] = useState(true)
 
   useEffect( () => {
     if(edit[0] || del[0] || view[0]){
@@ -29,6 +35,8 @@ const HabitsDisplay = (props) => {
     HabitDataServices.findByUserId(user.userID)
       .then((response) => {
         setHabits(response.data);
+        
+        setLoading(false)
       })
       .catch((e) => {
       });
@@ -107,7 +115,7 @@ const HabitsDisplay = (props) => {
         )
         ) : (
           <>
-          {(user != undefined) ? <div className="mt-12"><Spinner /></div> : <div>{"No Habits to Display"}</div>}
+          {(user != undefined) && loading ? <div className="mt-12"><Spinner /></div> : <div>{"No Habits to Display"}</div>}
           </>
         )}
     </div>

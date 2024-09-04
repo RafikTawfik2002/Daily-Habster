@@ -13,7 +13,7 @@ const Feedback = () => {
     Feedback<br/>
     <Link to="/Home">Cancel</Link>
 
-    <div className='flex justify-center'><PassValidate password={"Monopoly8800$$"}/></div>
+   
     </div>
     </div>
 

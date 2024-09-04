@@ -7,7 +7,12 @@ import { IoEyeOffOutline } from "react-icons/io5";
 import { FiEye } from "react-icons/fi";
 import PassValidate from "../PassValidate";
 
+import UserDataServices from "../../../services/users"
+
 const PasswordUpdate = (props) => {
+
+  const id = props.user.userID
+
   const initUser = {
     oldPassword: "",
     password: "",
@@ -25,41 +30,51 @@ const PasswordUpdate = (props) => {
   const [field2, setField2] = useState(true);
   const [field3, setField3] = useState(true);
 
+  const [message, setMessage] = useState("")
+
   const [newPassValid, setNewPassValid] = useState(false)
+  const [enter, setEnter] = useState(false)
 
   const hangleChange = (event) => {
     const { name, value } = event.target; //get name and value from the target
+    if(name == "password"){setEnter(true)}
     setUser((prevState) => ({
       ...prevState,
       [name]: value,
     }));
   };
 
-  useEffect(() => {
-    const inputs = document.querySelectorAll('input');
-    inputs.forEach(input => {
-      input.setAttribute('autocomplete', 'off');
-    });
-  }, []);
+  const [success, setSuccess] = useState(false)
+  const updatePassword = () => {
+      if(!user.oldPassword || !user.password || !user.confirmPass){
+        setMessage("Please fill all fields")
+        return}
+      if(user.password != user.confirmPass){
+          alert(user.password + " " + user.confirmPass)
+          setMessage("New and Confirm passwords don't match")
+          return}
+      if(!newPassValid){
+        setMessage("Password does not meet the requirements")
+        return
+      }
+      const body = {
+        password: user.password,
+        oldPassword: user.oldPassword
+      }
+     UserDataServices.updatePassword(id, body)
+     .then(() => {setSuccess(true); setMessage("")})
+     .catch(() => {setMessage("Old password is incorrect")})
+  }
 
-  return (
-    <div className="pt-9 w-[80%] md:w-[65%] lg:w-[45%]  mx-auto">
-      {/* Profile Section */}
-      <div className="bg-slate-800 border text-gray-300 border-slate-400 rounded-3xl pl-5 pr-4 pt-5 shadow-lg backdrop-filter backdrop-blur-md bg-opacity-30 justify-center pb-9">
-        <TbArrowBackUp
-          onClick={() => navigate("/Home")}
-          className="py-0  cursor-pointer text-xl md:text-3xl lg:text-3xl rounded-md  inline"
-        >
-          {" "}
-        </TbArrowBackUp>
-
-        <div className="text-xl md:text-2xl lg:text-2xl text-center mb-2 mt-2">
+  const Active = () => {
+    return (<>
+     <div className="text-xl md:text-2xl lg:text-2xl text-center mb-10 mt-2">
           Update Password
         </div>
-        <div className="mb-10 flex flex-col">
-          <div className="text-center mb-2 text-sm">New Password must contain </div> 
-          <div className="flex justify-center"><PassValidate password={user.password} setValid={setNewPassValid} valid={newPassValid} /></div>
+        <div className='flex justify-center '>
+        <span className=" text-sm text-red-700 bg-white opacity-60 px-0.5 rounded-md">{message}</span>
         </div>
+        
 
         <div className="flex flex-row mx-2 md:mx-2 lg:mx-2 ">
           {/* labels
@@ -136,13 +151,19 @@ const PasswordUpdate = (props) => {
                 : <FiEye className="cursor-pointer absolute top-4 right-3 text-xl" onClick={() => setField3(prev => !prev)}/>}
             </div>
             </form>
+
+            <div className="mt-10 flex flex-col">
+          <div className="text-center mb-2 text-sm">New Password must contain </div> 
+          <div className="flex justify-center"><PassValidate password={user.password} setValid={setNewPassValid} valid={newPassValid} /></div>
+        </div>
+            
           </div>
         </div>
 
         <div className="flex flex-col items-center mt-8 text-yellow-500">
           <button
             className="mb-2 hover:font-bold text-green-500"
-            onClick={() => props.setState(0)}
+            onClick={() => updatePassword()}
           >
             Save Changes
           </button>
@@ -152,7 +173,38 @@ const PasswordUpdate = (props) => {
           >
             Cancel
           </button>
+        </div></>)
+  }
+
+  const Success = () => {
+    return (<>
+    <div className="text-xl md:text-2xl lg:text-2xl text-center mb-10 mt-2">
+          Password Updated Successfully 
         </div>
+        <div className="flex flex-col items-center mt-8 text-yellow-500">
+          <button
+            className="mb-2 hover:font-bold text-green-500 rounded-lg bg-opacity-30 bg-slate-500 px-3 py-1"
+            onClick={() => props.setState(0)}
+          >
+            Go Back to Profile Info
+          </button>
+          </div>
+      
+    </>)
+  }
+
+  return (
+    <div className="pt-9 w-[80%] md:w-[65%] lg:w-[45%]  mx-auto">
+      {/* Profile Section */}
+      <div className="bg-slate-800 border text-gray-300 border-slate-400 rounded-3xl pl-5 pr-4 pt-5 shadow-lg backdrop-filter backdrop-blur-md bg-opacity-30 justify-center pb-9">
+        <TbArrowBackUp
+          onClick={() => navigate("/Home")}
+          className="py-0  cursor-pointer text-xl md:text-3xl lg:text-3xl rounded-md  inline"
+        >
+          {" "}
+        </TbArrowBackUp>
+
+        {success ? Success() : Active()}
       </div>
     </div>
   );

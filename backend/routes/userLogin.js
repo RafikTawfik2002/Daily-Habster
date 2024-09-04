@@ -130,6 +130,39 @@ router.post('/authenticate', async (request, response) => {
     }
 });
 
+// used to update a password
+router.put('/password/:id', async (request, response) => {
+    try{
+        if(!request.body.password || !request.body.oldPassword){throw new Error("send both old and new passwords")}
+        const { id } = request.params;
+
+        // find the user and check if password matches
+        const found = await User.find({_id: id}).exec() 
+
+        if(found.length == 0){throw new Error('user not found error');}
+
+        const user = found[0]
+        const password = user.passWord
+
+        const isMatch = await bcrypt.compare(request.body.oldPassword, password)
+
+        if(!isMatch){throw new Error('old password is incorrect');}
+        
+        // old password match, encrypt new password and update the user
+
+        const hashedPassword = await bcrypt.hash(request.body.password, 10);
+        
+        const updated = await User.findByIdAndUpdate(id, {passWord: hashedPassword},  { new: true, runValidators: true })
+
+
+        return response.status(200).json(updated);
+    } catch (error){
+        console.log(error.message);
+        response.status(500).send({ message: error.message });
+
+    }
+})
+
 router.put('/:id', async (request, response) => {
     try{
         if(!request.body.name){throw new Error("no name provided")}
