@@ -92,7 +92,7 @@ const Login = (props) => {
         <input type={passHidden ? "password" : "text"}
                     id="password"
                     required
-                    autoComplete="off"
+                    autoComplete="on"
                     value={user.password}
                     onChange={handleInputChange}
                     name="password" 

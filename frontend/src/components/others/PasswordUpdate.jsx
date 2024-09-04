@@ -1,10 +1,11 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { TbArrowBackUp } from "react-icons/tb";
 
 import { IoEyeOffOutline } from "react-icons/io5";
 import { FiEye } from "react-icons/fi";
+import PassValidate from "../PassValidate";
 
 const PasswordUpdate = (props) => {
   const initUser = {
@@ -24,6 +25,8 @@ const PasswordUpdate = (props) => {
   const [field2, setField2] = useState(true);
   const [field3, setField3] = useState(true);
 
+  const [newPassValid, setNewPassValid] = useState(false)
+
   const hangleChange = (event) => {
     const { name, value } = event.target; //get name and value from the target
     setUser((prevState) => ({
@@ -31,6 +34,13 @@ const PasswordUpdate = (props) => {
       [name]: value,
     }));
   };
+
+  useEffect(() => {
+    const inputs = document.querySelectorAll('input');
+    inputs.forEach(input => {
+      input.setAttribute('autocomplete', 'off');
+    });
+  }, []);
 
   return (
     <div className="pt-9 w-[80%] md:w-[65%] lg:w-[45%]  mx-auto">
@@ -43,8 +53,12 @@ const PasswordUpdate = (props) => {
           {" "}
         </TbArrowBackUp>
 
-        <div className="text-xl md:text-2xl lg:text-2xl text-center mb-10 mt-2">
+        <div className="text-xl md:text-2xl lg:text-2xl text-center mb-2 mt-2">
           Update Password
+        </div>
+        <div className="mb-10 flex flex-col">
+          <div className="text-center mb-2 text-sm">New Password must contain </div> 
+          <div className="flex justify-center"><PassValidate password={user.password} setValid={setNewPassValid} valid={newPassValid} /></div>
         </div>
 
         <div className="flex flex-row mx-2 md:mx-2 lg:mx-2 ">
@@ -60,7 +74,8 @@ const PasswordUpdate = (props) => {
         </div> */}
           {/* fields */}
           <div className="flex flex-col w-full justify-center md:text-xs text-xs lg:text-sm ">
-            <div className="mb-5 flex items-center w-full">
+            <form autoComplete="off" key="unique-key">
+            <div className="relative mb-5 flex items-center w-full">
               <label
                 className={`pr-3 text-left w-1/4  ${
                   isFocusedName && "text-yellow-200"
@@ -72,15 +87,18 @@ const PasswordUpdate = (props) => {
                 type={field1 ? "password" : "text"}
                 onFocus={() => setIsFocusedName(true)}
                 onBlur={() => setIsFocusedName(false)}
-                id="oldPassword"
+                id=""
                 name="oldPassword"
                 value={user.oldPassword}
                 onChange={hangleChange}
+                autoComplete="off"
                 className="w-3/4 px-3 border border-slate-400 bg-transparent  bg-opacity-30 border-t-0 border-x-0 ring-0 focus:ring-0 focus:border-yellow-200"
               ></input>
+                {field1 ? <IoEyeOffOutline className="cursor-pointer absolute top-4 right-3 text-xl" onClick={() => setField1(prev => !prev)}/> 
+                : <FiEye className="cursor-pointer absolute top-4 right-3 text-xl" onClick={() => setField1(prev => !prev)}/>}
             </div>
 
-            <div className="mb-5 flex items-center w-full">
+            <div className="relative mb-5 flex items-center w-full">
             <label className={` pr-3 text-left w-1/4 ${isFocusedExtra && "text-yellow-200"}`}>
               New Password:
           </label>
@@ -92,11 +110,14 @@ const PasswordUpdate = (props) => {
                 name="password"
                 value={user.password}
                 onChange={hangleChange}
+                autoComplete="off"
                 className="w-3/4 px-3 border border-slate-400 bg-transparent  bg-opacity-30 border-t-0 border-x-0 ring-0 focus:ring-0 focus:border-yellow-200"
               ></input>
+               {field2 ? <IoEyeOffOutline className="cursor-pointer absolute top-4 right-3 text-xl" onClick={() => setField2(prev => !prev)}/> 
+                : <FiEye className="cursor-pointer absolute top-4 right-3 text-xl" onClick={() => setField2(prev => !prev)}/>}
             </div>
 
-            <div className="flex items-center w-full">
+            <div className="relative flex items-center w-full">
             <label className={`pr-3 text-left w-1/4 ${isFocusedEmail && "text-yellow-200"}`}>
               Confirm Password:
           </label>
@@ -108,9 +129,13 @@ const PasswordUpdate = (props) => {
                 name="confirmPass"
                 value={user.confirmPass}
                 onChange={hangleChange}
+                autoComplete="off"
                 className="w-3/4 px-3 border border-slate-400 bg-transparent bg-opacity-30 border-t-0 border-x-0 ring-0 focus:ring-0 focus:border-yellow-200"
               ></input>
+               {field3 ? <IoEyeOffOutline className="cursor-pointer absolute top-4 right-3 text-xl" onClick={() => setField3(prev => !prev)}/> 
+                : <FiEye className="cursor-pointer absolute top-4 right-3 text-xl" onClick={() => setField3(prev => !prev)}/>}
             </div>
+            </form>
           </div>
         </div>
 

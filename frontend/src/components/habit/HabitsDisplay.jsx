@@ -5,11 +5,11 @@ import EditModal from "./modals/EditModal";
 import DeleteModal from "./modals/DeleteModal";
 import DateTools from "../../DateTools";
 import ViewModal from "./modals/ViewModal";
+import Spinner from "../Spinner";
 
 
 const HabitsDisplay = (props) => {
   const user = props.user;
-
 
   const [habits, setHabits] = useState([]);
   const [edit, setEdit] = useState([false, null, null]);
@@ -106,7 +106,9 @@ const HabitsDisplay = (props) => {
           
         )
         ) : (
-          <div>{"No Habits to Display"}</div>
+          <>
+          {(user != undefined) ? <div className="mt-12"><Spinner /></div> : <div>{"No Habits to Display"}</div>}
+          </>
         )}
     </div>
     {edit[0] && <EditModal habit={edit[1]} setHabit={edit[2]} setEdit={() => setEdit([false, null, null])}/>}
