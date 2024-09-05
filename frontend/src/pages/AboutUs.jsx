@@ -43,7 +43,7 @@ const AboutUs = (props) => {
             Thank you for using my habit tracker Daily Habster. This app started as a small tool I made for myself after deciding to expanded into the tool you are using right now.
             </div>
             <div className="text-sm md:text-md lg:text-md text-left mb-4 mt-2">
-            I am a software developper and I'm always looking for exciting work and projects to work on and to collaborate with other developpers. 
+            I am a software developper and I'm always looking for exciting work and projects to work on and enjoy collaborating with other developpers. 
             </div>
             <div className="text-sm md:text-md lg:text-md text-left mb-5 mt-2">
             Please feel free to reach out to me if you are interested in working together.
