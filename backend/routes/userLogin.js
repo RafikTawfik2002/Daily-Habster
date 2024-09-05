@@ -116,7 +116,8 @@ router.post('/authenticate', async (request, response) => {
             userID: user.userID,
             userName: user.userName,
             email: user.email,
-            createdAt: user.createdAt
+            createdAt: user.createdAt,
+            verified: user.verified
         }
 
         console.log("BACKEND SENDING")

@@ -1,6 +1,7 @@
 import express from 'express';
 import { Habit } from '../models/habit.js'
 import mongodb, { ObjectId } from "mongodb"
+import { Review } from "../models/Reviews.js"
 
 const router = express.Router();
 
@@ -113,7 +114,19 @@ router.delete('/:id', async (request, response) => {
     }
 })
 
-// routes for user login
+// Post a review
+
+router.post('/review', async (request, response) => {
+    try {
+
+        const review = await Review.create(request.body);
+
+        return response.status(200).send({ message: 'Review added successfully' });
+    } catch (error) {
+        console.log(error.message);
+        response.status(500).send({ message: error.message });
+    }
+})
 
 
 

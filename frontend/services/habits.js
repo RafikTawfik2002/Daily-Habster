@@ -21,6 +21,10 @@ class HabitDataService {
         return http.delete(`/habit/${id}`);
     }
 
+    addReview(body) {
+        return http.post(`habit/review`, body)
+    }
+
 }
 
 export default new HabitDataService();
