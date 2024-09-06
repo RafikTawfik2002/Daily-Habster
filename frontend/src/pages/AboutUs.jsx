@@ -26,7 +26,7 @@ const AboutUs = (props) => {
     <div className="relative overflow-hidden md:pt-28 lg:pt-32 pt-24 ">
         <div className="pt-9 w-[80%] md:w-[65%] lg:w-[45%]  mx-auto">
           {/* Profile Section */}
-          <div className="bg-slate-800 border text-gray-300 border-slate-400 rounded-3xl pl-5 pr-4 pt-5 shadow-lg backdrop-filter backdrop-blur-md bg-opacity-30 justify-center pb-7">
+         {user && <div className="bg-slate-800 border text-gray-300 border-slate-400 rounded-3xl pl-5 pr-4 pt-5 shadow-lg backdrop-filter backdrop-blur-md bg-opacity-30 justify-center pb-7">
             <TbArrowBackUp
               onClick={() => navigate("/Home")}
               className="py-0  cursor-pointer text-xl md:text-3xl lg:text-3xl rounded-md  inline"
@@ -35,15 +35,15 @@ const AboutUs = (props) => {
             </TbArrowBackUp>
            
             <div className="text-xl md:text-2xl lg:text-2xl text-center mb-5 mt-2">
-                  About the app and the developper 
+                  About the app and the developer 
                 </div>
 
                 <div className='rounded-xl p-4 bg-slate-800 bg-opacity-50 border border-gray-600'>
                 <div className="text-sm md:text-md lg:text-md text-left mb-4 mt-2">
-            Thank you for using my habit tracker Daily Habster. This app started as a small tool I made for myself after deciding to expanded into the tool you are using right now.
+            Thank you for using my habit tracker Daily Habster. This app started as a small tool I made for myself after deciding to expand it into the tool you are using right now.
             </div>
             <div className="text-sm md:text-md lg:text-md text-left mb-4 mt-2">
-            I am a software developper and I'm always looking for exciting work and projects to work on and enjoy collaborating with other developpers. 
+            I am a software developper and I'm always looking for exciting work and projects to work on and enjoy collaborating with other developers. 
             </div>
             <div className="text-sm md:text-md lg:text-md text-left mb-5 mt-2">
             Please feel free to reach out to me if you are interested in working together.
@@ -80,7 +80,7 @@ const AboutUs = (props) => {
                
            
 
-          </div>
+          </div>}
         </div>
       </div>
     

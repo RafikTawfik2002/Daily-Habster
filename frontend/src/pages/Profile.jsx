@@ -36,7 +36,7 @@ const Profile = (props) => {
 
     const [state, setState] = useState(0)
 
-    const arr = [<ProfileDisplay user={user} setState={setState} />, <ProfileEdit user={user} setState={setState} />,  <PasswordUpdate user={user} setState={setState} />]
+    const arr = [<ProfileDisplay user={user} setState={setState} />, <ProfileEdit setUser={props.setUser} user={user} setState={setState} />,  <PasswordUpdate user={user} setState={setState} />]
 
 
   return (

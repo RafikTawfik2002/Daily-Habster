@@ -103,11 +103,12 @@ const HabitsDisplay = (props) => {
 
     
   }
+  
 
   return (<>
       {/* <span className="bg-white mx-52">{props.tab}</span>  */}
       
-     <div className="text-white w-full mx-auto flex flex-col justify-center items-center">
+   <div className="text-white w-full mx-auto flex flex-col justify-center items-center">
         {habits.length > 0 ? (
           filter().map((item, index ) =>
           <SingleHabitTab setParen={updateHabits} tab={props.tab} index={index+1} habit={item} deleteHabit={() => deleteHabit(item._id)} setDel={setDel} setEdit={setEdit}  key={item._id} setView={setView}/>
@@ -122,6 +123,7 @@ const HabitsDisplay = (props) => {
     {edit[0] && <EditModal habit={edit[1]} setHabit={edit[2]} setEdit={() => setEdit([false, null, null])}/>}
     {del[0] && <DeleteModal habit={del[1]} setDel={() => setDel([false, null, null])} deleteHabit={() => deleteHabit(del[1]._id)}/>}
     {view[0] && <ViewModal habit={view[1]} exit={() => setView([false, null])}/>}
+  
 
     </>
   );

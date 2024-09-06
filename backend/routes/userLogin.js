@@ -166,8 +166,13 @@ router.put('/password/:id', async (request, response) => {
 
 router.put('/:id', async (request, response) => {
     try{
-        if(!request.body.name){throw new Error("no name provided")}
+        if(!request.body.userName){throw new Error("no name provided")}
         const { id } = request.params;
+        // find if the new user name exists
+        const found = await User.find({userName: request.body.userName}).exec() 
+
+        if(found.length == 1){throw new Error('username already exists');}
+        
 
         const user = await User.findByIdAndUpdate(id, request.body,  { new: true, runValidators: true })
 

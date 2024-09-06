@@ -84,6 +84,12 @@ const Feedback = (props) => {
                   Review Submitted Successfully 
                 </div>
                 <div className="flex flex-col items-center mt-8 text-yellow-500">
+                <button
+                    className="mb-2 hover:font-bold text-slate-300 rounded-lg bg-opacity-30 bg-slate-500 px-3 py-1"
+                    onClick={() => {setReview(""); setSuccess(false)}}
+                  >
+                    Leave another review
+                  </button>
                   <button
                     className="mb-2 hover:font-bold text-green-500 rounded-lg bg-opacity-30 bg-slate-500 px-3 py-1"
                     onClick={() => navigate("/Home")}
@@ -98,7 +104,7 @@ const Feedback = (props) => {
     <>
       <OthersPageTitle />
       <div className="relative overflow-hidden md:pt-28 lg:pt-32 pt-24 ">
-        <div className="pt-9 w-[80%] md:w-[65%] lg:w-[45%]  mx-auto">
+        {user && <div className="pt-9 w-[80%] md:w-[65%] lg:w-[45%]  mx-auto">
           {/* Profile Section */}
           <div className="bg-slate-800 border text-gray-300 border-slate-400 rounded-3xl pl-5 pr-4 pt-5 shadow-lg backdrop-filter backdrop-blur-md bg-opacity-30 justify-center pb-9">
             <TbArrowBackUp
@@ -111,7 +117,7 @@ const Feedback = (props) => {
            
 
           </div>
-        </div>
+        </div>}
       </div>
     </>
   );

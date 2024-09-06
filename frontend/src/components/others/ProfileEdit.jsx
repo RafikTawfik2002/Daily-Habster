@@ -2,14 +2,18 @@ import React from 'react'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { TbArrowBackUp } from 'react-icons/tb'
+import UserDataServices from "../../../services/users"
 
 const ProfileEdit = (props) => {
     const [user, setUser] = useState(props.user)
+    const setUserParent = props.setUser
 
     const navigate = useNavigate()
 
     const [isFocusedEmail, setIsFocusedEmail] = useState(false)
     const [isFocusedName, setIsFocusedName] = useState(false)
+
+    const [message, setMessage] = useState("")
 
     const hangleChange = event => {
         const { name, value } = event.target; //get name and value from the target
@@ -17,6 +21,20 @@ const ProfileEdit = (props) => {
             ...prevState,
             [name]: value
           }));
+    }
+
+    const updateUser = () => {
+      if(user.userName == props.user.userName){
+        props.setState(0)
+        return
+      }
+      UserDataServices.updateNameById(user.userID, {userName: user.userName})
+      .then((response) => {
+        setUserParent(prev => ({...prev, userName: user.userName}))
+        console.log(response)
+        props.setState(0)
+      })
+      .catch(e => {console.log(e);setMessage("username already exists")})
     }
 
     return (
@@ -29,6 +47,9 @@ const ProfileEdit = (props) => {
       <div className="text-2xl md:text-4xl lg:text-4xl text-center mb-10 mt-2">
             Edit Information
       </div>
+      <div className='flex justify-center '>
+        <span className=" text-sm text-red-700 bg-white opacity-60 px-0.5 rounded-md">{message}</span>
+        </div>
   
       <div className="flex flex-row mx-2 md:mx-2 lg:mx-12">
         {/* labels */}
@@ -69,8 +90,9 @@ const ProfileEdit = (props) => {
       </div>
   
         <div className="flex flex-col items-center mt-8 text-yellow-500">
-        <button className='mb-2 hover:font-bold text-green-500' onClick={() => props.setState(0)}>Save Changes</button>
+        <button className='mb-2 hover:font-bold text-green-500' onClick={() => updateUser()}>Save Changes</button>
          <button className='mb-2 hover:font-bold' onClick={() => props.setState(0)}>Cancel</button>
+        
          
         </div>
       
