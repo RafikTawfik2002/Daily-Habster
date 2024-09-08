@@ -1,28 +1,169 @@
 import express from 'express';
 import { User } from '../models/user.js';
 import { Habit } from '../models/habit.js';
-import mongodb, { ObjectId } from "mongodb"
+import { ObjectId } from "mongodb"
 import bcrypt from 'bcrypt'
+import nodemailer from "nodemailer"
+import { Code } from "../models/Code.js"
 
 const router = express.Router();
 
 
-// get method for getting users
+// setting up mail transporter
 
-router.get('/', async (request, response) => {
+const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: 'dailyhabster@gmail.com',
+      pass: '',
+    },
+  });
+
+
+// email html template
+
+const emailTemplate = (verificationCode) => {return (`
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Email Verification</title>
+        <style>
+          body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+          }
+          .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+          }
+          .email-header {
+            background-color: #4caf50;
+            padding: 10px;
+            text-align: center;
+            color: white;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+          }
+          .email-body {
+            padding: 20px;
+            text-align: center;
+          }
+          .verification-code {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            background-color: #f0f0f0;
+            padding: 10px;
+            border-radius: 5px;
+            display: inline-block;
+            letter-spacing: 4px;
+          }
+          .email-footer {
+            margin-top: 20px;
+            font-size: 12px;
+            color: #888;
+            text-align: center;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="email-container">
+          <div class="email-header">
+            <h2>Email Verification</h2>
+          </div>
+          <div class="email-body">
+            <p>Hello,</p>
+            <p>Thank you for signing up! Please use the following code to verify your email address:</p>
+            <div class="verification-code">${verificationCode}</div>
+            <p>This code is valid for the next 10 minutes.</p>
+          </div>
+          <div class="email-footer">
+            <p>If you did not request this email, please ignore it.</p>
+          </div>
+        </div>
+      </body>
+    </html>
+    `)}
+
+// generate verification code
+const verificationCode = () => {
+    let code = ""
+    for(let i = 0; i < 6; i++){
+        code += Math.floor(Math.random() * 10);
+    }
+    return code
+}
+// ESSINTAIL Routes for the application
+
+// send verification code
+router.post('/sendmail', async (request, response) => {
     try{
-        const user = await User.find({});
-        return response.status(200).json({
-            count: user.length,
-            data: user
-        });
-    } catch (error){
-        console.log(error.message);
-        response.status(500).send({ message: error.message });
+        if(!request.body.email){return response.status(400).send({message: 'no email provided'})}
+        const code = verificationCode()
+        
+        const found = await Code.find({email: request.body.email}).exec() 
 
+        if(found.length >= 1){
+            const entry = found[0]
+            const res = await Code.findByIdAndUpdate(entry._id, {code: code})
+            console.log(res)
+            
+        }
+        else{
+            await Code.create({email: request.body.email, code: code})
+        }
+
+        console.log("CODE IS " + code)
+        const info = await transporter.sendMail({
+            from: 'dailyhabster@gmail.com', // sender address
+            to: request.body.email, // list of receivers
+            subject: "Email Verification", // Subject line
+            text: request.body.text, // plain text body
+            html: emailTemplate(code), // html body
+          });
+          console.log("Message sent: %s", info.messageId);
+
+          return response.status(200).json({success: "true"});
+
+    } catch (error){
+        console.log(error)
+        response.status(500).send({ message: error.message });
     }
 })
 
+// verify email against verification code
+router.post('/verify', async (request, response) => {
+    try{if(!request.body.email || !request.body.code) { throw new Error("Send all required field")}
+    const found = await Code.find({email: request.body.email}).exec()
+    if(found.length == 0){throw new Error("No token was issued")}
+    if(found[0].code == request.body.code){
+        const find = await User.find({email: request.body.email}).exec()
+        console.log(find)
+        const userID = find[0]._id
+        const res = await User.findByIdAndUpdate(userID, {verified: true})
+        await Code.findByIdAndDelete(found[0]._id)
+        return response.status(200).json(res);
+    }
+    else{
+        throw new Error("Verification failed")
+    }
+    }
+    catch (error) {
+        console.log(error)
+        response.status(500).send({ message: error.message });
+    }
+
+})
+
+// Getting user by id
 router.get('/:id', async (request, response) => {
     try{
 
@@ -36,6 +177,8 @@ router.get('/:id', async (request, response) => {
 
     }
 })
+
+// Getting user by username
 
 router.get('/username/:username', async (request, response) => {
     try{
@@ -51,7 +194,8 @@ router.get('/username/:username', async (request, response) => {
     }
 })
 
-// create a new user
+// Creating a new user, used for signing up users
+
 router.post('/', async (request, response) => {
     try {
         //input validation
@@ -91,6 +235,8 @@ router.post('/', async (request, response) => {
         response.status(500).send({ message: error.message });
     }
 });
+
+// authenticating user, used for user login
 
 router.post('/authenticate', async (request, response) => {
     try {
@@ -132,6 +278,7 @@ router.post('/authenticate', async (request, response) => {
 });
 
 // used to update a password
+
 router.put('/password/:id', async (request, response) => {
     try{
         if(!request.body.password || !request.body.oldPassword){throw new Error("send both old and new passwords")}
@@ -164,6 +311,8 @@ router.put('/password/:id', async (request, response) => {
     }
 })
 
+// used to update username
+
 router.put('/:id', async (request, response) => {
     try{
         if(!request.body.userName){throw new Error("no name provided")}
@@ -184,6 +333,8 @@ router.put('/:id', async (request, response) => {
 
     }
 })
+
+// user to delete account
 
 router.delete('/:id', async (request, response) => {
     try {
@@ -208,5 +359,25 @@ router.delete('/:id', async (request, response) => {
         response.status(500).send({ message: error.message });
     }
 })
+
+// NON-ESSENTIAL routes used for testing
+
+// get method for getting users
+
+router.get('/', async (request, response) => {
+    try{
+        const user = await User.find({});
+        return response.status(200).json({
+            count: user.length,
+            data: user
+        });
+    } catch (error){
+        console.log(error.message);
+        response.status(500).send({ message: error.message });
+
+    }
+})
+
+
 
 export default router

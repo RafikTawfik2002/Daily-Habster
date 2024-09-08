@@ -7,9 +7,9 @@ import { GoPlus } from "react-icons/go";
 import { IoIosArrowUp } from "react-icons/io";
 import { IoIosArrowDown } from "react-icons/io";
 import { IoMenu } from "react-icons/io5";
-import { MdOutlineContactMail } from "react-icons/md";
 import { VscFeedback } from "react-icons/vsc";
 import { GrStatusInfo } from "react-icons/gr";
+
 
 const HabitPageTitle = (props) => {
   const user = props.user;
@@ -116,6 +116,8 @@ const HabitPageTitle = (props) => {
     }
   }, [addState]);
 
+
+
   return (
     <div className="text-white font-thin  w-full ">
       <div className=" w-full lg:w-2/3 mx-auto rounded-xl rounded-t-none bg-slate-700 border border-slate-400 border-x-0 border-t-0 p-2 pt-0 shadow-lg ">
@@ -135,6 +137,9 @@ const HabitPageTitle = (props) => {
           </Link>
 
           <div className="pr-2 flex flex-row text-5xl lg:text-6xl">
+
+
+
             {!addState && (
               <div
                 className={`mr-2 text-base cursor-pointer font-bold border-2 ${

@@ -1,6 +1,7 @@
 import React from 'react'
 import { TbArrowBackUp } from 'react-icons/tb'
 import { useNavigate } from 'react-router-dom'
+import { FaCheck } from "react-icons/fa6";
 
 const ProfileDisplay = (props) => {
     const user = props.user
@@ -31,8 +32,8 @@ const ProfileDisplay = (props) => {
        <div className="h-full mb-5 px-3 py-2 w-full border border-slate-400 bg-slate-900 bg-opacity-30 rounded-2xl">
        {props.user.userName}
         </div>
-        <div className="h-full px-3 py-2 w-full border border-slate-400 bg-slate-900 bg-opacity-30 rounded-2xl">
-            {props.user.email}
+        <div className="flex justify-between h-full px-3 py-2 w-full border border-slate-400 bg-slate-900 bg-opacity-30 rounded-2xl">
+            {props.user.email} <div className='inline text-right text-yellow-200' > <i>{props.user.verified ? <>verified <FaCheck className='inline'/></> : "not verified"}</i> </div>
         </div>
       </div>
 

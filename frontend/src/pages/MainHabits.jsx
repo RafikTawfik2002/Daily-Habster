@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import HabitPageTitle from "../components/habit/HabitPageTitle.jsx";
 import HabitsDisplay from "../components/habit/HabitsDisplay.jsx";
 import AddHabit from "../components/habit/modals/AddHabit.jsx";
+import Verify from "../components/Verify.jsx";
 
 const MainHabits = (props) => {
   const user = props.user;
@@ -20,7 +21,11 @@ const MainHabits = (props) => {
     }
   }, [addState]);
 
-  //   const [habits, setHabits] = useState([])
+  // function to request new code
+
+
+  // function to request 
+
 
   return (
     <>
@@ -29,7 +34,8 @@ const MainHabits = (props) => {
     </div>
     {user && user.verified ? <div className="relative overflow-hidden md:pt-28 lg:pt-32 pt-24 ">
     {(addState) ? (<AddHabit setAddState={setAddState} user={user}/>) : (<HabitsDisplay sortState={sortState} user={user} tab={tab}/>) }
-    </div> : <div className="relative overflow-hidden md:pt-28 lg:pt-32 pt-24 text-center"> Needs email verification</div>}
+    </div> :  user ? <Verify user={user} setUser={props.setUser}/>
+            :  <div className="relative overflow-hidden md:pt-28 lg:pt-32 pt-24 text-center text-white"> Login to see habits</div>}
     </>
   );
 };

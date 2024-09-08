@@ -29,6 +29,14 @@ class UserDataService {
         return http.put(`/login/password/${id}`, body)
     }
 
+    sendmail(body){
+        return http.post(`/login/sendmail`, body)
+    }
+
+    verify(body){
+        return http.post(`login/verify`, body)
+    }
+
 }
 
 export default new UserDataService();

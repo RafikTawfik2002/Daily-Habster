@@ -2,6 +2,7 @@
 
 import express from "express"
 import cors from "cors"
+
 import habitRouter from "./routes/habitRoute.js"
 import userLogin from "./routes/userLogin.js"
 
@@ -9,7 +10,6 @@ const app = express() //we use to make the server
 app.use(cors())
 app.use(express.json())
 
-//app.use("/api/v1/restaurants", restaurants)
 app.use('/habit', habitRouter);
 app.use('/login', userLogin);
 app.use("*", (req, res) => res.status(404).json({ error: "not found"}))
