@@ -5,9 +5,12 @@ import { ObjectId } from "mongodb"
 import bcrypt from 'bcrypt'
 import nodemailer from "nodemailer"
 import { Code } from "../models/Code.js"
+import dotenv from "dotenv"
 
 const router = express.Router();
 
+
+dotenv.config()
 
 // setting up mail transporter
 
@@ -15,7 +18,7 @@ const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
       user: 'dailyhabster@gmail.com',
-      pass: '',
+      pass: process.env.EMAIL_PASS,
     },
   });
 
