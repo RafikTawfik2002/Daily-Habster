@@ -1,19 +1,51 @@
 import React from 'react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import UserDataServices from "../../services/users"
 
 const Verify = (props) => {
     console.log("ENTERED VERIFY")
     console.log(props.user)
     const [focus, setFocus] = useState(false)
+    const [off, setOff] = useState(true)
+    const [timer, setTimer] = useState(10)
+
+    useEffect(() => {
+      UserDataServices.sendmail({email: props.user.email})
+        .then((response) => {
+            console.log("Sent successfully")
+            setOff(true)
+            setTimer(10)
+        })
+        .catch((error) =>{
+            console.log(error)
+        })
+    }, [])
+
+    useEffect(() => {
+      
+      let interval = null
+      if (off && timer > 0) {
+        interval = setInterval(() => {
+          setTimer(seconds => seconds - 1);
+        }, 1000);
+      } else if (off && timer == 0) {
+        setOff(false)
+        clearInterval(interval);
+      }
+  
+      return () => clearInterval(interval);
+    }, [timer, off]);
 
     const [code, setCode] = useState("")
 
     const sendCode = () => {
+        if(off){return}
         // request the backend to send a code
         UserDataServices.sendmail({email: props.user.email})
         .then((response) => {
-            alert("Sent successfully")
+            console.log("Sent successfully")
+            setOff(true)
+            setTimer(10)
         })
         .catch((error) =>{
             console.log(error)
@@ -76,7 +108,11 @@ const Verify = (props) => {
 
       <div className="flex flex-col items-center mt-8 text-yellow-500">
        <button className=' rounded-xl px-2 py-1 hover:bg-gray-700 duration-300' onClick={() => verify()}>Submit</button>
-       <div className=' text-white'>Didn't recieve code ? <button onClick={() => sendCode()} className='rounded-xl px-2 py-1 hover:bg-gray-700 duration-300 text-blue-500'> Resend </button></div>
+       <div className=' text-white'>Didn't recieve code ? 
+        <button onClick={() => sendCode()} className={`rounded-xl px-2 py-1 hover:bg-gray-700 duration-300 text-blue-500 ${(off) && "text-gray-500 hover:bg-transparent cursor-default" } `}>
+         Resend code  {(off) && ("in 0:" + ((timer != 10) ? "0" + timer : timer))} 
+      </button>
+      </div>
       </div>
     
     

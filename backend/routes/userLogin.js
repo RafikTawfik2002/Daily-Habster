@@ -13,16 +13,16 @@ const router = express.Router();
 dotenv.config()
 
 // setting up mail transporter
-
+console.log("PASSWORD IS: " + process.env.EMAIL_PASS)
 const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
       user: 'dailyhabster@gmail.com',
-      pass: process.env.EMAIL_PASS,
+      pass: "oqpjznmiykesyrta",
     },
   });
 
-
+  
 // email html template
 
 const emailTemplate = (verificationCode) => {return (`
