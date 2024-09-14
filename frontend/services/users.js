@@ -37,6 +37,10 @@ class UserDataService {
         return http.post(`login/verify`, body)
     }
 
+    sentCheck(body){
+        return http.post(`login/sentcheck`, body)
+    }
+
 }
 
 export default new UserDataService();

@@ -92,7 +92,7 @@ const LinearBar = (props) => {
     for (let i = 0; i < count; i++) {
       divs.push(
         <div
-          className={`text-whit flex items-center font-bold border-blue-800 border bg-opacity-30 bg-gray-800 w-full rounded-lg rounded-l-none
+          className={`text-whit flex items-center font-bold border-blue-800 border ${habit.duration > 100 && "border-0.3"} bg-opacity-30 bg-gray-800 w-full rounded-lg rounded-l-none
       ${days > 0 && "  bg-gradient-to-r from-green-700 to-green-500"}
       `}
           key={i}

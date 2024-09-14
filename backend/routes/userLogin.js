@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { request, response } from 'express';
 import { User } from '../models/user.js';
 import { Habit } from '../models/habit.js';
 import { ObjectId } from "mongodb"
@@ -141,6 +141,26 @@ router.post('/sendmail', async (request, response) => {
         response.status(500).send({ message: error.message });
     }
 })
+
+// check if a code is already sent
+router.post('/sentcheck', async (request, response) => {
+    try{if(!request.body.email){return response.status(400).send({message: 'no email provided'})}
+        const found = await Code.find({email: request.body.email}).exec() 
+
+        if(found.length >= 1){
+            return response.status(200).json({sent: true});
+        }
+        else{
+            return response.status(200).json({sent: false});
+        }
+    }
+    catch (error){
+        console.log(error)
+        response.status(500).send({ message: error.message });
+    }
+
+}
+)
 
 // verify email against verification code
 router.post('/verify', async (request, response) => {
