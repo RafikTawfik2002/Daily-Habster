@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { CiEdit } from "react-icons/ci";
 import LinearBar from "../LinearBar";
@@ -15,6 +15,10 @@ const SingleHabit = (props) => {
   const initData = props.habit;
   const [habit, setHabit] = useState(initData);
 
+  const [mounted, setMounted] = useState(false)
+
+ 
+
   const startEdit = () => {
     console.log("starting edit with state: ")
     console.log(habit)
@@ -29,15 +33,20 @@ const SingleHabit = (props) => {
   const [checkIn, setCheckIn] = useState( DateTools.LoggedWithin24Hours(habit.createdAt, habit.lastLogin))
 
 
+
+
   return (
-    <div className={` flex flex-col font-thin justify-between w-11/12 md:w-11/12 lg:w-3/5 text-gray-300  rounded-3xl border-blue-900 rounded-tl-none rounded-bl-none bg-blue-900  border-2 bg-opacity-80 blur-30 my-2 backdrop-filter backdrop-blur-xl`}>
-      
+    <div className={` 
+    flex flex-col font-thin justify-between w-11/12 md:w-11/12 lg:w-3/5 text-gray-300  rounded-3xl
+     border-blue-900 rounded-tl-none rounded-bl-none bg-blue-900  border-2 bg-opacity-80 blur-30 my-2 backdrop-filter backdrop-blur-xl
+
+     `}>
       <div className="flex flex-row w-full ">
 
                   {/*  Main Display of Habit Data */}
                   <div className="flex flex-col w-full py-3">
                       <div className={`px-3 mb-2 rounded-lg  text-xl md:text-xl lg:text-3xl self-start leading-extra-tight font-normal`}>
-                        <span className="font-thin">{props.index + ") "}</span>{habit.desc} 
+                        <span className="hidden font-thin md:inline lg:inline">{props.index + ") "}</span>{habit.desc} 
                       </div>
 
                       <div className="flex flex-row items-center pl-3">

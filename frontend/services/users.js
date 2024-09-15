@@ -12,12 +12,12 @@ class UserDataService {
     createUser(user){
         return http.post(`/login`, user);
     }
-
+    // should update email as well
     updateNameById(id, name){
         return http.put(`/login/${id}`, name); // data is the body of the post request
     }
 
-    deleteUser() {
+    deleteUser(id) {
         return http.delete(`/login/${id}`);
     }
 

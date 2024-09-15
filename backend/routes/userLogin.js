@@ -13,7 +13,6 @@ const router = express.Router();
 dotenv.config()
 
 // setting up mail transporter
-console.log("PASSWORD IS: " + process.env.EMAIL_PASS)
 const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
@@ -167,7 +166,14 @@ router.post('/verify', async (request, response) => {
     try{if(!request.body.email || !request.body.code) { throw new Error("Send all required field")}
     const found = await Code.find({email: request.body.email}).exec()
     if(found.length == 0){throw new Error("No token was issued")}
+
+    
+    const elapsedMinutes =  (new Date().getTime() - new Date(found[0].updatedAt).getTime())/(1000*60) 
+    console.log(elapsedMinutes)
+
+    
     if(found[0].code == request.body.code){
+        if(elapsedMinutes > 11){throw new Error("this code has expired")}
         const find = await User.find({email: request.body.email}).exec()
         console.log(find)
         const userID = find[0]._id
@@ -228,9 +234,20 @@ router.post('/', async (request, response) => {
 
         const newID = new ObjectId(request.body.userID)
 
+        // check if email or username exists
+        let error = ''
+        // check if username exists
         const found = await User.find({userName: request.body.userName}).exec() 
         console.log(found.length)
-        if(found.length > 0){throw new Error('username already exists');}
+        if(found.length > 0){error = 'username taken'}
+        // check if email exists
+        const foundEmail = await User.find({email: request.body.email}).exec() 
+        if(foundEmail.length > 0){
+            if(error != ''){error += ' and email already registered'}
+            else{error = 'email already registered'}
+        }
+        // raise error if error is not empty
+        if(error != ''){throw new Error(error)}
 
         const hashedPassword = await bcrypt.hash(request.body.passWord, 10);
         //initialize a new user
@@ -334,19 +351,36 @@ router.put('/password/:id', async (request, response) => {
     }
 })
 
-// used to update username
+// used to update username and email => TODO add email update
 
 router.put('/:id', async (request, response) => {
     try{
-        if(!request.body.userName){throw new Error("no name provided")}
+        if(!request.body.userName || !request.body.email){throw new Error("send all information")}
         const { id } = request.params;
-        // find if the new user name exists
+        const currUser = await User.findById(id)
+        // check if email or username exists
+        let error = ''
+        // check if username exists
         const found = await User.find({userName: request.body.userName}).exec() 
+        console.log(found.length)
+        if(found.length == 1 && request.body.userName != currUser.userName){error = 'username taken'}
+        // check if email exists
+        const foundEmail = await User.find({email: request.body.email}).exec() 
+        if(foundEmail.length == 1 && request.body.email != currUser.email){
+            if(error != ''){error += ' and email already registered'}
+            else{error = 'email already registered'}
+        }
+        // raise error if error is not empty
+        if(error != ''){throw new Error(error)}
 
-        if(found.length == 1){throw new Error('username already exists');}
         
+        const newInfo = {
+            userName: request.body.userName,
+            email: request.body.email,
+            verified: currUser.email == request.body.email
+        }
 
-        const user = await User.findByIdAndUpdate(id, request.body,  { new: true, runValidators: true })
+        const user = await User.findByIdAndUpdate(id, newInfo,  { new: true, runValidators: true })
 
 
         return response.status(200).json(user);

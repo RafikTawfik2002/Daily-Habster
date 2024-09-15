@@ -162,13 +162,13 @@ const PasswordUpdate = (props) => {
 
         <div className="flex flex-col items-center mt-8 text-yellow-500">
           <button
-            className="mb-2 hover:font-bold text-green-500"
+            className="mb-2  hover:bg-opacity-70 hover:bg-gray-500 duration-300 p-1 px-2 rounded-xl text-green-500"
             onClick={() => updatePassword()}
           >
             Save Changes
           </button>
           <button
-            className="mb-2 hover:font-bold"
+            className="mb-2  hover:bg-opacity-70 hover:bg-gray-500 duration-300 p-1 px-2 rounded-xl"
             onClick={() => props.setState(0)}
           >
             Cancel
@@ -183,7 +183,7 @@ const PasswordUpdate = (props) => {
         </div>
         <div className="flex flex-col items-center mt-8 text-yellow-500">
           <button
-            className="mb-2 hover:font-bold text-green-500 rounded-lg bg-opacity-30 bg-slate-500 px-3 py-1"
+            className="mb-2  hover:bg-opacity-70 hover:bg-gray-500 duration-300 p-1 px-2 rounded-xl text-green-500"
             onClick={() => props.setState(0)}
           >
             Go Back to Profile Info
@@ -196,7 +196,7 @@ const PasswordUpdate = (props) => {
   return (
     <div className="pt-9 w-[80%] md:w-[65%] lg:w-[45%]  mx-auto">
       {/* Profile Section */}
-      <div className="bg-slate-800 border text-gray-300 border-slate-400 rounded-3xl pl-5 pr-4 pt-5 shadow-lg backdrop-filter backdrop-blur-md bg-opacity-30 justify-center pb-9">
+      <div className="bg-slate-800 border text-gray-300 border-slate-400 rounded-3xl pl-5 pr-4 pt-5 shadow-lg backdrop-filter backdrop-blur-md bg-opacity-30 justify-center pb-5">
         <TbArrowBackUp
           onClick={() => navigate("/Home")}
           className="py-0  cursor-pointer text-xl md:text-3xl lg:text-3xl rounded-md  inline"

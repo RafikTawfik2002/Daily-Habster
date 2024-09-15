@@ -70,8 +70,8 @@ const Register = (props) => {
       props.filled(newUser.data);
     }
     catch(e){
-      setMessage("username may be taken")
-      console.log(e)
+      setMessage(e.response.data.message)
+      console.log(e.response.data)
     }
 
 

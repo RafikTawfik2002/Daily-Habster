@@ -116,7 +116,7 @@ const HabitsDisplay = (props) => {
         )
         ) : (
           <>
-          {(user != undefined) && loading ? <div className="mt-12"><Spinner /></div> : <div>{"No Habits to Display"}</div>}
+          {(user != undefined) && loading ? <div className=" flex justify-center items-center "><Spinner /></div> : <div className="fixed mt-14">{"Press on the + icon to add a new Habit"}</div>}
           </>
         )}
     </div>

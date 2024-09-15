@@ -72,7 +72,7 @@ const Verify = (props) => {
         })
         .catch( (error) => {
             console.log(error)
-            setMessage("Code could not be verified")
+            setMessage(error.response.data.message)
         })
     }
 

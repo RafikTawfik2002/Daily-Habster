@@ -7,6 +7,7 @@ import HabitDataService from "../../../services/users.js"
 import { useState } from "react";
 import { IoEyeOffOutline } from "react-icons/io5";
 import { FiEye } from "react-icons/fi";
+import Spinner from "../Spinner.jsx";
 
 
 const Login = (props) => {
@@ -19,6 +20,7 @@ const Login = (props) => {
     password: "",
   };
   
+  const [loading, setLoading] = useState(false)
 
   const [user, setUser] = useState(initialUserState);
   const [message, setMessage] = useState("") 
@@ -35,7 +37,7 @@ const Login = (props) => {
     try{
       // check if user exists
       // const isUser = await HabitDataService.getByUsername(user.username); 
-
+      setLoading(true)
       const isAuthentic = await HabitDataService.authenticate({username: user.username, password: user.password});
       console.log("LOGIN DATA IS")
       console.log(isAuthentic.data)
@@ -44,6 +46,7 @@ const Login = (props) => {
     }
     catch(e){
       setMessage("Wrong username or password")
+      setTimeout(() => setLoading(false), 200)
       console.log(e)
     }
 
@@ -61,7 +64,7 @@ const Login = (props) => {
     className="text-white h-[100vh] flex justify-center items-center bg-cover"
     
   >
-    <div>
+    { loading ? <Spinner /> : <div>
       <div className="bg-slate-800 border border-slate-400 rounded-md p-8 shadow-lg backdrop-filter backdrop-blur-sm bg-opacity-30 relative">
       <div className="text-2xl text-gray-300 shadow-2xl rounded-lg bg-opacity-10 text-center mb-4 p-2"> <MdMenuBook className="inline -translate-y-1"/> Habit Tracker</div>
         <h1 className="text-4xl text-white font-bold text-center rounded-lg mb-6 p-2">Login</h1>
@@ -116,7 +119,7 @@ const Login = (props) => {
 
 
       </div>
-    </div>
+    </div>}
     </div>
 
   )
