@@ -126,7 +126,7 @@ const HabitPageTitle = (props) => {
             <div className="flex pl-5 flex-col p-2">
               <div className=" text-lg lg:text-4xl">
                 {" "}
-                <MdMenuBook className="inline -translate-y-1" /> Habit Tracker
+                <MdMenuBook className="inline -translate-y-1" /> Daily Habster
               </div>
               <div className="text-sm lg:text-xl">
                 {" "}

@@ -66,7 +66,7 @@ const Login = (props) => {
   >
     { loading ? <Spinner /> : <div>
       <div className="bg-slate-800 border border-slate-400 rounded-md p-8 shadow-lg backdrop-filter backdrop-blur-sm bg-opacity-30 relative">
-      <div className="text-2xl text-gray-300 shadow-2xl rounded-lg bg-opacity-10 text-center mb-4 p-2"> <MdMenuBook className="inline -translate-y-1"/> Habit Tracker</div>
+      <div className="text-2xl text-gray-300 shadow-2xl rounded-lg bg-opacity-10 text-center mb-4 p-2"> <MdMenuBook className="inline -translate-y-1"/> Daily Habster</div>
         <h1 className="text-4xl text-white font-bold text-center rounded-lg mb-6 p-2">Login</h1>
         {message && <div className="text-center mb-3 "><span className="px-2 py-1 rounded-lg bg-opacity-60 bg-gray-200 text-sm text-red-700">{message}</span></div>}
 
@@ -111,10 +111,10 @@ const Login = (props) => {
         <button className="w-full mb-4 text-[18px] mt-6 rounded-full bg-white text-emerald-800 hover:bg-emerald-600 hover:text-white py-2 transition-colors duration-150" onClick={()=>validate()}>Login</button>
 
         <div className="text-center text-sm">
-          <span className="m-4">Don't have an account? <Link className="text-blue-500" onClick={() => toRegister()}>Sign up</Link></span>
+          <span className="m-4">Don't have an account? <Link className="text-yellow-200" onClick={() => toRegister()}>Sign up</Link></span>
         </div>
         <div className="mt-2 text-center text-sm">
-          <span className="m-4 "> Forgot <Link className="text-blue-500" onClick={() => toRegister()}>useranme / password</Link> ?</span>
+          <span className="m-4 "> Forgot <Link className="text-yellow-200" to="/ForgotPage">useranme / password</Link> ?</span>
         </div>
 
 
