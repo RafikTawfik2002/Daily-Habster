@@ -10,6 +10,8 @@ const DeleteAccount = (props) => {
   const [deleted, setDeleted] = useState(false);
   const [loading, setLoading] = useState(true)
 
+  
+
   const deleteAccount = () => {
     setDeleted(true);
 

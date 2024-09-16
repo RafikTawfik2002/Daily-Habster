@@ -22,7 +22,96 @@ const transporter = nodemailer.createTransport({
   });
 
   
-// email html template
+// ACCOUNT RECOVERY
+const usernameTemplate = (username) => {return `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Username Recovery</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .header {
+            background-color: #4CAF50;
+            color: #ffffff;
+            padding: 10px;
+            text-align: center;
+            border-radius: 5px 5px 0 0;
+        }
+        .content {
+            padding: 20px;
+            text-align: center;
+        }
+        .username {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333333;
+        }
+        .footer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 12px;
+            color: #999999;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header">
+            <h1>Username Recovery</h1>
+        </div>
+        <div class="content">
+            <p>Hello,</p>
+            <p>It looks like you've requested to recover your username.</p>
+            <p>Your username is:</p>
+            <p class="username">${username}</p> <!-- Replace {{username}} with the actual username -->
+            <p>If you didn't request this, please ignore this email.</p>
+        </div>
+    </div>
+
+</body>
+</html>
+`}
+router.post('/forgotusername', async (request, response) => {
+    try{
+        if(!request.body.email){return response.status(400).send({message: 'no email provided'})}
+        const found = await User.find({email: request.body.email}).exec()
+        if(found == 0){throw new Error("User does not exist")}
+        const user = found[0]
+
+        const info = await transporter.sendMail({
+            from: 'dailyhabster@gmail.com', // sender address
+            to: request.body.email, // list of receivers
+            subject: "Username Recovery", // Subject line
+            text: request.body.text, // plain text body
+            html: usernameTemplate(user.userName), // html body
+          });
+          console.log("Message sent: %s", info.messageId);
+
+          return response.status(200).json({success: "true"});
+    }catch (error){
+        console.log(error)
+        response.status(500).send({ message: error.message });
+    }
+    
+})
+// EMAIL VERIFICATION
+// email html template for email verification
 
 const emailTemplate = (verificationCode) => {return (`
     <!DOCTYPE html>

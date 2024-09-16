@@ -29,6 +29,8 @@ class UserDataService {
         return http.put(`/login/password/${id}`, body)
     }
 
+    // email verification
+
     sendmail(body){
         return http.post(`/login/sendmail`, body)
     }
@@ -39,6 +41,12 @@ class UserDataService {
 
     sentCheck(body){
         return http.post(`login/sentcheck`, body)
+    }
+
+    // account recovery
+
+    sendUsername(body){
+        return http.post(`login/forgotusername`, body)
     }
 
 }

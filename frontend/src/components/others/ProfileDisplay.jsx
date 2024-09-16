@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { TbArrowBackUp } from 'react-icons/tb'
 import { useNavigate } from 'react-router-dom'
 import { FaCheck } from "react-icons/fa6";
@@ -8,6 +8,18 @@ const ProfileDisplay = (props) => {
     const user = props.user
     const [deleteOpen, setDeleteOpen] = useState(false)
     const navigate = useNavigate()
+
+    // disable scrolling when modal is open
+    useEffect( () => {
+      if(deleteOpen){
+        document.body.classList.add('overflow-hidden');
+      }
+      else{
+        document.body.classList.remove('overflow-hidden');
+      }
+    }, [deleteOpen])
+
+    
   return (
     <div className="pt-9 w-[80%] md:w-[60%] lg:w-[45%]  mx-auto">
     {/* Profile Section */}
