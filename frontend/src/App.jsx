@@ -9,6 +9,7 @@ import Profile from "./pages/Profile";
 import AboutUs from "./pages/AboutUs";
 import Feedback from "./pages/Feedback";
 import ForgotPage from "./pages/ForgotPage";
+import PasswordReset from "./pages/PasswordReset";
 
 const App = () => {
   const [logged, setLogged] = useState()
@@ -34,6 +35,7 @@ const App = () => {
             <Route exact path='/Home' element={<MainHabits user={user} setUser={setUser} setLogged={setLogged}/>} />
             <Route exact path='/AboutUs' element={<AboutUs user={user} setUser={setUser} setLogged={setLogged}/>} />
             <Route exact path='/Feedback' element={<Feedback user={user} setUser={setUser} setLogged={setLogged}/>} />
+            <Route exact path='/ResetPassword' element={<PasswordReset setUser={setUser} setLogged={setLogged}/>} />
       </Switch>
 
 

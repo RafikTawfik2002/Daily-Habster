@@ -95,7 +95,7 @@ const ForgotPage = () => {
         <div className="text-2xl text-gray-300 shadow-2xl rounded-lg bg-opacity-10 text-center mb-4 p-2"> <MdMenuBook className="inline -translate-y-1"/> Daily Habster</div>
         <h1 className="text-4xl text-white font-bold text-center rounded-lg mb-2 p-2">Account Recovery</h1>
         
-            {done ? <div className="text-center text-white mt-4 mb-32 text-xl">
+            {done ? <div className="text-center text-gray-300 mt-4 mb-32 bg-slate-700 bg-opacity-85 text-lg rounded-lg border py-2 border-gray-300 ">
                 If an account with that email exists, we've sent an email with {option == 1 ? "your username" : "a link to reset your password"}
             </div> :Active() }
       
