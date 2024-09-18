@@ -57,6 +57,10 @@ class UserDataService {
         return http.post(`login/checktoken`, body)
     }
 
+    resetPassword(body){
+        return http.post(`login/resetpass`, body)
+    }
+
 }
 
 export default new UserDataService();

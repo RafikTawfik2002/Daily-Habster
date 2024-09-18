@@ -25,6 +25,41 @@ const transporter = nodemailer.createTransport({
   
 // ACCOUNT RECOVERY
 
+// takes a token and validates it and updates the password
+router.post('/resetpass', async (request, response) => {
+    try{
+        console.log("WORKED")
+    if(!request.body.password || !request.body.token){return response.status(400).send({message: 'send all fields'})}
+    const found = await Token.find({token: request.body.token})
+    if(found.length == 0){return response.status(400).send({message: 'no token found'})}
+ 
+    const userID = found[0].userID
+    const createdAt = found[0].createdAt
+    if((new Date().getTime() - new Date(createdAt).getTime())/(1000*60) > 11){
+        console.log("Deleted token since start time: " + createdAt + " and now it is " + new Date())
+        await Token.findByIdAndDelete(found[0]._id)
+        return response.status(400).send({message: 'token expired'})
+    } 
+    const user = await User.find({userID: userID})
+    if(user.length == 0){return response.status(400).send({message: 'no user found'})}
+    const idToReset = user[0]._id
+
+
+    const hashedPass = await bcrypt.hash(request.body.password, 10);
+
+    const update = await User.findByIdAndUpdate(idToReset, {passWord: hashedPass})
+    await Token.findByIdAndDelete(found[0]._id)
+
+    return response.status(200).send({message: 'success', update})
+    } catch (error){
+        const found = await Token.find({token: request.body.token})
+        const deleted = await Token.findByIdAndDelete(found[0]._id)
+        console.log(deleted)
+        console.log(error)
+        response.status(500).send({message: "error"} );
+    }
+    
+})
 // password reset
 const passwordResetTemplate = (link) => {return `<!DOCTYPE html>
 <html lang="en">
@@ -98,6 +133,7 @@ const passwordResetTemplate = (link) => {return `<!DOCTYPE html>
 </html>`}
 
 router.post('/resetrequest', async (request, response) => {
+
    try { if(!request.body.email || !request.body.link){return response.status(400).send({message: 'send all fields'})}
 
     const user = await User.find({email: request.body.email})

@@ -6,7 +6,7 @@ import PassValidate from '../components/PassValidate'
 import Spinner from '../components/Spinner'
 import { useParams } from 'react-router-dom'
 import UserDataServices from "../../services/users"
-import { data } from 'autoprefixer'
+
 const PasswordReset = () => {
     const [field2, setField2] = useState(true)
     const [field3, setField3] = useState(true)
@@ -24,6 +24,8 @@ const PasswordReset = () => {
 
     const [validToken, setValidToken] = useState(false)
 
+    const [success, setSuccess] = useState(false)
+    const [done, setDone] = useState(false)
 
     const { token } = useParams()
     console.log(token)
@@ -56,15 +58,33 @@ const PasswordReset = () => {
         if(!password || !confirm){setMessage("Please fill all field"); return}
         if(password != confirm){setMessage("Passwords do not match"); return}
         if(!valid){setMessage("Password does not meet the requirements"); return}
+        setLoading(true)
+        UserDataServices.resetPassword({token: token, password: password})
+        .then(response => {
+            console.log(response)
+            setLoading(false)
+            setSuccess(true)
+            setDone(true)
+        })
+        .catch(e => {
+            console.log(e)
+            setLoading(false)
+            setSuccess(false)
+            setDone(true)
+        })
        
     }  
   return (<>
-    {loading ? <div className='flex mt-[400px] justify-center items-center'> <Spinner /></div> :
+    
     <div className=" h-[100vh] flex justify-center items-center bg-cover text-gray-300 w-full">
     <div>
       <div className="w-[480px] bg-slate-800 border border-slate-400 rounded-md p-8 px-8 shadow-lg backdrop-filter backdrop-blur-sm bg-opacity-30 relative ">
       <div className="text-2xl text-gray-300 shadow-2xl rounded-lg bg-opacity-10 text-center mb-4 p-2"> <MdMenuBook className="inline -translate-y-1"/> Daily Habster</div>
-      {validToken ? <><h1 className="text-4xl text-white font-bold text-center rounded-lg mb-6 p-2">Reset Password</h1>
+      <h1 className="text-4xl text-white font-bold text-center rounded-lg mb-6 p-2">Reset Password</h1>
+      {loading ? <div className='flex justify-center mt-10 mb-16'><Spinner /> </div> : 
+      <>{done ? <div> {success ? <div className='flex justify-center mt-10'><span className='text-center'>Your password was successfully reset, you can now login using your new password</span></div>: <div className='flex justify-center mt-10'><span className='text-center'>Link might be expired, please request a new link</span></div>} </div> :
+
+      <>{validToken ? <>
 
 <div className='flex justify-center h-5 '>
   {message && <span className=" text-sm h-5 text-red-700 bg-white opacity-60 px-0.5 rounded-md mb-7">{message}</span>}
@@ -113,10 +133,12 @@ const PasswordReset = () => {
     </div>
       <div className='flex justify-center mt-10'>
           <PassValidate password={password} setValid={setValid} valid={valid}/>
-      </div></> : <div className='flex justify-center mt-10'><span className='text-center'>Link could not be verified, please request a new link or try refreshing the page</span></div>}
+      </div></> : <div className='flex justify-center mt-10'><span className='text-center'>Link could not be verified, please request a new link or try refreshing the page</span></div>}</>
+        }</>
+      }
         </div>
     </div>
-    </div>}
+    </div>
     </>
   )
 }
