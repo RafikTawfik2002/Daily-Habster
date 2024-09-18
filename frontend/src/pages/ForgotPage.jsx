@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { FaRegCircle } from "react-icons/fa";
 import { FaRegCheckCircle } from "react-icons/fa";
 import UserDataServices from "../../services/users"
+import Spinner from "../components/Spinner";
 
 
 const ForgotPage = (props) => {
@@ -15,12 +16,15 @@ const ForgotPage = (props) => {
 
     console.log(email)
 
+    const [loading, setLoading] = useState(false)
+
     const handleInputChange = (event) =>{
     
         const {name, value} = event.target
         setEmail(value)
     }
     const sendRequest = () => {
+        setLoading(true)
         let error = ""
         const emailRegex = /^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$/;
         if(!email){console.log("No email"); error = "Please provide an email"}
@@ -29,17 +33,19 @@ const ForgotPage = (props) => {
 
         if(error != ""){setMessage(error); return;}
 
+        
         if(option == 1){
             UserDataServices.sendUsername({email: email})
-            .then(response => {console.log(response); setDone(true)})
-            .catch(e => {console.log(e); setDone(true) })
+            .then(response => {console.log(response); setDone(true); setLoading(false)})
+            .catch(e => {console.log(e); setDone(true); setLoading(false) })
         }
         if(option == 2){
             console.log(email)
             UserDataServices.sendResetLink({email: email, link: "http://localhost:5173/ResetPassword"})
-            .then(response => {console.log(response); setDone(true)})
-            .catch(e => {console.log(e); setDone(true) })
+            .then(response => {console.log(response); setDone(true); setLoading(false)})
+            .catch(e => {console.log(e); setDone(true); setLoading(false) })
         }
+       
     }
     const Active = () => {return (<>
       <div className='h-7 flex justify-center items-center mb-4'>
@@ -101,9 +107,9 @@ const ForgotPage = (props) => {
         <div className="text-2xl text-gray-300 shadow-2xl rounded-lg bg-opacity-10 text-center mb-4 p-2"> <MdMenuBook className="inline -translate-y-1"/> Daily Habster</div>
         <h1 className="text-4xl text-white font-bold text-center rounded-lg mb-2 p-2">Account Recovery</h1>
         
-            {done ? <div className="text-center text-gray-300 mt-4 mb-32 bg-slate-700 bg-opacity-85 text-lg rounded-lg border py-2 border-gray-300 ">
+           {loading ? <div className="flex justify-center my-20"> <Spinner /></div> : <>{done ? <div className="text-center text-gray-300 mt-4 mb-32 bg-slate-700 bg-opacity-85 text-lg rounded-lg border py-2 border-gray-300 ">
                 If an account with that email exists, we've sent an email with {option == 1 ? "your username" : "a link to reset your password"}
-            </div> :Active() }
+            </div> :Active() }</>}
       
           
 
