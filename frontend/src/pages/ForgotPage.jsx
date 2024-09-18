@@ -36,7 +36,7 @@ const ForgotPage = (props) => {
         }
         if(option == 2){
             console.log(email)
-            UserDataServices.sendResetLink({email: email, link: "http://localhost:5173"})
+            UserDataServices.sendResetLink({email: email, link: "http://localhost:5173/ResetPassword"})
             .then(response => {console.log(response); setDone(true)})
             .catch(e => {console.log(e); setDone(true) })
         }

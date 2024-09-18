@@ -137,6 +137,20 @@ router.post('/resetrequest', async (request, response) => {
     
 })
 
+// check if token exists 
+router.post('/checktoken', async (request, response) => {
+    try{
+        if(!request.body.token) {throw new Error("no token found")}
+        const token = request.body.token
+        const found = await Token.find({token: token})
+        response.status(200).send({ found: found.length == 1 });
+
+    } catch (error){
+        console.log(error)
+        response.status(500).send({ found: false });
+    }
+})
+
 // Username revocery
 const usernameTemplate = (username) => {return `<!DOCTYPE html>
 <html lang="en">

@@ -53,6 +53,10 @@ class UserDataService {
         return http.post(`login/resetrequest`, body)
     }
 
+    checkToken(body){
+        return http.post(`login/checktoken`, body)
+    }
+
 }
 
 export default new UserDataService();

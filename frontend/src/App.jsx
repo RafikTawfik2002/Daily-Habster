@@ -35,7 +35,7 @@ const App = () => {
             <Route exact path='/Home' element={<MainHabits user={user} setUser={setUser} setLogged={setLogged}/>} />
             <Route exact path='/AboutUs' element={<AboutUs user={user} setUser={setUser} setLogged={setLogged}/>} />
             <Route exact path='/Feedback' element={<Feedback user={user} setUser={setUser} setLogged={setLogged}/>} />
-            <Route exact path='/ResetPassword' element={<PasswordReset setUser={setUser} setLogged={setLogged}/>} />
+            <Route exact path='/ResetPassword/:token' element={<PasswordReset setUser={setUser} setLogged={setLogged}/>} />
       </Switch>
 
 
