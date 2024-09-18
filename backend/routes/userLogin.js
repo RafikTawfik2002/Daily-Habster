@@ -6,7 +6,8 @@ import bcrypt from 'bcrypt'
 import nodemailer from "nodemailer"
 import { Code } from "../models/Code.js"
 import dotenv from "dotenv"
-
+import crypto from "crypto"
+import { Token } from '../models/Token.js';
 const router = express.Router();
 
 
@@ -23,6 +24,120 @@ const transporter = nodemailer.createTransport({
 
   
 // ACCOUNT RECOVERY
+
+// password reset
+const passwordResetTemplate = (link) => {return `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Password Reset</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .header {
+            background-color: #4CAF50;
+            color: #ffffff;
+            padding: 10px;
+            text-align: center;
+            border-radius: 5px 5px 0 0;
+        }
+        .content {
+            padding: 20px;
+            text-align: center;
+        }
+        .reset-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 16px;
+            color: #ffffff;
+            background-color: #4CAF50;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        .footer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 12px;
+            color: #999999;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header">
+            <h1>Password Reset</h1>
+        </div>
+        <div class="content">
+            <p>Hello,</p>
+            <p>You requested to reset your password. Click the button below to proceed:</p>
+            <a href="${link}" class="reset-btn" style="color: #ffffff; text-decoration: none;">Reset Password</a>
+            
+        </div>
+        <div class="footer">
+            <p>If you didn't request this, please ignore this email.</p>
+        </div>
+    </div>
+
+</body>
+</html>`}
+
+router.post('/resetrequest', async (request, response) => {
+   try { if(!request.body.email || !request.body.link){return response.status(400).send({message: 'send all fields'})}
+
+    const user = await User.find({email: request.body.email})
+    if(user.length == 0){return response.status(400).send({message: 'no user exists'})}
+
+    const userID = user[0].userID
+
+
+    const email = request.body.email
+
+    const token = crypto.randomBytes(32).toString('hex');
+    const found = await Token.find({userID: userID})
+    if(found.length >= 1){
+        const entry = found[0]
+        const res = await Token.findByIdAndUpdate(entry._id, {token: token})
+        console.log(res)
+    }
+    else{
+    await Token.create({token: token, userID: userID}) 
+    }
+    const info = await transporter.sendMail({
+        from: 'dailyhabster@gmail.com', // sender address
+        to: email, // list of receivers
+        subject: "Reset Password", // Subject line
+        text: "", // plain text body
+        html: passwordResetTemplate(request.body.link + "/" + token), // html body
+      });
+      console.log("Message sent: %s", info.messageId);
+
+      return response.status(200).json({success: "true", link: request.body.link + "/" + token});
+
+    } catch (error){
+    console.log(error)
+    response.status(500).send({ message: error.message });
+}
+    
+    
+})
+
+// Username revocery
 const usernameTemplate = (username) => {return `<!DOCTYPE html>
 <html lang="en">
 <head>

@@ -6,7 +6,7 @@ import { FaRegCheckCircle } from "react-icons/fa";
 import UserDataServices from "../../services/users"
 
 
-const ForgotPage = () => {
+const ForgotPage = (props) => {
     const [option, setOption] = useState(0)
     const [email, setEmail] = useState("")
     const [message, setMessage] = useState("")
@@ -31,6 +31,12 @@ const ForgotPage = () => {
 
         if(option == 1){
             UserDataServices.sendUsername({email: email})
+            .then(response => {console.log(response); setDone(true)})
+            .catch(e => {console.log(e); setDone(true) })
+        }
+        if(option == 2){
+            console.log(email)
+            UserDataServices.sendResetLink({email: email, link: "http://localhost:5173"})
             .then(response => {console.log(response); setDone(true)})
             .catch(e => {console.log(e); setDone(true) })
         }

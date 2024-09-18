@@ -49,6 +49,10 @@ class UserDataService {
         return http.post(`login/forgotusername`, body)
     }
 
+    sendResetLink(body){
+        return http.post(`login/resetrequest`, body)
+    }
+
 }
 
 export default new UserDataService();
