@@ -82,7 +82,7 @@ const PasswordReset = () => {
       <div className="text-2xl text-gray-300 shadow-2xl rounded-lg bg-opacity-10 text-center mb-4 p-2"> <MdMenuBook className="inline -translate-y-1"/> Daily Habster</div>
       <h1 className="text-4xl text-white font-bold text-center rounded-lg mb-6 p-2">Reset Password</h1>
       {loading ? <div className='flex justify-center mt-10 mb-16'><Spinner /> </div> : 
-      <>{done ? <div> {success ? <div className='flex justify-center mt-10'><span className='text-center'>Your password was successfully reset, you can now login using your new password</span></div>: <div className='flex justify-center mt-10'><span className='text-center'>Link might be expired, please request a new link</span></div>} </div> :
+      <>{done ? <div> {success ? <div className='flex justify-center mb-10'><span className='text-center'>Your password was successfully reset, you can now login using your new password</span></div>: <div className='flex justify-center mb-10'><span className='text-center'>Link might be expired, please request a new link</span></div>} </div> :
 
       <>{validToken ? <>
 
@@ -133,7 +133,7 @@ const PasswordReset = () => {
     </div>
       <div className='flex justify-center mt-10'>
           <PassValidate password={password} setValid={setValid} valid={valid}/>
-      </div></> : <div className='flex justify-center mt-10'><span className='text-center'>Link could not be verified, please request a new link or try refreshing the page</span></div>}</>
+      </div></> : <div className='flex justify-center mb-10'><span className='text-center'>Link could not be verified, please request a new link or try refreshing the page</span></div>}</>
         }</>
       }
         </div>

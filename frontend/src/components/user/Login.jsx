@@ -83,7 +83,7 @@ const Login = (props) => {
                     value={user.username}
                     onChange={handleInputChange}
                     name="username" 
-          className=" block w-72 py-0.5 px-0 text-sm  bg-transparent border-0 border-b-2 border-gray-300 focus:border-gray-300 focus:ring-0 " placeholder="Enter Habit Title"
+          className=" block w-72 py-0.5 px-0 text-sm  bg-transparent border-0 border-b-2 border-gray-300 focus:border-gray-300 focus:ring-0 " placeholder="Enter your username"
           />
           <BiUser className="absolute top-6 right-1"/>
           
@@ -99,7 +99,7 @@ const Login = (props) => {
                     value={user.password}
                     onChange={handleInputChange}
                     name="password" 
-          className=" block w-72 py-0.5 px-0 text-sm  bg-transparent border-0 border-b-2 border-gray-300 focus:border-gray-300 focus:ring-0 " placeholder="Enter Habit Title"
+          className=" block w-72 py-0.5 px-0 text-sm  bg-transparent border-0 border-b-2 border-gray-300 focus:border-gray-300 focus:ring-0 " placeholder="Enter your passowrd"
           />
          {passHidden ? <IoEyeOffOutline className="cursor-pointer absolute top-6 right-1" onClick={() => setPassHidden(false)}/> : <FiEye className=" cursor-pointer absolute top-6 right-1" onClick={() => setPassHidden(true)}/>}
           

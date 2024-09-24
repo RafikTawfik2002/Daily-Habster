@@ -24,7 +24,7 @@ const ForgotPage = (props) => {
         setEmail(value)
     }
     const sendRequest = () => {
-        setLoading(true)
+        
         let error = ""
         const emailRegex = /^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$/;
         if(!email){console.log("No email"); error = "Please provide an email"}
@@ -33,7 +33,7 @@ const ForgotPage = (props) => {
 
         if(error != ""){setMessage(error); return;}
 
-        
+        setLoading(true)
         if(option == 1){
             UserDataServices.sendUsername({email: email})
             .then(response => {console.log(response); setDone(true); setLoading(false)})
