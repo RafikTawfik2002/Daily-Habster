@@ -6,18 +6,18 @@ import DeleteModal from "./modals/DeleteModal";
 import DateTools from "../../DateTools";
 import ViewModal from "./modals/ViewModal";
 import Spinner from "../Spinner";
+import CompleteModal from "./modals/CompleteModal";
 
 
 const HabitsDisplay = (props) => {
   const user = props.user;
 
-  const sleep = ms => {
-    return new Promise(resolve => setTimeout(resolve, ms));
-  }
 
   const [habits, setHabits] = useState([]);
   const [edit, setEdit] = useState([false, null, null]);
   const [del, setDel] = useState([false, null]);
+
+  const [queued, setQueued] = useState(['habit to display'])
 
   const [view, setView] = useState([false, null])
 
@@ -123,6 +123,10 @@ const HabitsDisplay = (props) => {
     {edit[0] && <EditModal habit={edit[1]} setHabit={edit[2]} setEdit={() => setEdit([false, null, null])}/>}
     {del[0] && <DeleteModal habit={del[1]} setDel={() => setDel([false, null, null])} deleteHabit={() => deleteHabit(del[1]._id)}/>}
     {view[0] && <ViewModal habit={view[1]} exit={() => setView([false, null])}/>}
+
+      {/* Display completed habits before moving them to completed tab */}
+    {(!view[0] && !del[0] && !edit[0] && queued.length > 0)  && <CompleteModal />}
+
   
 
     </>

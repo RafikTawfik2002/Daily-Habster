@@ -42,25 +42,25 @@ const LinearBar = (props) => {
         
         console.log("updated habit is : ");
         console.log(updatedHabit);
-        HabitsDataServices.updateHabit(habit._id, updatedHabit)
-          .then((response) => {
-            console.log("updated to archived true successfullyy");
-            props.setHabit({
-              ...habit,
-              archived: true,
-              success: habit.success,
-              discrete: habit.discrete,
-            });
-            props.setParen(habit._id, {
-              ...habit,
-              archived: true,
-              success: habit.success,
-              discrete: habit.discrete,
-            })
-          })
-          .catch((error) => {
-            console.log(error);
-          });
+        // HabitsDataServices.updateHabit(habit._id, updatedHabit)
+        //   .then((response) => {
+        //     console.log("updated to archived true successfullyy");
+        //     props.setHabit({
+        //       ...habit,
+        //       archived: true,
+        //       success: habit.success,
+        //       discrete: habit.discrete,
+        //     });
+        //     props.setParen(habit._id, {
+        //       ...habit,
+        //       archived: true,
+        //       success: habit.success,
+        //       discrete: habit.discrete,
+        //     })
+        //   })
+        //   .catch((error) => {
+        //     console.log(error);
+        //   });
       }
     }, 1000); // Update every 100ms for smoother animation
 
