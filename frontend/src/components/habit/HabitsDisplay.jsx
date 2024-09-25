@@ -17,7 +17,7 @@ const HabitsDisplay = (props) => {
   const [edit, setEdit] = useState([false, null, null]);
   const [del, setDel] = useState([false, null]);
 
-  const [queued, setQueued] = useState(['habit to display'])
+  const [queued, setQueued] = useState([])
 
   const [view, setView] = useState([false, null])
 
@@ -32,9 +32,17 @@ const HabitsDisplay = (props) => {
     }
   }, [edit, del, view])
   const find = (user) => {
+    
     HabitDataServices.findByUserId(user.userID)
       .then((response) => {
-        setHabits(response.data);
+        setHabits((response.data).filter(habit => {
+          const timeDiff = (new Date().getTime() - new Date(habit.createdAt).getTime()) / (1000*60*60*24)
+          return !(timeDiff >= habit.duration)
+        }));
+        setQueued((response.data).filter(habit => {
+          const timeDiff = (new Date().getTime() - new Date(habit.createdAt).getTime()) / (1000*60*60*24)
+          return (timeDiff >= habit.duration && !habit.archived)
+        }));
         
         setLoading(false)
       })
@@ -125,7 +133,7 @@ const HabitsDisplay = (props) => {
     {view[0] && <ViewModal habit={view[1]} exit={() => setView([false, null])}/>}
 
       {/* Display completed habits before moving them to completed tab */}
-    {(!view[0] && !del[0] && !edit[0] && queued.length > 0)  && <CompleteModal />}
+    {(!view[0] && !del[0] && !edit[0] && queued.length > 0)  && <CompleteModal queued={queued}/>}
 
   
 
