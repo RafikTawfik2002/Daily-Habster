@@ -7,16 +7,17 @@ import DateTools from "../../DateTools";
 import CheckIn from "../CheckIn";
 
 const SingleHabitQueued = (props) => {
-    console.log("HABIT IN QUEUED")
-    console.log(props.habit)
-    const initData = props.habit;
+  console.log("HABIT IN QUEUED");
+  console.log(props.habit);
+  const initData = props.habit;
   const [habit, setHabit] = useState(props.habit);
-
+  // rounded-tl-none rounded-bl-none
+  // rounded-3xl
   return (
     <div
       className={` 
-    flex flex-col font-thin justify-between w-11/12 md:w-11/12 lg:w-3/5 text-gray-300  rounded-3xl
-     border-blue-900 rounded-tl-none rounded-bl-none bg-blue-900  border-2 bg-opacity-80 blur-30 my-2 backdrop-filter backdrop-blur-xl
+    flex flex-col font-thin justify-between w-11/12 text-gray-300  
+     border-blue-900  border-2 bg-blue-900 rounded-3xl   bg-opacity-80 blur-30 my-2
 
      `}
     >
@@ -26,9 +27,9 @@ const SingleHabitQueued = (props) => {
           <div
             className={`px-3 mb-2 rounded-lg  text-xl md:text-xl lg:text-3xl self-start leading-extra-tight font-normal`}
           >
-            <span className="hidden font-thin md:inline lg:inline">
+            {/* <span className="hidden font-thin md:inline lg:inline">
               {props.index + ") "}
-            </span>
+            </span> */}
             {habit.desc}
           </div>
 
@@ -53,16 +54,18 @@ const SingleHabitQueued = (props) => {
               className={`ml-6 lg:ml-10 w-5/6 lg:w-3/3 px-3 mt-1 rounded-lg  text-base md:text-xl lg:text-sm self-start font-normal`}
             >
               <span className="font-thin">
-                <span className="text-sm">
-                  <i>Description</i>
-                </span>{" "}
-                <br />
-                <i>{habit.text}</i>
+                <span className="block text-sm leading-tight">
+                  <i>{habit.text}</i>
+                </span>
               </span>
             </div>
           )}
         </div>
+      
+
+        {habit.lastLogin == habit.duration && <div className=""><div>Gold Status Achieved {habit.duration}</div></div>}
       </div>
+        
     </div>
   );
 };

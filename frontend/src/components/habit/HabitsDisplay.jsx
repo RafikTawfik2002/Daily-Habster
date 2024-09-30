@@ -23,6 +23,9 @@ const HabitsDisplay = (props) => {
 
   const [loading, setLoading] = useState(true)
 
+
+  
+
   useEffect( () => {
     if(edit[0] || del[0] || view[0]){
       document.body.classList.add('overflow-hidden');
@@ -37,7 +40,7 @@ const HabitsDisplay = (props) => {
       .then((response) => {
         setHabits((response.data).filter(habit => {
           const timeDiff = (new Date().getTime() - new Date(habit.createdAt).getTime()) / (1000*60*60*24)
-          return !(timeDiff >= habit.duration)
+          return !(timeDiff >= habit.duration) || habit.archived
         }));
         setQueued((response.data).filter(habit => {
           const timeDiff = (new Date().getTime() - new Date(habit.createdAt).getTime()) / (1000*60*60*24)
@@ -119,7 +122,7 @@ const HabitsDisplay = (props) => {
    <div className="text-white w-full mx-auto flex flex-col justify-center items-center">
         {habits.length > 0 ? (
           filter().map((item, index ) =>
-          <SingleHabitTab setParen={updateHabits} tab={props.tab} index={index+1} habit={item} deleteHabit={() => deleteHabit(item._id)} setDel={setDel} setEdit={setEdit}  key={item._id} setView={setView}/>
+          <SingleHabitTab setQueued={setQueued} queued={queued} setParen={updateHabits} tab={props.tab} index={index+1} habit={item} deleteHabit={() => deleteHabit(item._id)} setDel={setDel} setEdit={setEdit}  key={item._id} setView={setView}/>
           
         )
         ) : (
@@ -133,7 +136,8 @@ const HabitsDisplay = (props) => {
     {view[0] && <ViewModal habit={view[1]} exit={() => setView([false, null])}/>}
 
       {/* Display completed habits before moving them to completed tab */}
-    {(!view[0] && !del[0] && !edit[0] && queued.length > 0)  && <CompleteModal queued={queued}/>}
+      <div className="text-center">{queued.length}</div>
+    {(!view[0] && !del[0] && !edit[0] && queued.length > 0)  && <CompleteModal queued={queued} setQueued={setQueued} habits={habits} setHabits={setHabits}/>}
 
   
 

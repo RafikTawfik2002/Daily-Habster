@@ -4,6 +4,7 @@ import DateTools from "../DateTools";
 import HabitsDataServices from "../../services/habits";
 
 const LinearBar = (props) => {
+
   const start = props.start;
   const duration = props.duration;
   const habit = props.habit;
