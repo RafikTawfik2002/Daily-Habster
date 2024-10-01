@@ -31,18 +31,13 @@ const LinearBar = (props) => {
 
       if (newProgress >= 1) {
         clearInterval(interval);
-        const updatedHabit = {
-          ...habit,
-          archived: "" + true,
-          success: "" + habit.success,
-          discrete: "" + habit.discrete,
-          duration: "" + habit.duration,
-          lastLogin: "" + habit.lastLogin 
-        };
 
+        console.log("HABIT DONE!!!!")
         
-        console.log("updated habit is : ");
-        console.log(updatedHabit);
+
+        // TODO: need to delete the habit from the habits array and added to queued
+        props.setParen(habit)
+
         // HabitsDataServices.updateHabit(habit._id, updatedHabit)
         //   .then((response) => {
         //     console.log("updated to archived true successfullyy");

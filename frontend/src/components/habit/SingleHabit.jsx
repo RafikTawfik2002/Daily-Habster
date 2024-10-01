@@ -118,7 +118,7 @@ const SingleHabit = (props) => {
       </div>
 
       <div className="p-3 pt-0 w-full">
-                        <LinearBar setParen={props.setParen} setHabit={setHabit} habit={habit} start={habit.createdAt} duration={habit.duration} setQueued={props.setQueued} queued={props.queued} />
+                        <LinearBar setParen={props.switchToQueue} setHabit={setHabit} habit={habit} start={habit.createdAt} duration={habit.duration} setQueued={props.setQueued} queued={props.queued} />
       </div>
 
 

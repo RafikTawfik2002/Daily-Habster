@@ -111,9 +111,18 @@ const HabitsDisplay = (props) => {
     setHabits(prevState => {
       return prevState.map(item => item._id == id ? habit : item);
     })
-
-    
   }
+
+  const switchToQueue = (h) => {
+    console.log("SWITCHING PLACES")
+    setHabits(prevState => {
+      return prevState.filter(habit => habit._id !== h._id);
+    });
+    const newArray = []
+    queued.forEach(habit => newArray.push(habit))
+    newArray.push(h)
+    setQueued(newArray)
+  } 
   
 
   return (<>
@@ -122,7 +131,7 @@ const HabitsDisplay = (props) => {
    <div className="text-white w-full mx-auto flex flex-col justify-center items-center">
         {habits.length > 0 ? (
           filter().map((item, index ) =>
-          <SingleHabitTab setQueued={setQueued} queued={queued} setParen={updateHabits} tab={props.tab} index={index+1} habit={item} deleteHabit={() => deleteHabit(item._id)} setDel={setDel} setEdit={setEdit}  key={item._id} setView={setView}/>
+          <SingleHabitTab setQueued={setQueued} queued={queued} setParen={updateHabits} switchToQueue={switchToQueue} tab={props.tab} index={index+1} habit={item} deleteHabit={() => deleteHabit(item._id)} setDel={setDel} setEdit={setEdit}  key={item._id} setView={setView}/>
           
         )
         ) : (
@@ -136,7 +145,7 @@ const HabitsDisplay = (props) => {
     {view[0] && <ViewModal habit={view[1]} exit={() => setView([false, null])}/>}
 
       {/* Display completed habits before moving them to completed tab */}
-      <div className="text-center">{queued.length}</div>
+      {/* <div className="text-center">{queued.length} why</div> */}
     {(!view[0] && !del[0] && !edit[0] && queued.length > 0)  && <CompleteModal queued={queued} setQueued={setQueued} habits={habits} setHabits={setHabits}/>}
 
   
