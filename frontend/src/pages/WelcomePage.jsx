@@ -1,8 +1,10 @@
-import React from "react";
+import React, {useEffect} from "react";
 import { MdMenuBook } from "react-icons/md";
 import { Link } from "react-router-dom";
 
+
 const WelcomePage = () => {
+  useEffect(() => localStorage.removeItem('user'),[])
   return (
     <div className="text-white h-[100vh] flex justify-center items-center bg-cover">
       <div>

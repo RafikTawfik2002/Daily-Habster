@@ -11,7 +11,8 @@ import { TbArrowBackUp } from "react-icons/tb";
 import HabitServices from "../../services/habits"
 
 const Feedback = (props) => {
-    const user = props.user
+  const user = props.user
+
 
     const [review, setReview] = useState("")
     const [anonymous, setAnonymous] = useState(false)
@@ -26,7 +27,7 @@ const Feedback = (props) => {
 
     useEffect(() => {
         if(!user){
-          navigate("/Home")
+          navigate("/")
         }
   
       }, [])

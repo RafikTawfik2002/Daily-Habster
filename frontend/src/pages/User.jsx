@@ -9,6 +9,7 @@ import { useLocation } from "react-router-dom";
 const User = (props) => {
   const location = useLocation()
   const navigate = useNavigate();
+
   const initialState = location.state ? location.state.s : 'log' 
   const [logOrRegister, setLogOrRegister] = useState(initialState);
 
@@ -16,6 +17,7 @@ const User = (props) => {
   useEffect(() => {
     props.setLogged(false);
     props.setUser({});
+    localStorage.removeItem('user');
   }, []);
   // user information, once obtained we can transition to the habit page
 

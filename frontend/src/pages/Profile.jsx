@@ -29,7 +29,7 @@ const Profile = (props) => {
 
     useEffect(() => {
       if(!user){
-        navigate("/Home")
+        navigate("/")
       }
 
     }, [])

@@ -15,7 +15,7 @@ const AboutUs = (props) => {
   const user = props.user
   useEffect(() => {
     if(!user){
-      navigate("/Home")
+      navigate("/")
     }
 
   }, [])

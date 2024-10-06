@@ -3,16 +3,27 @@ import HabitPageTitle from "../components/habit/HabitPageTitle.jsx";
 import HabitsDisplay from "../components/habit/HabitsDisplay.jsx";
 import AddHabit from "../components/habit/modals/AddHabit.jsx";
 import Verify from "../components/Verify.jsx";
+import { useNavigate } from "react-router-dom";
 
 const MainHabits = (props) => {
-  const user = props.user;
+  const user = props.user || JSON.parse(localStorage.getItem('user'));
+  console.log("USER IS EQUAL")
+  console.log(user)
   const [addState, setAddState] = useState(false)
   const [tab, setTab] = useState("Main")
   const [sortState, setSortState] = useState(["none", "up"])
 
+  const navigate = useNavigate()
+
+  console.log("Enterd main habit and user is define: " + user)
+
   useEffect(() => {
     props.setLogged(true);
     props.setUser(user);
+
+    if(!user){
+      console.log("TIME TO NAVIGATE")
+      navigate('/welcome')}
   }, []);
 
   useEffect(() => {

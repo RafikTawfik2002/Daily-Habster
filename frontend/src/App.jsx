@@ -13,7 +13,7 @@ import PasswordReset from "./pages/PasswordReset";
 
 const App = () => {
   const [logged, setLogged] = useState()
-  const [user, setUser] = useState() // user should represent the userID and not the while user entry 
+  const [user, setUser] = useState(JSON.parse(localStorage.getItem('user'))) // user should represent the userID and not the while user entry 
   return (
     <>
     <div
@@ -28,7 +28,8 @@ const App = () => {
       {/* Routing to different pages */}
       <Switch>
             {/* <Route exact path='/' element={logged ? <MainHabits user={user} setUser={setUser} setLogged={setLogged}/> : <User setUser={setUser} setLogged={setLogged}/>} /> */}
-            <Route exact path='/' element={<WelcomePage />} />
+            <Route exact path='/' element={<MainHabits user={user} setUser={setUser} setLogged={setLogged}/>} />
+            <Route exact path='/welcome' element={<WelcomePage />} />
             <Route exact path='/Login' element={<User setUser={setUser} setLogged={setLogged}/>} />
             <Route exact path='/ForgotPage' element={<ForgotPage setUser={setUser} setLogged={setLogged}/>} />
             <Route exact path='/Profile' element={<Profile user={user} setUser={setUser} logged={logged} setLogged={setLogged}/>} />

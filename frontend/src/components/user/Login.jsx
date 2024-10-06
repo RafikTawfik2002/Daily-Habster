@@ -4,7 +4,7 @@ import { BiUser } from "react-icons/bi"
 import {AiOutlineUnlock } from "react-icons/ai"
 import { MdMenuBook } from "react-icons/md";
 import HabitDataService from "../../../services/users.js"
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { IoEyeOffOutline } from "react-icons/io5";
 import { FiEye } from "react-icons/fi";
 import Spinner from "../Spinner.jsx";
@@ -19,6 +19,12 @@ const Login = (props) => {
     username: "",
     password: "",
   };
+
+  // useEffect(()=>{
+  //   if(localStorage.getItem('user')){
+  //     props.filled(JSON.parse(localStorage.getItem('user')));
+  //   }
+  // },[])
   
   const [loading, setLoading] = useState(false)
 
@@ -41,6 +47,7 @@ const Login = (props) => {
       const isAuthentic = await HabitDataService.authenticate({username: user.username, password: user.password});
       console.log("LOGIN DATA IS")
       console.log(isAuthentic.data)
+      localStorage.setItem('user', JSON.stringify(isAuthentic.data))
         
       await props.filled(isAuthentic.data);
     }
