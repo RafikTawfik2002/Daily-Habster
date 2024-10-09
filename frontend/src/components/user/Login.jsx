@@ -40,16 +40,18 @@ const Login = (props) => {
       return;
     }
 
-    try{
+    try{ 
       // check if user exists
       // const isUser = await HabitDataService.getByUsername(user.username); 
       setLoading(true)
       const isAuthentic = await HabitDataService.authenticate({username: user.username, password: user.password});
       console.log("LOGIN DATA IS")
       console.log(isAuthentic.data)
-      localStorage.setItem('user', JSON.stringify(isAuthentic.data))
+      //localStorage.setItem('user', JSON.stringify(isAuthentic.data))
         
       await props.filled(isAuthentic.data);
+
+      
     }
     catch(e){
       setMessage("Wrong username or password")

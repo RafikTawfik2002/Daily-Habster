@@ -17,7 +17,7 @@ const User = (props) => {
   useEffect(() => {
     props.setLogged(false);
     props.setUser({});
-    localStorage.removeItem('user');
+    localStorage.clear();
   }, []);
   // user information, once obtained we can transition to the habit page
 

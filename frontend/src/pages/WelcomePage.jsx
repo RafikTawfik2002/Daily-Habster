@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 
 const WelcomePage = () => {
-  useEffect(() => localStorage.removeItem('user'),[])
+  useEffect(() => localStorage.clear(),[])
   return (
     <div className="text-white h-[100vh] flex justify-center items-center bg-cover">
       <div>
