@@ -1,4 +1,4 @@
-import express, { request, response } from 'express';
+import express from 'express';
 import { User } from '../models/user.js';
 import { Habit } from '../models/habit.js';
 import { ObjectId } from "mongodb"
@@ -8,6 +8,10 @@ import { Code } from "../models/Code.js"
 import dotenv from "dotenv"
 import crypto from "crypto"
 import { Token } from '../models/Token.js';
+import jwt from "jsonwebtoken"
+import { config } from 'dotenv';
+config(); // Load environment variables from .env
+
 const router = express.Router();
 
 
@@ -477,7 +481,7 @@ router.get('/username/:username', async (request, response) => {
     }
 })
 
-// Creating a new user, used for signing up users
+// Creating a new user, used for signing up users  ===> GENERATES A TOKEN
 
 router.post('/', async (request, response) => {
     try {
@@ -504,6 +508,8 @@ router.post('/', async (request, response) => {
         if(error != ''){throw new Error(error)}
 
         const hashedPassword = await bcrypt.hash(request.body.passWord, 10);
+
+        const token = jwt.sign({ username: request.body.username }, process.env.JWT_KEY, { expiresIn: '7d' });
         //initialize a new user
         const newUser = {
             _id: newID,
@@ -511,8 +517,10 @@ router.post('/', async (request, response) => {
             userName: request.body.userName,
             email: request.body.email,
             passWord: hashedPassword,
-            verified: false
+            verified: false,
+            token: token
         };
+        console.log(newUser)
 
         const user = await User.create(newUser); //using a mongoose.model which has a mongoose Schema
 
@@ -530,7 +538,7 @@ router.post('/', async (request, response) => {
     }
 });
 
-// authenticating user, used for user login
+// authenticating user, used for user login  ===> GENERATES A TOKEN
 
 router.post('/authenticate', async (request, response) => {
     try {
@@ -551,13 +559,16 @@ router.post('/authenticate', async (request, response) => {
 
         if(!isMatch){throw new Error('username or password are incorrect');}
 
+        const token = jwt.sign({ username: request.body.username }, process.env.JWT_KEY, { expiresIn: '7d' });
+
         // data to send back to frontend
         const res = {
             userID: user.userID,
             userName: user.userName,
             email: user.email,
             createdAt: user.createdAt,
-            verified: user.verified
+            verified: user.verified,
+            token: token
         }
 
         console.log("BACKEND SENDING")
