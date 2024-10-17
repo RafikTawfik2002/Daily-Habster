@@ -1,0 +1,31 @@
+Backend Routes/API - 20 Total
+
+- Habit API - 7 Total
+-> get                     - gets all habits from database -> secret key required
+-> get/id/:id              - get habit by id               -> user token required
+-> get/user/:user          - get user habits               -> user token required
+-> post, habit             - post new habit                -> user token required
+-> put/:id, habit          - update habit by id            -> user token required
+-> delete/:id              - delete habit by id            -> user token required
+-> post/review             - post new review               -> user token required
+
+
+User API - Account recover - 4 Total
+-> post/resetpass           - resets password                 -> no token required
+-> post/restrequest         - send email to reset password    -> no token required
+-> post/checktoken          - checks if password token exists -> no token required
+-> post/forgotusername      - send email to user              -> no token required
+
+User API - In app
+- User API - Email verification - 3 Total
+-> post/sendmail            - send verf code email                   -> user token required
+-> post/sentcheck           - checks if code is sent                 -> user token required
+-> post/verify              - verify code                            -> user token required
+
+- User API - others - 6 Total
+-> get/:id                  - get user by id (may not be needed)     -> user token required
+-> post                     - create new user                        -> no token required => Sends token
+-> post/authenticate        - authenticate user login                -> no token required => Sends token
+-> put/:id                  - update username and email              -> user token required
+-> delete/:id               - delete an account                      -> user token required
+-> get                      - get all user                           -> secret key required
