@@ -10,6 +10,7 @@ import crypto from "crypto"
 import { Token } from '../models/Token.js';
 import jwt from "jsonwebtoken"
 import { config } from 'dotenv';
+
 config(); // Load environment variables from .env
 
 const router = express.Router();
@@ -510,6 +511,17 @@ router.post('/', async (request, response) => {
         const hashedPassword = await bcrypt.hash(request.body.passWord, 10);
 
         const token = jwt.sign({ username: request.body.username }, process.env.JWT_KEY, { expiresIn: '7d' });
+
+
+                // Store the token in a secure, HttpOnly cookie
+                response.cookie('authToken', token, {
+                    httpOnly: true,      // Prevents JavaScript access (XSS protection)
+                    secure: false,         // Only sent over HTTPS
+                    sameSite: 'Strict',   // CSRF protection
+                    maxAge: 7 * 24 * 60 * 60 * 1000, // 7-day expiration
+                });
+        
+  
         //initialize a new user
         const newUser = {
             _id: newID,
@@ -517,8 +529,7 @@ router.post('/', async (request, response) => {
             userName: request.body.userName,
             email: request.body.email,
             passWord: hashedPassword,
-            verified: false,
-            token: token
+            verified: false
         };
         console.log(newUser)
 
@@ -561,15 +572,26 @@ router.post('/authenticate', async (request, response) => {
 
         const token = jwt.sign({ username: request.body.username }, process.env.JWT_KEY, { expiresIn: '7d' });
 
+          
+        
+
         // data to send back to frontend
         const res = {
             userID: user.userID,
             userName: user.userName,
             email: user.email,
             createdAt: user.createdAt,
-            verified: user.verified,
-            token: token
+            verified: user.verified
         }
+        console.log(token)
+
+                // Store the token in a secure, HttpOnly cookie
+        response.cookie('authToken', token, {
+            httpOnly: true,      // Prevents JavaScript access (XSS protection)
+            secure: false,         // Only sent over HTTPS
+            sameSite: 'Strict',   // CSRF protection
+            maxAge: 7 * 24 * 60 * 60 * 1000, // 7-day expiration
+        });
 
         console.log("BACKEND SENDING")
         console.log(res)
