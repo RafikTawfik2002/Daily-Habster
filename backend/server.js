@@ -9,7 +9,10 @@ import userLogin from "./routes/userLogin.js"
 import cookieParser from 'cookie-parser'
 
 const app = express() //we use to make the server
-app.use(cors())
+app.use( cors({
+    origin: true, 
+    credentials: true, 
+  }))
 app.use(express.json())
 app.use(cookieParser())
 

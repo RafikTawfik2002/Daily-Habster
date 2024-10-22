@@ -2,8 +2,14 @@ import express from 'express';
 import { Habit } from '../models/habit.js'
 import mongodb, { ObjectId } from "mongodb"
 import { Review } from "../models/Reviews.js"
+import jwt from "jsonwebtoken"
+import { config } from 'dotenv';
+
+config(); // Load environment variables from .env
 
 const router = express.Router();
+
+const secretKey = process.env.JWT_KEY
 
 // Get route to get all books from the database
 router.get('/', async (request, response) => {
@@ -38,9 +44,19 @@ router.get('/id/:id', async (request, response) => {
 router.get('/user/:user', async (request, response) => {
     try{
         
-        const { user } = request.params;
-        const habit = await Habit.find({userID : user});
+        // CHECK TOKEN FOR USER ID
+        const user = {}
+        const token = request.cookies.authToken;
+        jwt.verify(token, secretKey, (err, decoded) => {
+            if (err) {
+                return res.status(401).send('Invalid token');
+            }
+            user.userID = decoded.userID     
+        });
         
+        //FIND HABITS USING USER ID FROM THE TOKEN
+        const habit = await Habit.find({userID : user.userID});
+
         return response.status(200).json(habit);
     } catch (error){
         console.log(error.message);

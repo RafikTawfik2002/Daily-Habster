@@ -13,10 +13,124 @@ import { config } from 'dotenv';
 
 config(); // Load environment variables from .env
 
+const isProduction = process.env.NODE_ENV === 'production';
+
 const router = express.Router();
 
 
 dotenv.config()
+
+// Creating a new user, used for signing up users  ===> GENERATES A TOKEN
+
+router.post('/', async (request, response) => {
+    try {
+        //input validation
+        if (!request.body.userID || !request.body.email || !request.body.passWord || !request.body.userName){
+            return response.status(400).send({message: 'Send all required fields'});
+        }
+
+        const newID = new ObjectId(request.body.userID)
+
+        // check if email or username exists
+        let error = ''
+        // check if username exists
+        const found = await User.find({userName: request.body.userName}).exec() 
+        console.log(found.length)
+        if(found.length > 0){error = 'username taken'}
+        // check if email exists
+        const foundEmail = await User.find({email: request.body.email}).exec() 
+        if(foundEmail.length > 0){
+            if(error != ''){error += ' and email already registered'}
+            else{error = 'email already registered'}
+        }
+        // raise error if error is not empty
+        if(error != ''){throw new Error(error)}
+
+        const hashedPassword = await bcrypt.hash(request.body.passWord, 10);
+
+        const token = jwt.sign({ username: request.body.userName }, process.env.JWT_KEY, { expiresIn: '7d' });
+
+
+                // Store the token in a secure, HttpOnly cookie
+                response.cookie('authToken', token, {
+                    httpOnly: true,      // Prevents JavaScript access (XSS protection)
+                    secure: false,         // Only sent over HTTPS
+                    sameSite: 'Strict',   // CSRF protection
+                    maxAge: 7 * 24 * 60 * 60 * 1000, // 7-day expiration
+                });
+        
+  
+        //initialize a new user
+        const newUser = {
+            _id: newID,
+            userID: newID,
+            userName: request.body.userName,
+            email: request.body.email,
+            passWord: hashedPassword,
+            verified: false
+        };
+        console.log(newUser)
+
+        const user = await User.create(newUser); //using a mongoose.model which has a mongoose Schema
+
+        const res = {
+            userID: user.userID,
+            userName: user.userName,
+            email: user.email,
+            createdAt: user.createdAt
+        }
+
+        return response.status(201).send(res);
+    } catch (error) {
+        console.log(error.message);
+        response.status(500).send({ message: error.message });
+    }
+});
+
+// authenticating user, used for user login  ===> GENERATES A TOKEN
+
+router.post('/authenticate', async (request, response) => {
+    try {
+        //INPUT VALIDATION 
+        if (!request.body.username || !request.body.password){
+            return response.status(400).send({message: 'Send all required fields'});
+        }
+        //CHECK USER EXISTS
+        const found = await User.find({userName: request.body.username}).exec() 
+        if(found.length == 0){throw new Error('username or password are incorrect');}
+
+        //CHECK IF PASSWORD MATCHED
+        const user = found[0]
+        const password = user.passWord
+        const isMatch = await bcrypt.compare(request.body.password, password)
+        if(!isMatch){throw new Error('username or password are incorrect');}
+
+        //GENERATE AND SEND COOKIE TOKEN ==> contains userID and lasts for 30 days
+        const token = jwt.sign({ userID: user.userID }, process.env.JWT_KEY, { expiresIn: '30d' });
+        response.cookie('authToken', token, {
+            httpOnly: true,      
+            secure: true,                       // Only sent over HTTPS
+            sameSite: 'None',   
+            maxAge: 30 * 24 * 60 * 60 * 1000,    // 30-day expiration
+        });
+    
+        //DATA TO SEND THE FRONTEND
+        const res = {
+            userID: user.userID,
+            userName: user.userName,
+            email: user.email,
+            createdAt: user.createdAt,
+            verified: user.verified
+        }
+
+        return response.status(201).send(res);
+    } catch (error) {
+        console.log(error.message);
+        response.status(500).send({ message: error.message });
+    }
+});
+
+
 
 // setting up mail transporter
 const transporter = nodemailer.createTransport({
@@ -482,127 +596,6 @@ router.get('/username/:username', async (request, response) => {
     }
 })
 
-// Creating a new user, used for signing up users  ===> GENERATES A TOKEN
-
-router.post('/', async (request, response) => {
-    try {
-        //input validation
-        if (!request.body.userID || !request.body.email || !request.body.passWord || !request.body.userName){
-            return response.status(400).send({message: 'Send all required fields'});
-        }
-
-        const newID = new ObjectId(request.body.userID)
-
-        // check if email or username exists
-        let error = ''
-        // check if username exists
-        const found = await User.find({userName: request.body.userName}).exec() 
-        console.log(found.length)
-        if(found.length > 0){error = 'username taken'}
-        // check if email exists
-        const foundEmail = await User.find({email: request.body.email}).exec() 
-        if(foundEmail.length > 0){
-            if(error != ''){error += ' and email already registered'}
-            else{error = 'email already registered'}
-        }
-        // raise error if error is not empty
-        if(error != ''){throw new Error(error)}
-
-        const hashedPassword = await bcrypt.hash(request.body.passWord, 10);
-
-        const token = jwt.sign({ username: request.body.username }, process.env.JWT_KEY, { expiresIn: '7d' });
-
-
-                // Store the token in a secure, HttpOnly cookie
-                response.cookie('authToken', token, {
-                    httpOnly: true,      // Prevents JavaScript access (XSS protection)
-                    secure: false,         // Only sent over HTTPS
-                    sameSite: 'Strict',   // CSRF protection
-                    maxAge: 7 * 24 * 60 * 60 * 1000, // 7-day expiration
-                });
-        
-  
-        //initialize a new user
-        const newUser = {
-            _id: newID,
-            userID: newID,
-            userName: request.body.userName,
-            email: request.body.email,
-            passWord: hashedPassword,
-            verified: false
-        };
-        console.log(newUser)
-
-        const user = await User.create(newUser); //using a mongoose.model which has a mongoose Schema
-
-        const res = {
-            userID: user.userID,
-            userName: user.userName,
-            email: user.email,
-            createdAt: user.createdAt
-        }
-
-        return response.status(201).send(res);
-    } catch (error) {
-        console.log(error.message);
-        response.status(500).send({ message: error.message });
-    }
-});
-
-// authenticating user, used for user login  ===> GENERATES A TOKEN
-
-router.post('/authenticate', async (request, response) => {
-    try {
-        //input validation
-        if (!request.body.username || !request.body.password){
-            return response.status(400).send({message: 'Send all required fields'});
-        }
-
-
-        const found = await User.find({userName: request.body.username}).exec() 
-
-        if(found.length == 0){throw new Error('username or password are incorrect');}
-
-        const user = found[0]
-        const password = user.passWord
-
-        const isMatch = await bcrypt.compare(request.body.password, password)
-
-        if(!isMatch){throw new Error('username or password are incorrect');}
-
-        const token = jwt.sign({ username: request.body.username }, process.env.JWT_KEY, { expiresIn: '7d' });
-
-          
-        
-
-        // data to send back to frontend
-        const res = {
-            userID: user.userID,
-            userName: user.userName,
-            email: user.email,
-            createdAt: user.createdAt,
-            verified: user.verified
-        }
-        console.log(token)
-
-                // Store the token in a secure, HttpOnly cookie
-        response.cookie('authToken', token, {
-            httpOnly: true,      // Prevents JavaScript access (XSS protection)
-            secure: false,         // Only sent over HTTPS
-            sameSite: 'Strict',   // CSRF protection
-            maxAge: 7 * 24 * 60 * 60 * 1000, // 7-day expiration
-        });
-
-        console.log("BACKEND SENDING")
-        console.log(res)
-
-
-        return response.status(201).send(res);
-    } catch (error) {
-        console.log(error.message);
-        response.status(500).send({ message: error.message });
-    }
-});
 
 // used to update a password
 
