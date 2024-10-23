@@ -120,7 +120,7 @@ router.post('/authenticate', async (request, response) => {
     
         //DATA TO SEND THE FRONTEND
         const res = {
-            userID: user.userID,
+            userID: user.userName,
             userName: user.userName,
             email: user.email,
             createdAt: user.createdAt,

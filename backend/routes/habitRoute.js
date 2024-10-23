@@ -13,8 +13,21 @@ const router = express.Router();
 const secretKey = process.env.JWT_KEY
 
 // takes in a username and returns a userID after verifying the token and its identity
-const verifyIdentity = (username) => {
-
+const verifyIdentity = async (request, username) => {
+    const token = request.cookies.authToken;
+    const userID = jwt.verify(token, secretKey, async (err, decoded) => {
+        if (err) {
+            return -1
+        }
+        const userID = decoded.userID 
+        // if token is verified and decoded check userID matches userName
+        const tokenUsername = (await User.findById(userID)).userName
+        if(tokenUsername != username){return -1}
+        
+        return userID
+    });
+    return userID
+    
 }
 
 // Get route to get all books from the database
@@ -54,18 +67,12 @@ router.get('/user/:user', async (request, response) => {
     try{
         const provided = request.params.user
         console.log("Provided is : " + provided)
-        // CHECK TOKEN FOR USER ID
-        const user = {}
-        const token = request.cookies.authToken;
-        jwt.verify(token, secretKey, (err, decoded) => {
-            if (err) {
-                return res.status(401).send('Invalid token');
-            }
-            user.userID = decoded.userID     
-        });
+    
+        const userID = await verifyIdentity(request, provided)
+        if(userID == -1 || (!userID))  return res.status(401).send('Invalid token');
         
         //FIND HABITS USING USER ID FROM THE TOKEN
-        const habit = await Habit.find({userID : user.userID});
+        const habit = await Habit.find({userID : userID});
 
         return response.status(200).json(habit);
     } catch (error){
