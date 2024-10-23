@@ -1,5 +1,6 @@
 import express from 'express';
 import { Habit } from '../models/habit.js'
+import { User } from '../models/user.js';
 import mongodb, { ObjectId } from "mongodb"
 import { Review } from "../models/Reviews.js"
 import jwt from "jsonwebtoken"
@@ -10,6 +11,11 @@ config(); // Load environment variables from .env
 const router = express.Router();
 
 const secretKey = process.env.JWT_KEY
+
+// takes in a username and returns a userID after verifying the token and its identity
+const verifyIdentity = (username) => {
+
+}
 
 // Get route to get all books from the database
 router.get('/', async (request, response) => {
@@ -40,10 +46,14 @@ router.get('/id/:id', async (request, response) => {
 
     }
 })
-// habits by user
+// habits by user  ===> WORK WITH TOKEN
 router.get('/user/:user', async (request, response) => {
+    // plan for all of these if to make a middlewear ==> takes in username and returns userID
+    // the middleware verifies the token and verifies username corresponds to user ID in the token 
+    // and the returns a user ID
     try{
-        
+        const provided = request.params.user
+        console.log("Provided is : " + provided)
         // CHECK TOKEN FOR USER ID
         const user = {}
         const token = request.cookies.authToken;

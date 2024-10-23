@@ -14,6 +14,7 @@ import { config } from 'dotenv';
 config(); // Load environment variables from .env
 
 const isProduction = process.env.NODE_ENV === 'production';
+const secretKey = process.env.JWT_KEY
 
 const router = express.Router();
 
@@ -24,43 +25,32 @@ dotenv.config()
 
 router.post('/', async (request, response) => {
     try {
-        //input validation
+        //INPUT VALIDATION
         if (!request.body.userID || !request.body.email || !request.body.passWord || !request.body.userName){
             return response.status(400).send({message: 'Send all required fields'});
         }
 
         const newID = new ObjectId(request.body.userID)
 
-        // check if email or username exists
+        // CHECK IF EMAIL OR USERNAME ALREADY EXIST
         let error = ''
-        // check if username exists
+        // CHECK IF USERNAME EXISTS
         const found = await User.find({userName: request.body.userName}).exec() 
         console.log(found.length)
         if(found.length > 0){error = 'username taken'}
-        // check if email exists
+        // CHECK IF EMAIL EXISTS
         const foundEmail = await User.find({email: request.body.email}).exec() 
         if(foundEmail.length > 0){
             if(error != ''){error += ' and email already registered'}
             else{error = 'email already registered'}
         }
-        // raise error if error is not empty
+        // RAISE AN ERROR IF EMAIL OR USERNAME ALREADY TAKEN
         if(error != ''){throw new Error(error)}
 
+        // ENCRYPT THE PASSWORD
         const hashedPassword = await bcrypt.hash(request.body.passWord, 10);
 
-        const token = jwt.sign({ username: request.body.userName }, process.env.JWT_KEY, { expiresIn: '7d' });
-
-
-                // Store the token in a secure, HttpOnly cookie
-                response.cookie('authToken', token, {
-                    httpOnly: true,      // Prevents JavaScript access (XSS protection)
-                    secure: false,         // Only sent over HTTPS
-                    sameSite: 'Strict',   // CSRF protection
-                    maxAge: 7 * 24 * 60 * 60 * 1000, // 7-day expiration
-                });
-        
-  
-        //initialize a new user
+        // INTIALIZE NEW USER TO ADD TO THE DATABASE
         const newUser = {
             _id: newID,
             userID: newID,
@@ -69,18 +59,32 @@ router.post('/', async (request, response) => {
             passWord: hashedPassword,
             verified: false
         };
+
+        // GENERATE A TOKEN
+        const token = jwt.sign({ userID: newID }, process.env.JWT_KEY, { expiresIn: '30d' });
+        response.cookie('authToken', token, {
+            httpOnly: true,      // Prevents JavaScript access (XSS protection)
+            secure: true,         // Only sent over HTTPS
+            sameSite: 'None',   // CSRF protection
+            maxAge: 30 * 24 * 60 * 60 * 1000, // 7-day expiration
+        });
+
+  
         console.log(newUser)
 
         const user = await User.create(newUser); //using a mongoose.model which has a mongoose Schema
 
-        const res = {
-            userID: user.userID,
-            userName: user.userName,
-            email: user.email,
-            createdAt: user.createdAt
+        const modifiedUser = {
+            _id: newID,
+            userID: newID,
+            userName: request.body.userName,
+            email: request.body.email,
+            passWord: hashedPassword,
+            verified: false
         }
 
-        return response.status(201).send(res);
+
+        return response.status(201).send(modifiedUser);
     } catch (error) {
         console.log(error.message);
         response.status(500).send({ message: error.message });
@@ -144,7 +148,7 @@ const transporter = nodemailer.createTransport({
   
 // ACCOUNT RECOVERY
 
-// takes a token and validates it and updates the password
+// takes a token and validates it and updates the password  ==> DOES NOT NEED A TOKEN
 router.post('/resetpass', async (request, response) => {
     try{
         console.log("WORKED")
@@ -395,7 +399,7 @@ router.post('/forgotusername', async (request, response) => {
     
 })
 // EMAIL VERIFICATION
-// email html template for email verification
+// email html template for email verification 
 
 const emailTemplate = (verificationCode) => {return (`
     <!DOCTYPE html>
@@ -478,25 +482,32 @@ const verificationCode = () => {
 }
 // ESSINTAIL Routes for the application
 
-// send verification code
+// send verification code  ==> NEEDS A TOKEN
 router.post('/sendmail', async (request, response) => {
     try{
-        if(!request.body.email){return response.status(400).send({message: 'no email provided'})}
-        const code = verificationCode()
-        
-        const found = await Code.find({email: request.body.email}).exec() 
+        // CHECK TOKEN 
+        const token = request.cookies.authToken;
+        jwt.verify(token, secretKey, (err, decoded) => {
+            if (err) {
+                return res.status(401).send('Invalid token');
+            }
+        });
 
+        // INPUT VALIDATION
+        if(!request.body.email){return response.status(400).send({message: 'no email provided'})}
+        
+        // GENERATE CODE
+        const code = verificationCode()
+        const found = await Code.find({email: request.body.email}).exec() 
         if(found.length >= 1){
             const entry = found[0]
-            const res = await Code.findByIdAndUpdate(entry._id, {code: code})
-            console.log(res)
-            
+            const res = await Code.findByIdAndUpdate(entry._id, {code: code}) 
         }
         else{
             await Code.create({email: request.body.email, code: code})
         }
 
-        console.log("CODE IS " + code)
+        // SENDING THE CODE BY EMAIL
         const info = await transporter.sendMail({
             from: 'dailyhabster@gmail.com', // sender address
             to: request.body.email, // list of receivers
@@ -504,7 +515,6 @@ router.post('/sendmail', async (request, response) => {
             text: request.body.text, // plain text body
             html: emailTemplate(code), // html body
           });
-          console.log("Message sent: %s", info.messageId);
 
           return response.status(200).json({success: "true"});
 
