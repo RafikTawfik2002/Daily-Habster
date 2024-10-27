@@ -13,7 +13,7 @@ const router = express.Router();
 const secretKey = process.env.JWT_KEY
 
 // takes in a username and returns a userID after verifying the token and its identity
-const verifyIdentity = async (request, username) => {
+const verifyByUsername = async (request, username) => {
     const token = request.cookies.authToken;
     const userID = jwt.verify(token, secretKey, async (err, decoded) => {
         if (err) {
@@ -30,21 +30,40 @@ const verifyIdentity = async (request, username) => {
     
 }
 
-// Get route to get all books from the database
-router.get('/', async (request, response) => {
-    try{
-        const habit = await Habit.find({});
-        return response.status(200).json({
-            count: habit.length,
-            data: habit
+// takes in a habitID and returns the habitID after verifying the token and its identity ==> NEEDS TESTING
+const verifyByHabitID = async (request, habitID) => {
+    const token = request.cookies.authToken;
+    const VerHabitID = jwt.verify(token, secretKey, async (err, decoded) => {
+        if (err) {
+            return -1
+        }
+        const userID = decoded.userID 
+        // if token is verified and decoded check userID matches userName
+        const habitUserID = (await habitID.findById(habitID)).userID
+        if(habitUserID != userID){return -1}
+        
+        return habitID
+    });
+    return habitID
+    
+}
 
-        });
-    } catch (error){
-        console.log(error.message);
-        response.status(500).send({ message: (error.message + "but at least backend is working") });
+// Get route to get all habits from the database ==> FOR NOW ITS DISABLED FOR SECURITY REASONS
+// router.get('/', async (request, response) => {
+//     try{
+//         const habit = await Habit.find({});
+//         return response.status(200).json({
+//             count: habit.length,
+//             data: habit
 
-    }
-})
+//         });
+//     } catch (error){
+//         console.log(error.message);
+//         response.status(500).send({ message: (error.message + "but at least backend is working") });
+
+//     }
+// })
+
 // get habit by id
 router.get('/id/:id', async (request, response) => {
     try{
@@ -68,7 +87,7 @@ router.get('/user/:user', async (request, response) => {
         const provided = request.params.user
         console.log("Provided is : " + provided)
     
-        const userID = await verifyIdentity(request, provided)
+        const userID = await verifyByUsername(request, provided)
         if(userID == -1 || (!userID))  return res.status(401).send('Invalid token');
         
         //FIND HABITS USING USER ID FROM THE TOKEN
@@ -89,13 +108,19 @@ router.post('/', async (request, response) => {
             return response.status(400).send({message: 'Send all required fields'});
         }
 
+        const provided = request.body.userID 
+        console.log("Provided is : " + provided)
+    
+        const userID = await verifyByUsername(request, provided)
+        if(userID == -1 || (!userID))  return res.status(401).send('Invalid token');
+
         //initialize a new book
         const newhabit = {
             desc: request.body.desc,
             archived: request.body.archived,
             success: request.body.success,
             discrete: request.body.discrete,
-            userID: new ObjectId(request.body.userID),
+            userID: new ObjectId(userID),
             duration: request.body.duration,
             lastLogin: 0,
             text: request.body.text || ""
