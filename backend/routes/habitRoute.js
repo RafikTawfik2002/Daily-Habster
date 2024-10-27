@@ -39,7 +39,7 @@ const verifyByHabitID = async (request, habitID) => {
         }
         const userID = decoded.userID 
         // if token is verified and decoded check userID matches userName
-        const habitUserID = (await habitID.findById(habitID)).userID
+        const habitUserID = (await Habit.findById(habitID)).userID
         if(habitUserID != userID){return -1}
         
         return habitID
@@ -48,37 +48,8 @@ const verifyByHabitID = async (request, habitID) => {
     
 }
 
-// Get route to get all habits from the database ==> FOR NOW ITS DISABLED FOR SECURITY REASONS
-// router.get('/', async (request, response) => {
-//     try{
-//         const habit = await Habit.find({});
-//         return response.status(200).json({
-//             count: habit.length,
-//             data: habit
 
-//         });
-//     } catch (error){
-//         console.log(error.message);
-//         response.status(500).send({ message: (error.message + "but at least backend is working") });
-
-//     }
-// })
-
-// get habit by id
-router.get('/id/:id', async (request, response) => {
-    try{
-
-        const { id } = request.params;
-        const habit = await Habit.findById(id);
-        
-        return response.status(200).json(habit);
-    } catch (error){
-        console.log(error.message);
-        response.status(500).send({ message: error.message });
-
-    }
-})
-// habits by user  ===> WORK WITH TOKEN
+// habits by user  ===> WORKS WITH TOKEN
 router.get('/user/:user', async (request, response) => {
     // plan for all of these if to make a middlewear ==> takes in username and returns userID
     // the middleware verifies the token and verifies username corresponds to user ID in the token 
@@ -100,7 +71,7 @@ router.get('/user/:user', async (request, response) => {
 
     }
 })
-// // Post route -> route for Save a new habit
+// // Post route -> route for Save a new habit ===> WORKS WITH TOKEN
 router.post('/', async (request, response) => {
     try {
         //input validation
@@ -143,7 +114,11 @@ router.put('/:id', async (request, response) => {
         }
         const { id } = request.params;
 
-        const result = await Habit.findByIdAndUpdate(id, request.body,  { new: true, runValidators: true });
+        // checking token is valid and proves ownership
+        const habitID = await verifyByHabitID(request, id)
+        if(habitID == -1 || (!habitID))  return res.status(401).send('Invalid token');
+
+        const result = await Habit.findByIdAndUpdate(habitID, request.body,  { new: true, runValidators: true });
 
         if (!result) {
             return response.status(404).json({ message: 'Habit not found' });
@@ -159,7 +134,12 @@ router.put('/:id', async (request, response) => {
 router.delete('/:id', async (request, response) => {
     try {
         const { id } = request.params;
-        const result = await Habit.findByIdAndDelete(id);
+
+        // checking token is valid and proves ownership
+        const habitID = await verifyByHabitID(request, id)
+        if(habitID == -1 || (!habitID))  return res.status(401).send('Invalid token');
+
+        const result = await Habit.findByIdAndDelete(habitID);
         if(!result){
             return response.status(404).json({ message: 'Habit not found '});
         }
@@ -176,9 +156,21 @@ router.delete('/:id', async (request, response) => {
 
 router.post('/review', async (request, response) => {
     try {
-
+        if(!request.body.userID){
+            const token = request.cookies.authToken;
+            jwt.verify(token, secretKey, async (err, decoded) => {
+                if (err) {
+                    return res.status(401).send('Invalid token');
+                }
+            });
+        }
+        else{
+            const userID = await verifyByUsername(request, request.body.userID)
+            if(userID == -1 || (!userID))  return res.status(401).send('Invalid token');
+            request.body.userID = userID
+        }
         const review = await Review.create(request.body);
-
+        
         return response.status(200).send({ message: 'Review added successfully' });
     } catch (error) {
         console.log(error.message);
@@ -187,5 +179,36 @@ router.post('/review', async (request, response) => {
 })
 
 
-
 export default router;
+
+
+// Get route to get all habits from the database ==> FOR NOW ITS DISABLED FOR SECURITY REASONS
+// router.get('/', async (request, response) => {
+//     try{
+//         const habit = await Habit.find({});
+//         return response.status(200).json({
+//             count: habit.length,
+//             data: habit
+
+//         });
+//     } catch (error){
+//         console.log(error.message);
+//         response.status(500).send({ message: (error.message + "but at least backend is working") });
+
+//     }
+// })
+
+// get habit by id ==> FOR NOW ITS DISABLED FOR SECURITY REASONS
+// router.get('/id/:id', async (request, response) => {
+//     try{
+
+//         const { id } = request.params;
+//         const habit = await Habit.findById(id);
+        
+//         return response.status(200).json(habit);
+//     } catch (error){
+//         console.log(error.message);
+//         response.status(500).send({ message: error.message });
+
+//     }
+// })
