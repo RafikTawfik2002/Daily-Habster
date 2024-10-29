@@ -10,6 +10,7 @@ import crypto from "crypto"
 import { Token } from '../models/Token.js';
 import jwt from "jsonwebtoken"
 import { config } from 'dotenv';
+import { request } from 'http';
 
 config(); // Load environment variables from .env
 
@@ -271,6 +272,19 @@ router.delete('/:id', async (request, response) => {
     }
 })
 
+// use to logout
+
+router.post('/logout', async (request, response) => {
+  
+  res.cookie('token', '', {
+    httpOnly: true, 
+    secure: true,
+    expires: new Date(0) 
+  });
+  
+  res.status(200).json({ message: 'Logged out successfully' });
+})
+
 
 // ===================================================================================
 // EMAIL VERIFICATION
@@ -459,7 +473,7 @@ router.post('/verify', async (request, response) => {
 
     const userID = await verifyByEmail(request, request.body.email)
     if(userID == -1 || (!userID))  return response.status(401).send('Invalid token');
-    
+
     const found = await Code.find({email: request.body.email}).exec()
     if(found.length == 0){throw new Error("No token was issued")}
 
