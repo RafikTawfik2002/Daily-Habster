@@ -21,6 +21,24 @@ const router = express.Router();
 
 dotenv.config()
 
+// takes in a username and returns a userID after verifying the token and its identity
+const verifyByUsername = async (request, username) => {
+    const token = request.cookies.authToken;
+    const userID = jwt.verify(token, secretKey, async (err, decoded) => {
+        if (err) {
+            return -1
+        }
+        const userID = decoded.userID 
+        // if token is verified and decoded check userID matches userName
+        const tokenUsername = (await User.findById(userID)).userName
+        if(tokenUsername != username){return -1}
+        
+        return userID
+    });
+    return userID
+    
+}
+
 // Creating a new user, used for signing up users  ===> GENERATES A TOKEN
 
 router.post('/', async (request, response) => {
@@ -76,7 +94,7 @@ router.post('/', async (request, response) => {
 
         const modifiedUser = {
             _id: newID,
-            userID: newID,
+            userID: request.body.userName,
             userName: request.body.userName,
             email: request.body.email,
             passWord: hashedPassword,
@@ -134,7 +152,147 @@ router.post('/authenticate', async (request, response) => {
     }
 });
 
+// used to update a password
 
+router.put('/password/:id', async (request, response) => {
+    try{
+        if(!request.body.password || !request.body.oldPassword){throw new Error("send both old and new passwords")}
+        const { id } = request.params;
+
+        const userID = await verifyByUsername(request, id)
+        if(userID == -1 || (!userID))  return response.status(401).send('Invalid token');
+
+        // find the user and check if password matches
+        const found = await User.find({_id: userID}).exec() 
+
+        if(found.length == 0){throw new Error('user not found error');}
+
+        const user = found[0]
+        const password = user.passWord
+
+        const isMatch = await bcrypt.compare(request.body.oldPassword, password)
+
+        if(!isMatch){throw new Error('old password is incorrect');}
+        
+        // old password match, encrypt new password and update the user
+
+        const hashedPassword = await bcrypt.hash(request.body.password, 10);
+        
+        const updated = await User.findByIdAndUpdate(userID, {passWord: hashedPassword},  { new: true, runValidators: true })
+
+
+        return response.status(200).json(updated);
+    } catch (error){
+        console.log(error.message);
+        response.status(500).send({ message: error.message });
+
+    }
+})
+
+// used to update username and email 
+
+router.put('/:id', async (request, response) => {
+    try{
+        console.log("\n\n\nUPDATING USERNAME : ")
+        if(!request.body.userName || !request.body.email){throw new Error("send all information")}
+        const { id } = request.params;
+
+        console.log("userID is ")
+        const userID = await verifyByUsername(request, id)
+        if(userID == -1 || (!userID))  return response.status(401).send('Invalid token');
+
+        console.log("userID is " + userID)
+
+        const currUser = await User.findById(userID)
+        // check if email or username exists
+        let error = ''
+        // check if username exists
+        const found = await User.find({userName: request.body.userName}).exec() 
+        console.log(found.length)
+        if(found.length == 1 && request.body.userName != currUser.userName){error = 'username taken'}
+        // check if email exists
+        const foundEmail = await User.find({email: request.body.email}).exec() 
+        if(foundEmail.length == 1 && request.body.email != currUser.email){
+            if(error != ''){error += ' and email already registered'}
+            else{error = 'email already registered'}
+        }
+        // raise error if error is not empty
+        if(error != ''){throw new Error(error)}
+
+        
+        const newInfo = {
+            userName: request.body.userName,
+            email: request.body.email,
+            verified: currUser.email == request.body.email
+        }
+        console.log("newInfo is ")
+        console.log(newInfo)
+
+        const user = await User.findByIdAndUpdate(userID, newInfo,  { new: true, runValidators: true })
+
+
+        return response.status(200).json(user);
+    } catch (error){
+        console.log(error.message);
+        response.status(500).send({ message: error.message });
+
+    }
+})
+
+// user to delete account
+
+router.delete('/:id', async (request, response) => {
+    try {
+        const { id } = request.params;
+
+        const userID = await verifyByUsername(request, id)
+        if(userID == -1 || (!userID))  return response.status(401).send('Invalid token');
+
+        const result = await User.findByIdAndDelete(userID);
+        const userHabits = await Habit.find({userID: userID}) 
+        
+        // deleting associated habits
+        userHabits.forEach(async (habit) => {
+            await Habit.findByIdAndDelete(habit._id)
+            console.log(userHabits._id)
+        });
+
+        // delete any associated code
+
+        if(!result){
+            return response.status(404).json({ message: 'User not found '});
+        }
+
+        return response.status(200).send({ message: 'User deleted successfully' });
+        
+    } catch (error) {
+        console.log(error.message);
+        response.status(500).send({ message: error.message });
+    }
+})
+
+
+// ===================================================================================
+// EMAIL VERIFICATION
+// ===================================================================================
+
+// takes userID token and an email and checks if information is matching
+const verifyByEmail = async (request, email) => {
+    const token = request.cookies.authToken;
+    const userID = jwt.verify(token, secretKey, async (err, decoded) => {
+        if (err) {
+            return -1
+        }
+        const userID = decoded.userID 
+        // if token is verified and decoded check userID matches userName
+        const tokenEmail = (await User.findById(userID)).email
+        if(tokenEmail != email){return -1}
+        
+        return userID
+    });
+    return userID
+    
+}
 
 // setting up mail transporter
 const transporter = nodemailer.createTransport({
@@ -146,7 +304,195 @@ const transporter = nodemailer.createTransport({
   });
 
   
+// email html template for email verification 
+
+const emailTemplate = (verificationCode) => {return (`
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Email Verification</title>
+        <style>
+          body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+          }
+          .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+          }
+          .email-header {
+            background-color: #4caf50;
+            padding: 10px;
+            text-align: center;
+            color: white;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+          }
+          .email-body {
+            padding: 20px;
+            text-align: center;
+          }
+          .verification-code {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            background-color: #f0f0f0;
+            padding: 10px;
+            border-radius: 5px;
+            display: inline-block;
+            letter-spacing: 4px;
+          }
+          .email-footer {
+            margin-top: 20px;
+            font-size: 12px;
+            color: #888;
+            text-align: center;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="email-container">
+          <div class="email-header">
+            <h2>Email Verification</h2>
+          </div>
+          <div class="email-body">
+            <p>Hello,</p>
+            <p>Thank you for signing up! Please use the following code to verify your email address:</p>
+            <div class="verification-code">${verificationCode}</div>
+            <p>This code is valid for the next 10 minutes.</p>
+          </div>
+          <div class="email-footer">
+            <p>If you did not request this email, please ignore it.</p>
+          </div>
+        </div>
+      </body>
+    </html>
+    `)}
+
+// generate verification code
+const verificationCode = () => {
+    let code = ""
+    for(let i = 0; i < 6; i++){
+        code += Math.floor(Math.random() * 10);
+    }
+    return code
+}
+// ESSINTAIL ROUTES FOR THE APPLICATION
+
+// send verification code  ==> NEEDS A TOKEN
+router.post('/sendmail', async (request, response) => {
+    try{
+       
+
+        // INPUT VALIDATION
+        if(!request.body.email){return response.status(400).send({message: 'no email provided'})}
+        
+
+        const userID = await verifyByEmail(request, request.body.email)
+        if(userID == -1 || (!userID))  return response.status(401).send('Invalid token');
+
+
+        // GENERATE CODE
+        const code = verificationCode()
+        const found = await Code.find({email: request.body.email}).exec() 
+        if(found.length >= 1){
+            const entry = found[0]
+            const res = await Code.findByIdAndUpdate(entry._id, {code: code}) 
+        }
+        else{
+            await Code.create({email: request.body.email, code: code})
+        }
+
+        // SENDING THE CODE BY EMAIL
+        const info = await transporter.sendMail({
+            from: 'dailyhabster@gmail.com', // sender address
+            to: request.body.email, // list of receivers
+            subject: "Email Verification", // Subject line
+            text: request.body.text, // plain text body
+            html: emailTemplate(code), // html body
+          });
+
+          return response.status(200).json({success: "true"});
+
+    } catch (error){
+        console.log(error)
+        response.status(500).send({ message: error.message });
+    }
+})
+
+// check if a code is already sent
+router.post('/sentcheck', async (request, response) => {
+    try{if(!request.body.email){return response.status(400).send({message: 'no email provided'})}
+
+
+        const userID = await verifyByEmail(request, request.body.email)
+        if(userID == -1 || (!userID))  return response.status(401).send('Invalid token');
+
+        const found = await Code.find({email: request.body.email}).exec() 
+
+        if(found.length >= 1){
+            return response.status(200).json({sent: true});
+        }
+        else{
+            return response.status(200).json({sent: false});
+        }
+    }
+    catch (error){
+        console.log(error)
+        response.status(500).send({ message: error.message });
+    }
+
+}
+)
+
+// verify email against verification code
+router.post('/verify', async (request, response) => {
+    try{if(!request.body.email || !request.body.code) { throw new Error("Send all required field")}
+
+    const userID = await verifyByEmail(request, request.body.email)
+    if(userID == -1 || (!userID))  return response.status(401).send('Invalid token');
+    
+    const found = await Code.find({email: request.body.email}).exec()
+    if(found.length == 0){throw new Error("No token was issued")}
+
+    
+    const elapsedMinutes =  (new Date().getTime() - new Date(found[0].updatedAt).getTime())/(1000*60) 
+    console.log(elapsedMinutes)
+
+    
+    if(found[0].code == request.body.code){
+        if(elapsedMinutes > 11){throw new Error("this code has expired")}
+        const find = await User.find({email: request.body.email}).exec()
+        console.log(find)
+        const userID = find[0]._id
+        const res = await User.findByIdAndUpdate(userID, {verified: true})
+        await Code.findByIdAndDelete(found[0]._id)
+        return response.status(200).json(res);
+    }
+    else{
+        throw new Error("Verification failed")
+    }
+    }
+    catch (error) {
+        console.log(error)
+        response.status(500).send({ message: error.message });
+    }
+
+})
+
+
+// ===================================================================================
 // ACCOUNT RECOVERY
+// ===================================================================================
+
 
 // takes a token and validates it and updates the password  ==> DOES NOT NEED A TOKEN
 router.post('/resetpass', async (request, response) => {
@@ -398,333 +744,57 @@ router.post('/forgotusername', async (request, response) => {
     }
     
 })
-// EMAIL VERIFICATION
-// email html template for email verification 
 
-const emailTemplate = (verificationCode) => {return (`
-    <!DOCTYPE html>
-    <html>
-      <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Email Verification</title>
-        <style>
-          body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-          }
-          .email-container {
-            max-width: 600px;
-            margin: 0 auto;
-            background-color: #ffffff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-          }
-          .email-header {
-            background-color: #4caf50;
-            padding: 10px;
-            text-align: center;
-            color: white;
-            border-top-left-radius: 8px;
-            border-top-right-radius: 8px;
-          }
-          .email-body {
-            padding: 20px;
-            text-align: center;
-          }
-          .verification-code {
-            font-size: 24px;
-            font-weight: bold;
-            color: #333;
-            background-color: #f0f0f0;
-            padding: 10px;
-            border-radius: 5px;
-            display: inline-block;
-            letter-spacing: 4px;
-          }
-          .email-footer {
-            margin-top: 20px;
-            font-size: 12px;
-            color: #888;
-            text-align: center;
-          }
-        </style>
-      </head>
-      <body>
-        <div class="email-container">
-          <div class="email-header">
-            <h2>Email Verification</h2>
-          </div>
-          <div class="email-body">
-            <p>Hello,</p>
-            <p>Thank you for signing up! Please use the following code to verify your email address:</p>
-            <div class="verification-code">${verificationCode}</div>
-            <p>This code is valid for the next 10 minutes.</p>
-          </div>
-          <div class="email-footer">
-            <p>If you did not request this email, please ignore it.</p>
-          </div>
-        </div>
-      </body>
-    </html>
-    `)}
-
-// generate verification code
-const verificationCode = () => {
-    let code = ""
-    for(let i = 0; i < 6; i++){
-        code += Math.floor(Math.random() * 10);
-    }
-    return code
-}
-// ESSINTAIL Routes for the application
-
-// send verification code  ==> NEEDS A TOKEN
-router.post('/sendmail', async (request, response) => {
-    try{
-        // CHECK TOKEN 
-        const token = request.cookies.authToken;
-        jwt.verify(token, secretKey, (err, decoded) => {
-            if (err) {
-                return res.status(401).send('Invalid token');
-            }
-        });
-
-        // INPUT VALIDATION
-        if(!request.body.email){return response.status(400).send({message: 'no email provided'})}
-        
-        // GENERATE CODE
-        const code = verificationCode()
-        const found = await Code.find({email: request.body.email}).exec() 
-        if(found.length >= 1){
-            const entry = found[0]
-            const res = await Code.findByIdAndUpdate(entry._id, {code: code}) 
-        }
-        else{
-            await Code.create({email: request.body.email, code: code})
-        }
-
-        // SENDING THE CODE BY EMAIL
-        const info = await transporter.sendMail({
-            from: 'dailyhabster@gmail.com', // sender address
-            to: request.body.email, // list of receivers
-            subject: "Email Verification", // Subject line
-            text: request.body.text, // plain text body
-            html: emailTemplate(code), // html body
-          });
-
-          return response.status(200).json({success: "true"});
-
-    } catch (error){
-        console.log(error)
-        response.status(500).send({ message: error.message });
-    }
-})
-
-// check if a code is already sent
-router.post('/sentcheck', async (request, response) => {
-    try{if(!request.body.email){return response.status(400).send({message: 'no email provided'})}
-        const found = await Code.find({email: request.body.email}).exec() 
-
-        if(found.length >= 1){
-            return response.status(200).json({sent: true});
-        }
-        else{
-            return response.status(200).json({sent: false});
-        }
-    }
-    catch (error){
-        console.log(error)
-        response.status(500).send({ message: error.message });
-    }
-
-}
-)
-
-// verify email against verification code
-router.post('/verify', async (request, response) => {
-    try{if(!request.body.email || !request.body.code) { throw new Error("Send all required field")}
-    const found = await Code.find({email: request.body.email}).exec()
-    if(found.length == 0){throw new Error("No token was issued")}
-
-    
-    const elapsedMinutes =  (new Date().getTime() - new Date(found[0].updatedAt).getTime())/(1000*60) 
-    console.log(elapsedMinutes)
-
-    
-    if(found[0].code == request.body.code){
-        if(elapsedMinutes > 11){throw new Error("this code has expired")}
-        const find = await User.find({email: request.body.email}).exec()
-        console.log(find)
-        const userID = find[0]._id
-        const res = await User.findByIdAndUpdate(userID, {verified: true})
-        await Code.findByIdAndDelete(found[0]._id)
-        return response.status(200).json(res);
-    }
-    else{
-        throw new Error("Verification failed")
-    }
-    }
-    catch (error) {
-        console.log(error)
-        response.status(500).send({ message: error.message });
-    }
-
-})
-
-// Getting user by id
-router.get('/:id', async (request, response) => {
-    try{
-
-        const { id } = request.params;
-        const user = await User.findById(id);
-
-        return response.status(200).json(user);
-    } catch (error){
-        console.log(error.message);
-        response.status(500).send({ message: error.message });
-
-    }
-})
-
-// Getting user by username
-
-router.get('/username/:username', async (request, response) => {
-    try{
-
-        const { username } = request.params;
-        const user = await User.find({userName: username});
-
-        return response.status(200).json(user);
-    } catch (error){
-        console.log(error.message);
-        response.status(500).send({ message: error.message });
-
-    }
-})
-
-
-// used to update a password
-
-router.put('/password/:id', async (request, response) => {
-    try{
-        if(!request.body.password || !request.body.oldPassword){throw new Error("send both old and new passwords")}
-        const { id } = request.params;
-
-        // find the user and check if password matches
-        const found = await User.find({_id: id}).exec() 
-
-        if(found.length == 0){throw new Error('user not found error');}
-
-        const user = found[0]
-        const password = user.passWord
-
-        const isMatch = await bcrypt.compare(request.body.oldPassword, password)
-
-        if(!isMatch){throw new Error('old password is incorrect');}
-        
-        // old password match, encrypt new password and update the user
-
-        const hashedPassword = await bcrypt.hash(request.body.password, 10);
-        
-        const updated = await User.findByIdAndUpdate(id, {passWord: hashedPassword},  { new: true, runValidators: true })
-
-
-        return response.status(200).json(updated);
-    } catch (error){
-        console.log(error.message);
-        response.status(500).send({ message: error.message });
-
-    }
-})
-
-// used to update username and email => TODO add email update
-
-router.put('/:id', async (request, response) => {
-    try{
-        if(!request.body.userName || !request.body.email){throw new Error("send all information")}
-        const { id } = request.params;
-        const currUser = await User.findById(id)
-        // check if email or username exists
-        let error = ''
-        // check if username exists
-        const found = await User.find({userName: request.body.userName}).exec() 
-        console.log(found.length)
-        if(found.length == 1 && request.body.userName != currUser.userName){error = 'username taken'}
-        // check if email exists
-        const foundEmail = await User.find({email: request.body.email}).exec() 
-        if(foundEmail.length == 1 && request.body.email != currUser.email){
-            if(error != ''){error += ' and email already registered'}
-            else{error = 'email already registered'}
-        }
-        // raise error if error is not empty
-        if(error != ''){throw new Error(error)}
-
-        
-        const newInfo = {
-            userName: request.body.userName,
-            email: request.body.email,
-            verified: currUser.email == request.body.email
-        }
-
-        const user = await User.findByIdAndUpdate(id, newInfo,  { new: true, runValidators: true })
-
-
-        return response.status(200).json(user);
-    } catch (error){
-        console.log(error.message);
-        response.status(500).send({ message: error.message });
-
-    }
-})
-
-// user to delete account
-
-router.delete('/:id', async (request, response) => {
-    try {
-        const { id } = request.params;
-        const result = await User.findByIdAndDelete(id);
-        const userHabits = await Habit.find({userID: id}) 
-        // deleting associated habits
-
-        userHabits.forEach(async (habit) => {
-            await Habit.findByIdAndDelete(habit._id)
-            console.log(userHabits._id)
-        });
-
-        if(!result){
-            return response.status(404).json({ message: 'User not found '});
-        }
-
-        return response.status(200).send({ message: 'User deleted successfully' });
-        
-    } catch (error) {
-        console.log(error.message);
-        response.status(500).send({ message: error.message });
-    }
-})
-
+// ===================================================================================
 // NON-ESSENTIAL routes used for testing
+// ===================================================================================
 
 // get method for getting users
 
-router.get('/', async (request, response) => {
-    try{
-        const user = await User.find({});
-        return response.status(200).json({
-            count: user.length,
-            data: user
-        });
-    } catch (error){
-        console.log(error.message);
-        response.status(500).send({ message: error.message });
+// router.get('/', async (request, response) => {
+//     try{
+//         const user = await User.find({});
+//         return response.status(200).json({
+//             count: user.length,
+//             data: user
+//         });
+//     } catch (error){
+//         console.log(error.message);
+//         response.status(500).send({ message: error.message });
 
-    }
-})
+//     }
+// })
 
+// Getting user by id
 
+// router.get('/:id', async (request, response) => {
+//     try{
+
+//         const { id } = request.params;
+//         const user = await User.findById(id);
+
+//         return response.status(200).json(user);
+//     } catch (error){
+//         console.log(error.message);
+//         response.status(500).send({ message: error.message });
+
+//     }
+// })
+
+// Getting user by username
+
+// router.get('/username/:username', async (request, response) => {
+//     try{
+
+//         const { username } = request.params;
+//         const user = await User.find({userName: username});
+
+//         return response.status(200).json(user);
+//     } catch (error){
+//         console.log(error.message);
+//         response.status(500).send({ message: error.message });
+
+//     }
+// })
 
 export default router

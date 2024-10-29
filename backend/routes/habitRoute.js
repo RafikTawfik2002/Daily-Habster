@@ -21,8 +21,9 @@ const verifyByUsername = async (request, username) => {
         }
         const userID = decoded.userID 
         // if token is verified and decoded check userID matches userName
-        const tokenUsername = (await User.findById(userID)).userName
-        if(tokenUsername != username){return -1}
+        const tokenUsername = (await User.findById(userID))
+        console.log(tokenUsername)
+        if(tokenUsername.userName != username){return -1}
         
         return userID
     });
@@ -51,6 +52,7 @@ const verifyByHabitID = async (request, habitID) => {
 
 // habits by user  ===> WORKS WITH TOKEN
 router.get('/user/:user', async (request, response) => {
+    console.log("\n\n\nGETTING ALL HABITS USING USERNAME")
     // plan for all of these if to make a middlewear ==> takes in username and returns userID
     // the middleware verifies the token and verifies username corresponds to user ID in the token 
     // and the returns a user ID
@@ -59,7 +61,7 @@ router.get('/user/:user', async (request, response) => {
         console.log("Provided is : " + provided)
     
         const userID = await verifyByUsername(request, provided)
-        if(userID == -1 || (!userID))  return res.status(401).send('Invalid token');
+        if(userID == -1 || (!userID))  return response.status(401).send('Invalid token');
         
         //FIND HABITS USING USER ID FROM THE TOKEN
         const habit = await Habit.find({userID : userID});
